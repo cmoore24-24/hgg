@@ -1,0 +1,11 @@
+{
+	"manager-name":"cmoore24-hgg",
+	"max-workers":300,
+	"min-workers":300,
+	"workers-per-cycle":500,
+	"cores":12,
+	"memory":cores*12000,
+	"disk":cores*13000,
+	"timeout":300,
+	"condor-requirements":"((has_vast))"
+}
