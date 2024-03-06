@@ -107,7 +107,7 @@ if __name__ == "__main__":
         i, j, k = ak.unzip(ak.combinations(vec, 3))
         #best = ak.argmin(abs((i + j + k).mass - 125), axis=1, keepdims=True)
         best = ak.argmax(abs((i + j + k).mass), axis=1, keepdims=True)
-        order_check = ak.concatenate([i[best].mass, j[best].mass, k[best].mass], axis=1)
+        order_check = ak.concatenate([i[best].pt, j[best].pt, k[best].pt], axis=1)
         largest = ak.argmax(order_check, axis=1, keepdims=True)
         smallest = ak.argmin(order_check, axis=1, keepdims=True)
         leading_particles = ak.concatenate([i[best], j[best], k[best]], axis=1)
@@ -212,10 +212,10 @@ if __name__ == "__main__":
                 fill_cr = ak.fill_none(ak.flatten(boosted_fatjet.color_ring), 0)
                 multi_axis = (
                     dhist.Hist.new
-                    .Reg(50, 0, 10, name="Color_Ring", label="Color_Ring", overflow=False, underflow=False)
-                    .Reg(50, 150, 2500, name="PT", label="PT", overflow=False, underflow=False)
-                    .Reg(50, 50, 150, name="Mass", label="Mass", overflow=False, underflow=False)
-                    .Reg(50, 50, 150, name="SDMass", label="SDMass", overflow=False, underflow=False)
+                    .Reg(40, 0, 3, name="Color_Ring", label="Color_Ring", overflow=False, underflow=False)
+                    .Reg(40, 150, 2500, name="PT", label="PT", overflow=False, underflow=False)
+                    .Reg(40, 50, 150, name="Mass", label="Mass", overflow=False, underflow=False)
+                    .Reg(40, 50, 150, name="SDMass", label="SDMass", overflow=False, underflow=False)
                     .Weight()
                     .fill(Color_Ring=fill_cr, 
                           PT=ak.flatten(boosted_fatjet.pt),
@@ -225,7 +225,6 @@ if __name__ == "__main__":
                          )
                 )
                 computations["Color_Ring"] = multi_axis
-                computations["color_ring_vals"] = fill_cr
 
             if "Color_Ring_Var" in enabled_functions:
                 uf_cr_var = ak.unflatten(
@@ -314,7 +313,7 @@ if __name__ == "__main__":
         lib_resources={'cores': 12, 'slots': 12},
     )
 
-    name = '../outputs/cr_investigations/multi_var_hists/antikt_argmax_dense_cr.pkl'
+    name = '../outputs/cr_investigations/multi_var_hists/cambridge02_pt_mass_argmax.pkl'
     with open(name, 'wb') as f:
         pickle.dump(computed, f)
 

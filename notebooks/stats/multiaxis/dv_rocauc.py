@@ -26,7 +26,7 @@ if __name__ == "__main__":
     )
 
     path = "../../../outputs/cr_investigations/multi_var_hists/"
-    name = "antikt_argmax.pkl"
+    name = "cambridge02_pt_mass_argmax.pkl"
     file = path + name
     with open(file, 'rb') as f:
         cring = pickle.load(f)
@@ -114,8 +114,8 @@ if __name__ == "__main__":
         hgg_copy = copy.copy(hgg_scaled)
         hbb_copy = copy.copy(hbb_scaled)
 
-        hgg_copy['Color_Ring'] = hgg_copy['Color_Ring'][:,l:m,:,:]
-        hbb_copy['Color_Ring'] = hbb_copy['Color_Ring'][:,l:m,:,:]
+        hgg_copy['Color_Ring'] = hgg_copy['Color_Ring'][l:m,:,:,:]
+        hbb_copy['Color_Ring'] = hbb_copy['Color_Ring'][l:m,:,:,:]
 
         if (hgg_copy['Color_Ring'].sum().value == 0) or (hbb_copy['Color_Ring'].sum().value == 0):
             category = 'mass_window_' + str(l) + '_' + str(m)
@@ -174,7 +174,7 @@ if __name__ == "__main__":
                         hbb_truth_dict[j] = temp_list
             
             qcd_vars_copy = copy.deepcopy(qcd_vars_scaled)
-            qcd_vars_copy['Color_Ring'] = qcd_vars_copy['Color_Ring'][:,l:m,:,:]
+            qcd_vars_copy['Color_Ring'] = qcd_vars_copy['Color_Ring'][l:m,:,:,:]
             qcd_vars = qcd_vars_copy
             
             #totals for each qcd hist
@@ -230,9 +230,9 @@ if __name__ == "__main__":
 
     auc_dict = {}
 
-    for l in range(0, 49):
-        for m in range(l+2, 53):
-            entry_name = 'pt_window_' + str(l) + '_' + str(m)
+    for l in range(0, 39):
+        for m in range(l+2, 43):
+            entry_name = 'cr_window_' + str(l) + '_' + str(m)
             auc_dict[entry_name] = loop(l,m)
 
     print(len(auc_dict))
@@ -245,7 +245,7 @@ if __name__ == "__main__":
         #task_mode="function_calls",
         lib_resources={'cores': 12, 'slots': 12},
     )
-    output = './outputs/akt/pt_window_' + name
+    output = './outputs/ca/cr_window_' + name
     with open(output, 'wb') as f:
         pickle.dump(computed[0], f)
 
