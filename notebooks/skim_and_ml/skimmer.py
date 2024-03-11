@@ -4,10 +4,11 @@ import dask_awkward as dak
 import awkward as ak
 import matplotlib.pyplot
 from coffea import dataset_tools
-from coffea.nanoevents import NanoEventsFactory
+from coffea.nanoevents import NanoEventsFactory, PFNanoAODSchema
 from ndcctools.taskvine import DaskVine
 import time
 import os
+import warnings
 
 full_start = time.time()
 
@@ -18,51 +19,60 @@ if __name__ == "__main__":
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info",
     )
 
-    with open('output_datasets.json', 'r') as f:
-        samples = json.load(f)
+    warnings.filterwarnings("ignore", module="coffea.*")
+    warnings.filterwarnings("ignore", "Found duplicate branch")
+    warnings.filterwarnings("ignore", "Missing cross-reference index for")
+    warnings.filterwarnings("ignore", "dcut")
+    warnings.filterwarnings("ignore", "Please ensure")
+    warnings.filterwarnings("ignore", "invalid value")
+    
+    # with open('output_datasets.json', 'r') as f:
+    #     samples = json.load(f)
 
-    print('doing samples')
-    sample_start = time.time()
-    samples_ready, samples = dataset_tools.preprocess(
-        samples,
-        step_size=50_000,
-        skip_bad_files=True,
-        recalculate_steps=True,
-        save_form=False,
-    )
-    sample_stop = time.time()
-    print('samples done')
-    print('full sample time is ' + str((sample_start - sample_stop)/60))
+    # print('doing samples')
+    # sample_start = time.time()
+    # samples_ready, samples = dataset_tools.preprocess(
+    #     samples,
+    #     step_size=50_000,
+    #     skip_bad_files=True,
+    #     recalculate_steps=True,
+    #     save_form=False,
+    # )
+    # sample_stop = time.time()
+    # print('samples done')
+    # print('full sample time is ' + str((sample_stop - sample_start)/60))
 
-    with open("samples_ready.json", "w") as fout:
-        json.dump(samples_ready, fout)
+    # with open("samples_ready.json", "w") as fout:
+    #     json.dump(samples_ready, fout)
 
     with open("samples_ready.json", 'r') as fin:
         samples_ready = json.load(fin)
 
     def analysis(events):
         dataset = events.metadata["dataset"]
-        photonSelect = (
-            (events.FatJet.pt > 18)
-            & (abs(events.FatJet.eta) < 1.5)
-            #& (events.Photon.isScEtaEE | events.Photon.isScEtaEB)
-            #& (events.Photon.cutBased >= 1)
+        fatjetSelect = (
+            (events.FatJet.pt > 200)
+            & (abs(events.FatJet.eta) < 2.5)
+            & (events.FatJet.mass > 50)
+            & (events.FatJet.mass < 200)
         )
         events = events[
-            ak.any(photonSelect, axis=1)
+            ak.any(fatjetSelect, axis=1)
         ]
         skim = ak.zip(
             {
-                "Jets": events.Jet,
-                # "MET": events.MET,
-                # "Photon": events.Photon,
+                "FatJets": events.FatJet,
+                 "MET": events.MET,
+                 "Photon": events.Photon,
+                "Subjets": events.SubJet,
+                "FJ_PFCands": events.FatJet.constituents.pf,
             },
             depth_limit=1,
         )
         
         skim_task = dak.to_parquet(
             skim,
-            f"./{dataset}",
+            f"/project01/ndcms/cmoore24/skims/{dataset}",
             compute=False,
         )
         return skim_task
@@ -71,6 +81,7 @@ if __name__ == "__main__":
         analysis,
         dataset_tools.slice_files(samples_ready, slice(None, 5)),
         uproot_options={"allow_read_errors_with_report": True},
+        schemaclass = PFNanoAODSchema,
     )
 
     print('start compute')
