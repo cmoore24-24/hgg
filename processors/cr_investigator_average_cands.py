@@ -141,6 +141,17 @@ if __name__ == "__main__":
         color_ring = (a13 + a23) / (a12)
     
         return color_ring
+    
+    def d2_calc(fatjet):
+        jetdef = fastjet.JetDefinition(
+            fastjet.cambridge_algorithm, 0.8
+        )
+        pf = ak.flatten(fatjet.constituents.pf, axis=1)
+        cluster = fastjet.ClusterSequence(pf, jetdef)
+        softdrop = cluster.exclusive_jets_softdrop_grooming()
+        softdrop_cluster = fastjet.ClusterSequence(softdrop.constituents, jetdef)
+        d2 = softdrop_cluster.exclusive_jets_energy_correlator(func="D2")
+        return d2
 
     class MyProcessor(processor.ProcessorABC):
         def __init__(self):
@@ -210,7 +221,11 @@ if __name__ == "__main__":
                 uf_cr = ak.unflatten(
                      color_ring(boosted_fatjet, cluster_val=0.2), counts=ak.num(boosted_fatjet)
                 )
+                d2 = ak.unflatten(
+                    d2_calc(boosted_fatjet), counts=ak.num(boosted_fatjet)
+                )
                 boosted_fatjet["color_ring"] = uf_cr
+                boosted_fatjet["d2b1"] = d2
                 fill_cr = ak.fill_none(ak.flatten(boosted_fatjet.color_ring), 10)
                 multi_axis = (
                     dhist.Hist.new
@@ -218,13 +233,14 @@ if __name__ == "__main__":
                     .Reg(40, 150, 2500, name="PT", label="PT", overflow=False, underflow=False)
                     .Reg(40, 50, 150, name="Mass", label="Mass", overflow=False, underflow=False)
                     .Reg(40, 50, 150, name="SDMass", label="SDMass", overflow=False, underflow=False)
+                    .Reg(40, 0, 3, name="D2B1", label="D2B1", overflow=False, underflow=False)
                     .Weight()
                     .fill(
                           Color_Ring=fill_cr, 
                           PT=ak.flatten(boosted_fatjet.pt),
                           Mass=ak.flatten(boosted_fatjet.mass),
-                          SDMass=ak.flatten(boosted_fatjet.msoftdrop)
-
+                          SDMass=ak.flatten(boosted_fatjet.msoftdrop),
+                          D2B1=ak.flatten(boosted_fatjet.d2b1)
                          )
                 )
                 computations["Color_Ring"] = multi_axis
