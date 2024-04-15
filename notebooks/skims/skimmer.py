@@ -51,35 +51,36 @@ if __name__ == "__main__":
     def analysis(events):
         dataset = events.metadata["dataset"]
         fatjetSelect = (
-            (events.FatJet.pt > 200)
-            & (abs(events.FatJet.eta) < 2.5)
-            & (events.FatJet.mass > 50)
-            & (events.FatJet.mass < 200)
+            (events.FatJet.pt > 170)
+            # & (abs(events.FatJet.eta) < 2.5)
+            # & (events.FatJet.mass > 50)
+            # & (events.FatJet.mass < 200)
         )
         events = events[
             ak.any(fatjetSelect, axis=1)
         ]
         skim = ak.zip(
             {
-                "FatJets": events.FatJet,
-                 "MET": events.MET,
-                 "Photon": events.Photon,
-                "Subjets": events.SubJet,
-                "FJ_PFCands": events.FatJet.constituents.pf,
+                "FatJets": ak.flatten(events.FatJet, axis=1),
+                #  "MET": events.MET,
+                #  "Photon": events.Photon,
+                # "Subjets": events.SubJet,
+                # "FJ_PFCands": events.FatJet.constituents.pf,
             },
             depth_limit=1,
         )
         
         skim_task = dak.to_parquet(
             skim,
-            f"/project01/ndcms/cmoore24/skims/{dataset}",
+            f"/project01/ndcms/cmoore24/skims/stitch_test_skims/{dataset}",
             compute=False,
         )
         return skim_task
 
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        dataset_tools.slice_files(samples_ready, slice(None, 5)),
+        #dataset_tools.slice_files(samples_ready, slice(None, 5)),
+        samples_ready,
         uproot_options={"allow_read_errors_with_report": True},
         schemaclass = PFNanoAODSchema,
     )
