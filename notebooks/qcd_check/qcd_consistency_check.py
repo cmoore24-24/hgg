@@ -11,14 +11,13 @@ import hist.dask as dhist
 import dask
 import pickle
 import os
-import distributed
 from ndcctools.taskvine import DaskVine
 import time
 
 full_start = time.time()
 
 if __name__ == '__main__':
-    m = DaskVine([9123,9128], name="hgg", run_info_path='/project01/ndcms/cmoore24/vine-run-info')
+    m = DaskVine([9123,9128], name="cmoore24-hgg", run_info_path='/project01/ndcms/cmoore24/vine-run-info')
 
     warnings.filterwarnings("ignore", "Found duplicate branch")
     warnings.filterwarnings("ignore", "Missing cross-reference index for")
@@ -38,63 +37,54 @@ if __name__ == '__main__':
 
     q347 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/300to470/' + fn: "/Events"} for fn in q347_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_300to470"},
     ).events()
     
     q476 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/470to600/' + fn: "/Events"} for fn in q476_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_470to600"},
     ).events()
     
     q68 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/600to800/' + fn: "/Events"} for fn in q68_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_600to800"},
     ).events()
     
     q810 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/800to1000/' + fn: "/Events"} for fn in q810_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_800to1000"},
     ).events()
     
     q1014 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/1000to1400/' + fn: "/Events"} for fn in q1014_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_1000to1400"},
     ).events()
     
     q1418 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/1400to1800/' + fn: "/Events"} for fn in q1418_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_1400to1800"},
     ).events()
     
     q1824 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/1800to2400/' + fn: "/Events"} for fn in q1824_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_1800to2400"},
     ).events()
     
     q2432 = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/2400to3200/' + fn: "/Events"} for fn in q2432_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_2400to3200"},
     ).events()
     
     q32Inf = NanoEventsFactory.from_root(
         [{'/project01/ndcms/cmoore24/qcd/3200toInf/' + fn: "/Events"} for fn in q32inf_files],
-        permit_dask=True,
         schemaclass=PFNanoAODSchema,
         metadata={"dataset": "QCD_Pt_3200toInf"},
     ).events()
@@ -108,23 +98,32 @@ if __name__ == '__main__':
             dataset = events.metadata['dataset']
             
             fatjet = events.FatJet
-            cut = ((fatjet.pt > 0) #& (fatjet.msoftdrop > 110) & 
+            cut = ((fatjet.pt > 170) #& (fatjet.msoftdrop > 110) & 
                    #(fatjet.msoftdrop < 140) & (abs(fatjet.eta) < 2.5) #& (higgs_jets)
                   )
             boosted_fatjet = fatjet[cut]
             
             jet_pt = (
                 dhist.Hist.new
-                .Reg(75, 200, 5000, name='jet_pt', label='Jet_Pt')
+                .Reg(75, 170, 5000, name='jet_pt', label='Jet_Pt')
                 .Weight()
             )
             
             jet_pt.fill(jet_pt=ak.flatten(boosted_fatjet.pt))
+
+            jet_n2 = (
+                dhist.Hist.new
+                .Reg(75, 0, 0.5, name='jet_n2', label='Jet_n2')
+                .Weight()
+            )
+            
+            jet_n2.fill(jet_n2=ak.flatten(boosted_fatjet.n2b1))
             
             return {
                 dataset: {
                     "entries": ak.count(events.event, axis=None),
                     "Jet_Pt":jet_pt,
+                    "Jet_n2":jet_n2,
                 }
             }
         
