@@ -30,7 +30,7 @@ if __name__ == "__main__":
     ]
 
     enabled_functions = set()
-    enabled_functions.update(["Color_Ring"])
+    enabled_functions.update(["Color_Ring", "D2"])
     print(enabled_functions)
 
     warnings.filterwarnings("ignore", "Found duplicate branch")
@@ -127,16 +127,16 @@ if __name__ == "__main__":
         leg2 = leading_particles[subleading]
         leg1 = ak.firsts(leg1)
         leg2 = ak.firsts(leg2)
-        a13 = ((((leg1.eta #* (leg1.pt/total_pt)
-                 ) - average_eta)**2) + (((leg1.phi #* (leg1.pt/total_pt)
-                                          ) - average_phi)**2))
-        a23 = ((((leg2.eta #* (leg2.pt/total_pt)
-                 ) - average_eta)**2) + (((leg2.phi #* (leg2.pt/total_pt)
-                                          ) - average_phi)**2))
-        a12 = ((((leg1.eta #* (leg1.pt/total_pt)
-                 ) - (leg2.eta #* (leg2.pt/total_pt)
-                     ))**2) + (((leg1.phi #* (leg1.pt/total_pt)
-                                ) - (leg2.phi #* (leg2.pt/total_pt)
+        a13 = ((((leg1.eta * (leg1.pt/total_pt)
+                 ) - average_eta)**2) + (((leg1.phi * (leg1.pt/total_pt)
+                                          ) - weighted_average_phi)**2))
+        a23 = ((((leg2.eta * (leg2.pt/total_pt)
+                 ) - average_eta)**2) + (((leg2.phi * (leg2.pt/total_pt)
+                                          ) - weighted_average_phi)**2))
+        a12 = ((((leg1.eta * (leg1.pt/total_pt)
+                 ) - (leg2.eta * (leg2.pt/total_pt)
+                     ))**2) + (((leg1.phi * (leg1.pt/total_pt)
+                                ) - (leg2.phi * (leg2.pt/total_pt)
                                     ))**2))
         color_ring = (a13 + a23) / (a12)
     
@@ -160,6 +160,11 @@ if __name__ == "__main__":
         def process(self, events):
             dataset = events.metadata["dataset"]
             computations = {"entries": ak.num(events.event, axis=0)}
+
+            events['PFCands', 'pt'] = (
+                events.PFCands.pt
+                * events.PFCands.puppiWeight
+            )
 
             fatjet = events.FatJet
 
@@ -194,12 +199,12 @@ if __name__ == "__main__":
                 )
 
             boosted_fatjet = fatjet[cut]
-            boosted_fatjet.constituents.pf["pt"] = (
-                boosted_fatjet.constituents.pf.pt
-                * boosted_fatjet.constituents.pf.puppiWeight
-            )
+            # boosted_fatjet.constituents.pf["pt"] = (
+            #     boosted_fatjet.constituents.pf.pt
+            #     * boosted_fatjet.constituents.pf.puppiWeight
+            # )
 
-            num_sub = ak.unflatten(num_subjets(boosted_fatjet, cluster_val=0.2), counts=ak.num(boosted_fatjet))
+            num_sub = ak.unflatten(num_subjets(boosted_fatjet, cluster_val=0.4), counts=ak.num(boosted_fatjet))
             boosted_fatjet['num_subjets'] = num_sub
             sub_cut = (boosted_fatjet.num_subjets >= 3)
             boosted_fatjet = boosted_fatjet[sub_cut]
@@ -219,13 +224,13 @@ if __name__ == "__main__":
 
             if "Color_Ring" in enabled_functions:
                 uf_cr = ak.unflatten(
-                     color_ring(boosted_fatjet, cluster_val=0.2), counts=ak.num(boosted_fatjet)
+                     color_ring(boosted_fatjet, cluster_val=0.4), counts=ak.num(boosted_fatjet)
                 )
-                d2 = ak.unflatten(
-                    d2_calc(boosted_fatjet), counts=ak.num(boosted_fatjet)
-                )
+                # d2 = ak.unflatten(
+                #     d2_calc(boosted_fatjet), counts=ak.num(boosted_fatjet)
+                # )
                 boosted_fatjet["color_ring"] = uf_cr
-                boosted_fatjet["d2b1"] = d2
+                #boosted_fatjet["d2b1"] = d2
                 fill_cr = ak.fill_none(ak.flatten(boosted_fatjet.color_ring), 10)
                 multi_axis = (
                     dhist.Hist.new
@@ -233,14 +238,14 @@ if __name__ == "__main__":
                     .Reg(40, 150, 2500, name="PT", label="PT", overflow=False, underflow=False)
                     .Reg(40, 50, 150, name="Mass", label="Mass", overflow=False, underflow=False)
                     .Reg(40, 50, 150, name="SDMass", label="SDMass", overflow=False, underflow=False)
-                    .Reg(40, 0, 3, name="D2B1", label="D2B1", overflow=False, underflow=False)
+                    #.Reg(40, 0, 3, name="D2B1", label="D2B1", overflow=False, underflow=False)
                     .Weight()
                     .fill(
                           Color_Ring=fill_cr, 
                           PT=ak.flatten(boosted_fatjet.pt),
                           Mass=ak.flatten(boosted_fatjet.mass),
                           SDMass=ak.flatten(boosted_fatjet.msoftdrop),
-                          D2B1=ak.flatten(boosted_fatjet.d2b1)
+                          #D2B1=ak.flatten(boosted_fatjet.d2b1)
                          )
                 )
                 computations["Color_Ring"] = multi_axis
@@ -332,7 +337,7 @@ if __name__ == "__main__":
         lib_resources={'cores': 12, 'slots': 12},
     )
 
-    name = '../outputs/cr_investigations/multi_var_hists/cambridge02_averaged_noweight.pkl'
+    name = '../outputs/cr_investigations/multi_var_hists/temp_test2.pkl'
     with open(name, 'wb') as f:
         pickle.dump(computed, f)
 

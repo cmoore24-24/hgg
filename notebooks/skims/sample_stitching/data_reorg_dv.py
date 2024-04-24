@@ -1,7 +1,4 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt 
-import awkward as ak
 import os
 import time
 import dask
@@ -12,10 +9,13 @@ import warnings
 import pickle
 
 
-
 vars = [
     'pt',
-    'n2b1',
+    'color_ring',
+    # 'eta',
+    # 'phi',
+    # 'n2b1',
+    # 'n3b1',
 ]
 
 desired_vars = []
@@ -41,65 +41,65 @@ if __name__ == "__main__":
     filelist = os.listdir(path)
     dask_q347 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q347 compiled, {len(filelist)} files: {(stop-super_start)/60} minutes")
+    print(f"dask_q347 compiled, {len(filelist)} files: {(stop-super_start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/470to600/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q476 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q476 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q476 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/600to800/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q68 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q68 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q68 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/800to1000/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q810 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q810 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q810 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/1000to1400/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q1014 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q1014 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q1014 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/1400to1800/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q1418 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q1418 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q1418 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/1800to2400/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q1824 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q1824 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q1824 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/2400to3200/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q2432 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     stop = time.time()
-    print(f"dask_q2432 compiled, {len(filelist)} files: {(stop-start)/60} minutes")
+    print(f"dask_q2432 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
 
     path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/3200toInf/"
     start = time.time()
     filelist = os.listdir(path)
     dask_q32inf = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
     super_stop = time.time()
-    print(f"dask_q32inf compiled, {len(filelist)} files: {(super_stop-start)/60} minutes")
+    print(f"dask_q32inf compiled, {len(filelist)} files: {(super_stop-start)/60:.2f} minutes")
 
-    print(f"Full compilation complete: {(super_stop-super_start)/60} minutes")
+    print(f"Full compilation complete: {(super_stop-super_start)/60:.2f} minutes")
 
     dask_dict = {}
     dask_dict['q347'] = dask_q347[desired_vars]
@@ -125,10 +125,8 @@ if __name__ == "__main__":
     )[0]
     compute_stop = time.time()
     print(f"{sys.getsizeof(output)} MB")
-    print(f"Compute Complete: {(compute_stop-compute_start)/60} minutes")
+    print(f"Compute Complete: {(compute_stop-compute_start)/60:.2f} minutes")
     
-    print(f'All done! {(compute_stop-super_start)/60} minutes')
-    with open('./qcd_pt.pkl', 'wb') as f:
+    print(f'All done! {(compute_stop-super_start)/60:.2f} minutes')
+    with open('./qcd_pt_cr.pkl', 'wb') as f:
         pickle.dump(output, f)
-
-    
