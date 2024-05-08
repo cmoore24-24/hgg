@@ -126,16 +126,18 @@ if __name__ == "__main__":
         
         skim_task = dak.to_parquet(
             skim,
-            f"/project01/ndcms/cmoore24/skims/stitch_test_skims/{dataset}",
+            f"/project01/ndcms/cmoore24/skims/full_fatjet_skims/{dataset}",
             compute=False,
         )
         return skim_task
 
-
+    subset = {}
+    subset['3200toInf'] = samples_ready['3200toInf']
     tasks = dataset_tools.apply_to_fileset(
         analysis,
         #dataset_tools.slice_files(samples_ready, slice(None, 20)),
-        samples_ready,
+        #samples_ready,
+        subset,
         uproot_options={"allow_read_errors_with_report": True},
         schemaclass = PFNanoAODSchema,
     )
