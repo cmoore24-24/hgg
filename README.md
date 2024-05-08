@@ -8,3 +8,5 @@ Installed Packages:
    * scikit_learn
 
 Other important packages (awkward, hist, etc) will most likely come along with the above
+
+Note: A separate conda environment that includes pytorch is used for the ML work
