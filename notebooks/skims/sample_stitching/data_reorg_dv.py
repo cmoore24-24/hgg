@@ -20,14 +20,14 @@ vars = [
     'pt',
     'nConstituents',
     'color_ring',
-    'd2b1',
-    'u1',
-    'u2',
-    'u3',
-    'd3',
-    'm2',
-    'm3',
-    'n4'
+    # 'd2b1',
+    # 'u1',
+    # 'u2',
+    # 'u3',
+    # 'd3',
+    # 'm2',
+    # 'm3',
+    # 'n4'
     
 ]
 
@@ -48,20 +48,20 @@ if __name__ == "__main__":
     )
 
     qcd_paths = {
-        '300to470':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/300to470/",
-        '470to600':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/470to600/",
-        '600to800':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/600to800/",
-        '800to1000':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/800to1000/",
-        '1000to1400':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/1000to1400/",
-        '1400to1800':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/1400to1800/",
-        '1800to2400':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/1800to2400/",
-        '2400to3200':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/2400to3200/",
-        '3200toInf':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/3200toInf/"
+        '300to470':"/project01/ndcms/cmoore24/skims/fatjet_skims/300to470/",
+        '470to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/470to600/",
+        '600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/600to800/",
+        '800to1000':"/project01/ndcms/cmoore24/skims/fatjet_skims/800to1000/",
+        '1000to1400':"/project01/ndcms/cmoore24/skims/fatjet_skims/1000to1400/",
+        '1400to1800':"/project01/ndcms/cmoore24/skims/fatjet_skims/1400to1800/",
+        '1800to2400':"/project01/ndcms/cmoore24/skims/fatjet_skims/1800to2400/",
+        '2400to3200':"/project01/ndcms/cmoore24/skims/fatjet_skims/2400to3200/",
+        '3200toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/3200toInf/"
     }
 
     signal_paths = {
-        'hgg':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/hgg/",
-        'hbb':"/project01/ndcms/cmoore24/skims/full_fatjet_skims/hbb/"
+        'hgg':"/project01/ndcms/cmoore24/skims/fatjet_skims/hgg/",
+        'hbb':"/project01/ndcms/cmoore24/skims/fatjet_skims/hbb/"
     }
 
 
@@ -90,84 +90,6 @@ if __name__ == "__main__":
     print(f"Signal compilation complete: {(super_stop-signal_start)/60:.2f} minutes")
 
     print(f"Full compilation complete: {(super_stop-super_start)/60:.2f} minutes")
-
-    
-    # #Reminder: When Hgg and Hbb samples are implemented, turn this into a for loop
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/300to470/"
-    # super_start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q347 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q347 compiled, {len(filelist)} files: {(stop-super_start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/470to600/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q476 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q476 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/600to800/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q68 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q68 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/800to1000/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q810 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q810 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/1000to1400/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q1014 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q1014 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/1400to1800/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q1418 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q1418 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/1800to2400/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q1824 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q1824 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/2400to3200/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q2432 = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # stop = time.time()
-    # print(f"dask_q2432 compiled, {len(filelist)} files: {(stop-start)/60:.2f} minutes")
-
-    # path = "/project01/ndcms/cmoore24/skims/stitch_test_skims/3200toInf/"
-    # start = time.time()
-    # filelist = os.listdir(path)
-    # dask_q32inf = ddf.concat([ddf.read_parquet(f"{path}{f}", engine='fastparquet') for f in filelist])
-    # super_stop = time.time()
-    # print(f"dask_q32inf compiled, {len(filelist)} files: {(super_stop-start)/60:.2f} minutes")
-
-    # print(f"Full compilation complete: {(super_stop-super_start)/60:.2f} minutes")
-
-    # dask_dict = {}
-    # dask_dict['q347'] = dask_q347[desired_vars]
-    # dask_dict['q476'] = dask_q476[desired_vars]
-    # dask_dict['q68'] = dask_q68[desired_vars]
-    # dask_dict['q810'] = dask_q810[desired_vars]
-    # dask_dict['q1014'] = dask_q1014[desired_vars]
-    # dask_dict['q1418'] = dask_q1418[desired_vars]
-    # dask_dict['q1824'] = dask_q1824[desired_vars]
-    # dask_dict['q2432'] = dask_q2432[desired_vars]
-    # dask_dict['q32inf'] = dask_q32inf[desired_vars]
     
     qcd_compute_start = time.time()
     print('QCD Compute Start')
@@ -181,8 +103,8 @@ if __name__ == "__main__":
         lib_resources={'cores': 12, 'slots': 12},
     )[0]
     qcd_compute_stop = time.time()
-    with open('./qcd_vars.pkl', 'wb') as f:
-        pickle.dump(output, f)
+    for i in output:
+        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"QCD Compute Complete: {(qcd_compute_stop-qcd_compute_start)/60:.2f} minutes")
 
@@ -197,8 +119,8 @@ if __name__ == "__main__":
         #task_mode="function_calls",
         lib_resources={'cores': 12, 'slots': 12},
     )[0]
-    with open('./signal_vars.pkl', 'wb') as f:
-        pickle.dump(output, f)
+    for i in output:
+        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
     signal_compute_stop = time.time()
     print(f"Signal Compute Complete: {(signal_compute_stop-signal_compute_start)/60:.2f} minutes")
     

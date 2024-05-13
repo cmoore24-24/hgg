@@ -1,0 +1,23 @@
+# invoke Singularity
+#
+universe = vanilla
+executable = pytorch.sh
+
+should_transfer_files = Yes
+when_to_transfer_output = ON_EXIT
+
+transfer_input_files = 
+
+Log = logs/$(Cluster).log
+Output = logs/$(Cluster)-$(Process).out
+Error = logs/$(Cluster)-$(Process).err
+
+#Enable Singularity Feature
+##Notre Dame Images
++SingularityImage = "/cvmfs/singularity.opensciencegrid.org/notredamedulac/el7-pytorch-gpu:latest"
+
+request gpus = 4
+request_memory = 180 Gb
+request_cpus = 12
+
+Queue 1
