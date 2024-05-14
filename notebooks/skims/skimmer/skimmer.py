@@ -101,41 +101,41 @@ if __name__ == "__main__":
         #     ak.any(fatjetSelect, axis=1)
         # ]
 
-        events["goodjets", 'color_ring'] = ak.unflatten(
+        events['goodjets', 'color_ring'] = ak.unflatten(
              color_ring(events.goodjets, cluster_val=0.4), counts=ak.num(events.goodjets)
         )
 
-        # events['FatJet', 'd2b1'] = ak.unflatten(
-        #      d2_calc(events.FatJet), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'd2b1'] = ak.unflatten(
+             d2_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'u1'] = ak.unflatten(
-        #      u_calc(events.FatJet, 1), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'u1'] = ak.unflatten(
+             u_calc(events.goodjets, 1), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'u2'] = ak.unflatten(
-        #      u_calc(events.FatJet, 2), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'u2'] = ak.unflatten(
+             u_calc(events.goodjets, 2), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'u3'] = ak.unflatten(
-        #      u_calc(events.FatJet, 3), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'u3'] = ak.unflatten(
+             u_calc(events.goodjets, 3), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'd3'] = ak.unflatten(
-        #      d3_calc(events.FatJet), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'd3'] = ak.unflatten(
+             d3_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'm2'] = ak.unflatten(
-        #      m2_calc(events.FatJet), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'm2'] = ak.unflatten(
+             m2_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'm3'] = ak.unflatten(
-        #      m3_calc(events.FatJet), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'm3'] = ak.unflatten(
+             m3_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
 
-        # events['FatJet', 'n4'] = ak.unflatten(
-        #      n4_calc(events.FatJet), counts=ak.num(events.FatJet)
-        # )
+        events['goodjets', 'n4'] = ak.unflatten(
+             n4_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
         
         skim = ak.zip(
             {
@@ -155,9 +155,9 @@ if __name__ == "__main__":
         )
         return skim_task
 
-    list = ['hgg', 'hbb', '300to470', '470to600', '600to800', '800to1000', '1000to1400', '1400to1800', '1800to2400', '2400to3200', '3200toInf']
+    list = [#'hgg', 'hbb', '300to470', '470to600', '600to800', '800to1000', 
+        '1000to1400', '1400to1800', '1800to2400', '2400to3200', '3200toInf']
     for i in list:
-        print(i)
         subset = {}
         subset[i] = samples_ready[i]
         tasks = dataset_tools.apply_to_fileset(

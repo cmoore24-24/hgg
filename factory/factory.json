@@ -1,7 +1,7 @@
 {
 	"manager-name":"cmoore24-hgg",
-	"max-workers":100,
-	"min-workers":50,
+	"max-workers":80,
+	"min-workers":80,
 	"workers-per-cycle":500,
 	"cores":12,
 	"memory":cores*15000,
