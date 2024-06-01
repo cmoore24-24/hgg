@@ -167,14 +167,14 @@ if __name__ == "__main__":
 
         skim_task = dak.to_parquet(
             skim,
-            f"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/{dataset}/test",
+            f"/project01/ndcms/cmoore24/skims/fatjet_skims/ttboosted/{dataset}/batch_4",
             compute=False,
         )
         return skim_task
 
 
     subset = {}
-    to_skim = 'qcd_470to600'
+    to_skim = 'ttboosted_1000toInf'
     subset[to_skim] = samples_ready[to_skim]
     files = subset[to_skim]['files']
     form = subset[to_skim]['form']
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     batch[to_skim]['form'] = form
     batch[to_skim]['metadata'] = dict_meta
 
-    for i in range(0, 389):
+    for i in range(113, 226):
         batch[to_skim]['files'][keys[i]] = files[keys[i]]
     with open('batch_check.json', 'w') as f:
         json.dump(batch, f)
