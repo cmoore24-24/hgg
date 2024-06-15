@@ -50,49 +50,49 @@ if __name__ == "__main__":
     )
 
     qcd_paths = {
-        'qcd_300to470':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_300to470/",
-        'qcd_470to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_470to600/",
-        'qcd_600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_600to800/",
-        'qcd_800to1000':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_800to1000/",
-        'qcd_1000to1400':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_1000to1400/",
-        'qcd_1400to1800':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_1400to1800/",
-        'qcd_1800to2400':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_1800to2400/",
-        'qcd_2400to3200':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_2400to3200/",
-        'qcd_3200toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/qcd/qcd_3200toInf/"
+        'qcd_300to470':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_300to470/",
+        'qcd_470to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_470to600/",
+        'qcd_600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_600to800/",
+        'qcd_800to1000':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_800to1000/",
+        'qcd_1000to1400':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_1000to1400/",
+        'qcd_1400to1800':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_1400to1800/",
+        'qcd_1800to2400':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_1800to2400/",
+        'qcd_2400to3200':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_2400to3200/",
+        'qcd_3200toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/qcd/qcd_3200toInf/"
     }
 
     diboson_paths = {
-        'ww':"/project01/ndcms/cmoore24/skims/fatjet_skims/diboson/diboson_ww/",
-        'zz':"/project01/ndcms/cmoore24/skims/fatjet_skims/diboson/diboson_zz/",
-        'wz':"/project01/ndcms/cmoore24/skims/fatjet_skims/diboson/diboson_wz/",
+        'ww':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_ww/",
+        'zz':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_zz/",
+        'wz':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_wz/",
     }
 
     singletop_path = {
-        'singletop':"/project01/ndcms/cmoore24/skims/fatjet_skims/singletop/",
+        'singletop':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/singletop/",
     }
 
     ttboosted_paths = {
-        'ttboosted_700to1000':"/project01/ndcms/cmoore24/skims/fatjet_skims/ttboosted/ttboosted_700to1000/",
-        'ttboosted_1000toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/ttboosted/ttboosted_1000toInf/",
+        'ttboosted_700to1000':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/ttboosted/ttboosted_700to1000/",
+        'ttboosted_1000toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/ttboosted/ttboosted_1000toInf/",
     }
 
     wqq_paths = {
-        'wqq_200to400':"/project01/ndcms/cmoore24/skims/fatjet_skims/wqq/wqq_200to400/",
-        'wqq_400to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/wqq/wqq_400to600/",
-        'wqq_600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/wqq/wqq_600to800/",
-        'wqq_800toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/wqq/wqq_800toInf/",
+        'wqq_200to400':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/wqq/wqq_200to400/",
+        'wqq_400to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/wqq/wqq_400to600/",
+        'wqq_600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/wqq/wqq_600to800/",
+        'wqq_800toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/wqq/wqq_800toInf/",
     }
 
     zqq_paths = {
-        'zqq_200to400':"/project01/ndcms/cmoore24/skims/fatjet_skims/zqq/zqq_200to400/",
-        'zqq_400to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/zqq/zqq_400to600/",
-        'zqq_600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/zqq/zqq_600to800/",
-        'zqq_800toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/zqq/zqq_800toInf/",
+        'zqq_200to400':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/zqq/zqq_200to400/",
+        'zqq_400to600':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/zqq/zqq_400to600/",
+        'zqq_600to800':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/zqq/zqq_600to800/",
+        'zqq_800toInf':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/zqq/zqq_800toInf/",
     }
 
     signal_paths = {
-        'hgg':"/project01/ndcms/cmoore24/skims/fatjet_skims/hgg/",
-        'hbb':"/project01/ndcms/cmoore24/skims/fatjet_skims/hbb/"
+        'hgg':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/hgg/",
+        'hbb':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/hbb/"
     }
 
 
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     )[0]
     qcd_compute_stop = time.time()
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"QCD Compute Complete: {(qcd_compute_stop-qcd_compute_start)/60:.2f} minutes")
     print('\n')
@@ -222,7 +222,7 @@ if __name__ == "__main__":
     )[0]
     diboson_compute_stop = time.time()
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"Diboson Compute Complete: {(diboson_compute_stop-diboson_compute_start)/60:.2f} minutes")
     print('\n')
@@ -240,7 +240,7 @@ if __name__ == "__main__":
     )[0]
     singletop_compute_stop = time.time()
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"Singletop Compute Complete: {(singletop_compute_stop-singletop_compute_start)/60:.2f} minutes")
     print('\n')
@@ -258,7 +258,7 @@ if __name__ == "__main__":
     )[0]
     ttboosted_compute_stop = time.time()
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"ttboosted Compute Complete: {(ttboosted_compute_stop-ttboosted_compute_start)/60:.2f} minutes")
     print('\n')
@@ -276,7 +276,7 @@ if __name__ == "__main__":
     )[0]
     wqq_compute_stop = time.time()
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"Wqq Compute Complete: {(wqq_compute_stop-wqq_compute_start)/60:.2f} minutes")
     print('\n')
@@ -294,7 +294,7 @@ if __name__ == "__main__":
     )[0]
     zqq_compute_stop = time.time()
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     del(output)
     print(f"Zqq Compute Complete: {(zqq_compute_stop-zqq_compute_start)/60:.2f} minutes")
     print('\n')
@@ -311,7 +311,7 @@ if __name__ == "__main__":
         lib_resources={'cores': 12, 'slots': 12},
     )[0]
     for i in output:
-        output[i].to_parquet(f'parquet/{i}.parquet', engine='fastparquet')
+        output[i].to_parquet(f'parquet/no_subcut/{i}.parquet', engine='fastparquet')
     signal_compute_stop = time.time()
     print(f"Signal Compute Complete: {(signal_compute_stop-signal_compute_start)/60:.2f} minutes")
     print('\n')

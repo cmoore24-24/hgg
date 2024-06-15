@@ -90,18 +90,57 @@ if __name__ == "__main__":
             fatjetSelect = (
                 (events.FatJet.pt > 400)
                 #& (events.FatJet.pt < 800)
-                & (events.FatJet.num_subjets >= 3)
+                #& (events.FatJet.num_subjets >= 3)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (higgs_jets)
             )
+
+        elif ('wqq' in dataset):
+            print('wqq background')
+            genw = events.GenPart[
+                (abs(events.GenPart.pdgId) == 24)
+                & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
+            ]
+            parents = events.FatJet.nearest(genw, threshold=0.2)
+            w_jets = ~ak.is_none(parents, axis=1)
+
+            fatjetSelect = (
+                (events.FatJet.pt > 400)
+                #& (events.FatJet.pt < 800)
+                #& (events.FatJet.num_subjets >= 3)
+                & (abs(events.FatJet.eta) < 2.4)
+                & (events.FatJet.msoftdrop > 40)
+                & (events.FatJet.msoftdrop < 200)
+                & (w_jets)
+            )
+
+        elif ('zqq' in dataset):
+            print('zqq background')
+            genz = events.GenPart[
+                (events.GenPart.pdgId == 23)
+                & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
+            ]
+            parents = events.FatJet.nearest(genz, threshold=0.2)
+            z_jets = ~ak.is_none(parents, axis=1)
+
+            fatjetSelect = (
+                (events.FatJet.pt > 400)
+                #& (events.FatJet.pt < 800)
+                #& (events.FatJet.num_subjets >= 3)
+                & (abs(events.FatJet.eta) < 2.4)
+                & (events.FatJet.msoftdrop > 40)
+                & (events.FatJet.msoftdrop < 200)
+                & (z_jets)
+            )
+    
         else:
             print('background')
             fatjetSelect = (
                 (events.FatJet.pt > 400)
                 #& (events.FatJet.pt < 800)
-                & (events.FatJet.num_subjets >= 3)
+                #& (events.FatJet.num_subjets >= 3)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
@@ -167,14 +206,14 @@ if __name__ == "__main__":
 
         skim_task = dak.to_parquet(
             skim,
-            f"/project01/ndcms/cmoore24/skims/fatjet_skims/ttboosted/{dataset}/",
+            f"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/zqq/{dataset}/",
             compute=False,
         )
         return skim_task
 
 
     subset = {}
-    to_skim = 'ttboosted_700to1000'
+    to_skim = 'zqq_600to800'
     subset[to_skim] = samples_ready[to_skim]
     files = subset[to_skim]['files']
     form = subset[to_skim]['form']
