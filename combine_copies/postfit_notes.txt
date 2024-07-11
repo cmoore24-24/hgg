@@ -1,0 +1,7 @@
+Link to Postfit Github: 
+	https://github.com/andrzejnovak/combine_postfits/tree/master
+
+Basic Run Command:
+	combine_postfits -i fitDiagnostics.root
+
+ 

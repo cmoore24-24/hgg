@@ -1,0 +1,20 @@
+cmsrel CMSSW_13_3_2
+cd CMSSW_13_3_2/src/
+cmsenv
+git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+scram b -j4
+
+combine -h
+
+git clone git@github.com:nsmith-/rhalphalib.git
+
+http://cms-sw.github.io/venv.html
+
+scram-venv
+cmsenv
+python3 -m pip install https://github.com/nsmith-/rhalphalib/archive/master.zip
+
+python3 test_rhalphalib.py
+cd tmp/testModel
+. build.sh
+combine -M FitDiagnostics model_combined.root --saveShapes

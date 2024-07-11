@@ -97,8 +97,8 @@ if __name__ == "__main__":
                 & (higgs_jets)
             )
 
-        elif ('wqq' in dataset):
-            print('wqq background')
+        elif ('wqq' in dataset) or ('ww' in dataset):
+            print('w background')
             genw = events.GenPart[
                 (abs(events.GenPart.pdgId) == 24)
                 & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
@@ -116,8 +116,8 @@ if __name__ == "__main__":
                 & (w_jets)
             )
 
-        elif ('zqq' in dataset):
-            print('zqq background')
+        elif ('zqq' in dataset) or ('zz' in dataset):
+            print('z background')
             genz = events.GenPart[
                 (events.GenPart.pdgId == 23)
                 & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
@@ -133,6 +133,25 @@ if __name__ == "__main__":
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (z_jets)
+            )
+
+        elif ('wz' in dataset):
+            print('wz background')
+            genwz = events.GenPart[
+                ((abs(events.GenPart.pdgId) == 24)|(events.GenPart.pdgId == 23))
+                & events.GenPart.hasFlags(["fromHardProcess", "isLastCopy"])
+            ]
+            parents = events.FatJet.nearest(genwz, threshold=0.2)
+            wz_jets = ~ak.is_none(parents, axis=1)
+
+            fatjetSelect = (
+                (events.FatJet.pt > 400)
+                #& (events.FatJet.pt < 800)
+                #& (events.FatJet.num_subjets >= 3)
+                & (abs(events.FatJet.eta) < 2.4)
+                & (events.FatJet.msoftdrop > 40)
+                & (events.FatJet.msoftdrop < 200)
+                & (wz_jets)
             )
     
         else:
@@ -206,14 +225,14 @@ if __name__ == "__main__":
 
         skim_task = dak.to_parquet(
             skim,
-            f"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/zqq/{dataset}/",
+            f"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/{dataset}/",
             compute=False,
         )
         return skim_task
 
 
     subset = {}
-    to_skim = 'zqq_600to800'
+    to_skim = 'diboson_zz'
     subset[to_skim] = samples_ready[to_skim]
     files = subset[to_skim]['files']
     form = subset[to_skim]['form']
