@@ -62,9 +62,10 @@ if __name__ == "__main__":
     # }
 
     diboson_paths = {
-        'ww':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_ww/",
-        'zz':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_zz/",
-        'wz':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_wz/",
+        # 'ww':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_ww/",
+        # 'zz':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_zz/",
+        # 'wz':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_wz/",
+        'ww4q':"/project01/ndcms/cmoore24/skims/fatjet_skims/no_nsub_cut/diboson/diboson_ww4q/",
     }
 
     # singletop_path = {

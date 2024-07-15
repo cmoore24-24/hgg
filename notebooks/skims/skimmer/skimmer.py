@@ -29,7 +29,7 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore", "Please ensure")
     warnings.filterwarnings("ignore", "invalid value")
     
-    # with open('output_datasets2.json', 'r') as f:
+    # with open('input_datasets.json', 'r') as f:
     #     samples = json.load(f)
     # print(type(samples))
 
@@ -47,16 +47,24 @@ if __name__ == "__main__":
     #     )
     #     return samples_ready
 
-    # samples_ready = sampler(dask.delayed(samples))
+    # sampler_dict = {}
+    # for i in samples:
+    #     sampler_dict[i] = sampler(samples[i])
 
-    # samples_ready = samples_ready.compute(
+    # print('Compute')
+    # samples_postprocess = dask.compute(
+    #     sampler_dict,
     #     scheduler=m.get,
     #     resources={"cores": 1},
     #     resources_mode=None,
     #     lazy_transfers=True,
     #     #task_mode="function_calls",
     #     lib_resources={'cores': 12, 'slots': 12},
-    # )
+    # )[0]
+
+    # samples_ready = {}
+    # for i in samples_postprocess:
+    #     samples_ready[i] = samples_postprocess[i]['files']
 
     # sample_stop = time.time()
     # print('samples done')
@@ -232,7 +240,7 @@ if __name__ == "__main__":
 
 
     subset = {}
-    to_skim = 'diboson_zz'
+    to_skim = 'diboson_ww4q'
     subset[to_skim] = samples_ready[to_skim]
     files = subset[to_skim]['files']
     form = subset[to_skim]['form']
