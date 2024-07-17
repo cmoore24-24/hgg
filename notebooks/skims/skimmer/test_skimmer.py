@@ -79,12 +79,17 @@ if __name__ == "__main__":
     def analysis(events):
         dataset = events.metadata["dataset"]
         print(dataset)
+
+        events['PFCands', 'pt'] = (
+            events.PFCands.pt
+            * events.PFCands.puppiWeight
+        )
         
         cut_to_fix_softdrop = (ak.num(events.FatJet.constituents.pf, axis=2) > 0)
         events = events[ak.all(cut_to_fix_softdrop, axis=1)]
 
-        num_sub = ak.unflatten(num_subjets(events.FatJet, cluster_val=0.4), counts=ak.num(events.FatJet))
-        events['FatJet', 'num_subjets'] = num_sub
+        # num_sub = ak.unflatten(num_subjets(events.FatJet, cluster_val=0.4), counts=ak.num(events.FatJet))
+        # events['FatJet', 'num_subjets'] = num_sub
 
         if ('hgg' in dataset) or ('hbb' in dataset):
             print("signal")
@@ -172,13 +177,10 @@ if __name__ == "__main__":
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
             )
-
-        events['PFCands', 'pt'] = (
-                events.PFCands.pt
-                * events.PFCands.puppiWeight
-            )
         
         events["goodjets"] = events.FatJet[fatjetSelect]
+        mask = ~ak.is_none(ak.firsts(events.goodjets))
+        events = events[mask]
         
         # events = events[
         #     ak.any(fatjetSelect, axis=1)
@@ -233,7 +235,7 @@ if __name__ == "__main__":
 
         skim_task = dak.to_parquet(
             events,
-            f"/project01/ndcms/cmoore24/skims/test/{dataset}/",
+            f"/project01/ndcms/cmoore24/skims/test/{dataset}2/",
             compute=False,
         )
         return skim_task

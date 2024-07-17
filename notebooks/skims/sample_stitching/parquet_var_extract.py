@@ -106,7 +106,7 @@ if __name__ == "__main__":
         start = time.time()
         path = signal_paths[i]
         filelist = os.listdir(path)
-        signal_dak[i] = dak.concatenate([dak.from_parquet(f"{path}{f}")['goodjets'] for f in filelist])[vars]
+        signal_dak[i] = ak.concatenate([dak.from_parquet(f"{path}{f}")['goodjets'] for f in filelist])[vars]
         stop = time.time()
         print(f"{i} compiled, {len(filelist)} files: {(stop - start)/60:.2f} minutes")
     signal_stop = time.time()
@@ -296,6 +296,7 @@ if __name__ == "__main__":
     print('Signal Compute Start')
     output = dask.compute(
         signal_dak,
+        optimize_graph=False,
         scheduler=m.get,
         resources={"cores": 1},
         resources_mode=None,
