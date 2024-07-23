@@ -16,12 +16,13 @@ full_start = time.time()
 
 if __name__ == "__main__":
     m = DaskVine(
-        [9123, 9128],
+        [8123, 9128],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info",
     )
 
     m.tune("temp-replica-count", 3)
+    #m.tune("transfer-temps-recovery", 1)
     
     warnings.filterwarnings("ignore", "Found duplicate branch")
     warnings.filterwarnings("ignore", "Missing cross-reference index for")
@@ -277,6 +278,7 @@ if __name__ == "__main__":
             resources={"cores": 1},
             resources_mode=None,
             lazy_transfers=True,
+            #prune_files=True,
             #task_mode="function_calls",
             lib_resources={'cores': 12, 'slots': 12},
         )
