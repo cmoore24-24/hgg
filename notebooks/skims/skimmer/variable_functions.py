@@ -125,13 +125,13 @@ def d3_calc(fatjet):
     softdrop = cluster.exclusive_jets_softdrop_grooming()
     softdrop_cluster = fastjet.ClusterSequence(softdrop.constituents, jetdef)
     e4 = softdrop_cluster.exclusive_jets_energy_correlator(
-        func="generic", normalized=True, npoint=4
+        func="generic", normalized=True, npoint=4,
     )
     e2 = softdrop_cluster.exclusive_jets_energy_correlator(
-        func="generic", normalized=True, npoint=2
+        func="generic", normalized=True, npoint=2,
     )
     e3 = softdrop_cluster.exclusive_jets_energy_correlator(
-        func="generic", normalized=True, npoint=3
+        func="generic", normalized=True, npoint=3,
     )
     d3 = (e4 * (e2**3)) / (e3**3)
     return d3
@@ -151,3 +151,16 @@ def u_calc(fatjet, n):
     if n == 3:
         u = softdrop_cluster.exclusive_jets_energy_correlator(func="u3")
     return u
+
+def make_ecf(fatjet, n, v, b):
+    jetdef = fastjet.JetDefinition(
+        fastjet.cambridge_algorithm, 0.8
+    )
+    pf = ak.flatten(fatjet.constituents.pf, axis=1)
+    cluster = fastjet.ClusterSequence(pf, jetdef)
+    softdrop = cluster.exclusive_jets_softdrop_grooming()
+    softdrop_cluster = fastjet.ClusterSequence(softdrop.constituents, jetdef)
+    ecf = softdrop_cluster.exclusive_jets_energy_correlator(
+        func='generic', npoint=n, angles=v, beta=b, normalized=True,
+    )
+    return ecf

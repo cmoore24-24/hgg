@@ -11,18 +11,19 @@ import time
 import os
 import warnings
 from variable_functions import *
+import scipy
 
 full_start = time.time()
 
 if __name__ == "__main__":
     m = DaskVine(
-        [8123, 9128],
+        [9123, 9128],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info",
     )
 
-    m.tune("temp-replica-count", 3)
-    #m.tune("transfer-temps-recovery", 1)
+    #m.tune("temp-replica-count", 3)
+    m.tune("transfer-temps-recovery", 1)
     
     warnings.filterwarnings("ignore", "Found duplicate branch")
     warnings.filterwarnings("ignore", "Missing cross-reference index for")
@@ -182,46 +183,54 @@ if __name__ == "__main__":
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
-        
+        events['goodjets', '1e2^0.5'] = make_ecf(events.goodjets, n=2, v=1, b=0.5)
+        events['ecfs'] = events.goodjets[[x for x in ak.fields(events.goodjets) if x == '1e2^0.5']]
         # events = events[
         #     ak.any(fatjetSelect, axis=1)
         # ]
 
-        events['goodjets', 'color_ring'] = ak.unflatten(
-             color_ring(events.goodjets, cluster_val=0.4), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'color_ring'] = ak.unflatten(
+        #      color_ring(events.goodjets, cluster_val=0.4), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'd2b1'] = ak.unflatten(
-             d2_calc(events.goodjets), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'd2b1'] = ak.unflatten(
+        #      d2_calc(events.goodjets), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'u1'] = ak.unflatten(
-             u_calc(events.goodjets, 1), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'u1'] = ak.unflatten(
+        #      u_calc(events.goodjets, 1), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'u2'] = ak.unflatten(
-             u_calc(events.goodjets, 2), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'u2'] = ak.unflatten(
+        #      u_calc(events.goodjets, 2), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'u3'] = ak.unflatten(
-             u_calc(events.goodjets, 3), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'u3'] = ak.unflatten(
+        #      u_calc(events.goodjets, 3), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'd3'] = ak.unflatten(
-             d3_calc(events.goodjets), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'd3'] = ak.unflatten(
+        #      d3_calc(events.goodjets), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'm2'] = ak.unflatten(
-             m2_calc(events.goodjets), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'm2'] = ak.unflatten(
+        #      m2_calc(events.goodjets), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'm3'] = ak.unflatten(
-             m3_calc(events.goodjets), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'm3'] = ak.unflatten(
+        #      m3_calc(events.goodjets), counts=ak.num(events.goodjets)
+        # )
 
-        events['goodjets', 'n4'] = ak.unflatten(
-             n4_calc(events.goodjets), counts=ak.num(events.goodjets)
-        )
+        # events['goodjets', 'n4'] = ak.unflatten(
+        #      n4_calc(events.goodjets), counts=ak.num(events.goodjets)
+        # )
+
+
+        for n in range(2,6):
+            for v in range(1, int(scipy.special.binom(n, 2))+1):
+                for b in range(5, 45, 5):
+                    ecf_name = f'{v}e{n}^{b/10}'
+                    events['ecfs', ecf_name] = make_ecf(events.goodjets, n=n, v=v, b=b/10)
         
         # skim = ak.zip(
         #     {
@@ -271,14 +280,15 @@ if __name__ == "__main__":
         schemaclass = PFNanoAODSchema,
     )
 
+
     print('start compute')
-    computed, report = dask.compute(
-            *tasks,
+    computed = dask.compute(
+            tasks[0],
             scheduler=m.get,
             resources={"cores": 1},
             resources_mode=None,
             lazy_transfers=True,
-            #prune_files=True,
+            prune_files=True,
             #task_mode="function_calls",
             lib_resources={'cores': 12, 'slots': 12},
         )
