@@ -17,12 +17,12 @@ full_start = time.time()
 
 if __name__ == "__main__":
     m = DaskVine(
-        [9123, 9128],
+        [8123, 8128],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info",
     )
 
-    #m.tune("temp-replica-count", 3)
+    m.tune("temp-replica-count", 1)
     m.tune("transfer-temps-recovery", 1)
     
     warnings.filterwarnings("ignore", "Found duplicate branch")
@@ -33,7 +33,6 @@ if __name__ == "__main__":
     
     # with open('input_datasets.json', 'r') as f:
     #     samples = json.load(f)
-    # print(type(samples))
 
     # print('doing samples')
     # sample_start = time.time()
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     # def sampler(samples):
     #     samples_ready, samples = dataset_tools.preprocess(
     #         samples,
-    #         step_size=50_000,
+    #         step_size=3_000,
     #         skip_bad_files=True,
     #         recalculate_steps=True,
     #         save_form=False,
@@ -59,6 +58,7 @@ if __name__ == "__main__":
     #     scheduler=m.get,
     #     resources={"cores": 1},
     #     resources_mode=None,
+    #     prune_files=True,
     #     lazy_transfers=True,
     #     #task_mode="function_calls",
     #     lib_resources={'cores': 12, 'slots': 12},
@@ -183,55 +183,52 @@ if __name__ == "__main__":
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
-        events['goodjets', '1e2^0.5'] = make_ecf(events.goodjets, n=2, v=1, b=0.5)
-        events['ecfs'] = events.goodjets[[x for x in ak.fields(events.goodjets) if x == '1e2^0.5']]
-        # events = events[
-        #     ak.any(fatjetSelect, axis=1)
-        # ]
-
-        # events['goodjets', 'color_ring'] = ak.unflatten(
-        #      color_ring(events.goodjets, cluster_val=0.4), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'd2b1'] = ak.unflatten(
-        #      d2_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'u1'] = ak.unflatten(
-        #      u_calc(events.goodjets, 1), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'u2'] = ak.unflatten(
-        #      u_calc(events.goodjets, 2), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'u3'] = ak.unflatten(
-        #      u_calc(events.goodjets, 3), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'd3'] = ak.unflatten(
-        #      d3_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'm2'] = ak.unflatten(
-        #      m2_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'm3'] = ak.unflatten(
-        #      m3_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-
-        # events['goodjets', 'n4'] = ak.unflatten(
-        #      n4_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-
-
-        for n in range(2,6):
-            for v in range(1, int(scipy.special.binom(n, 2))+1):
-                for b in range(5, 45, 5):
-                    ecf_name = f'{v}e{n}^{b/10}'
-                    events['ecfs', ecf_name] = make_ecf(events.goodjets, n=n, v=v, b=b/10)
+        ecfs = {}
         
+        events['goodjets', 'color_ring'] = ak.unflatten(
+             color_ring(events.goodjets, cluster_val=0.4), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'd2b1'] = ak.unflatten(
+             d2_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'u1'] = ak.unflatten(
+             u_calc(events.goodjets, 1), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'u2'] = ak.unflatten(
+             u_calc(events.goodjets, 2), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'u3'] = ak.unflatten(
+             u_calc(events.goodjets, 3), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'd3'] = ak.unflatten(
+             d3_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'm2'] = ak.unflatten(
+             m2_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'm3'] = ak.unflatten(
+             m3_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
+        
+        events['goodjets', 'n4'] = ak.unflatten(
+             n4_calc(events.goodjets), counts=ak.num(events.goodjets)
+        )
+
+        # for n in range(2,6):
+        #     for v in range(1, int(scipy.special.binom(n, 2))+1):
+        #         for b in range(5, 45, 5):
+        #             ecf_name = f'{v}e{n}^{b/10}'
+        #             ecfs[ecf_name] = make_ecf(events.goodjets, n=n, v=v, b=b/10)
+
+        # events["ecfs"] = ak.zip(ecfs)
+
         # skim = ak.zip(
         #     {
         #         "FatJets": ak.flatten(events.goodjets, axis=1),
