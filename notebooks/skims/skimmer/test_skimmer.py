@@ -31,49 +31,49 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore", "Please ensure")
     warnings.filterwarnings("ignore", "invalid value")
     
-    # with open('input_datasets.json', 'r') as f:
-    #     samples = json.load(f)
+    with open('input_datasets.json', 'r') as f:
+        samples = json.load(f)
 
-    # print('doing samples')
-    # sample_start = time.time()
+    print('doing samples')
+    sample_start = time.time()
 
-    # @dask.delayed
-    # def sampler(samples):
-    #     samples_ready, samples = dataset_tools.preprocess(
-    #         samples,
-    #         step_size=3_000,
-    #         skip_bad_files=True,
-    #         recalculate_steps=True,
-    #         save_form=False,
-    #     )
-    #     return samples_ready
+    @dask.delayed
+    def sampler(samples):
+        samples_ready, samples = dataset_tools.preprocess(
+            samples,
+            step_size=3_000,
+            skip_bad_files=True,
+            recalculate_steps=True,
+            save_form=False,
+        )
+        return samples_ready
 
-    # sampler_dict = {}
-    # for i in samples:
-    #     sampler_dict[i] = sampler(samples[i])
+    sampler_dict = {}
+    for i in samples:
+        sampler_dict[i] = sampler(samples[i])
 
-    # print('Compute')
-    # samples_postprocess = dask.compute(
-    #     sampler_dict,
-    #     scheduler=m.get,
-    #     resources={"cores": 1},
-    #     resources_mode=None,
-    #     prune_files=True,
-    #     lazy_transfers=True,
-    #     #task_mode="function_calls",
-    #     lib_resources={'cores': 12, 'slots': 12},
-    # )[0]
+    print('Compute')
+    samples_postprocess = dask.compute(
+        sampler_dict,
+        scheduler=m.get,
+        resources={"cores": 1},
+        resources_mode=None,
+        prune_files=True,
+        lazy_transfers=True,
+        #task_mode="function_calls",
+        lib_resources={'cores': 12, 'slots': 12},
+    )[0]
 
-    # samples_ready = {}
-    # for i in samples_postprocess:
-    #     samples_ready[i] = samples_postprocess[i]['files']
+    samples_ready = {}
+    for i in samples_postprocess:
+        samples_ready[i] = samples_postprocess[i]['files']
 
-    # sample_stop = time.time()
-    # print('samples done')
-    # print('full sample time is ' + str((sample_stop - sample_start)/60))
+    sample_stop = time.time()
+    print('samples done')
+    print('full sample time is ' + str((sample_stop - sample_start)/60))
 
-    # with open("samples_ready.json", "w") as fout:
-    #     json.dump(samples_ready, fout)
+    with open("samples_ready.json", "w") as fout:
+        json.dump(samples_ready, fout)
 
     with open("samples_ready.json", 'r') as fin:
         samples_ready = json.load(fin)
