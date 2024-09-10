@@ -30,6 +30,36 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore", "dcut")
     warnings.filterwarnings("ignore", "Please ensure")
     warnings.filterwarnings("ignore", "invalid value")
+
+######## Uncomment the following section if you need to create an input_datasets.json for new datasets ########
+
+    # samples_path = '/project01/ndcms/cmoore24/samples'  ## Change this path to where data is
+    # filelist = {}
+    # categories = os.listdir(samples_path)
+    # print(categories)
+    # for i in categories:
+    #     if '.root' in os.listdir(f'{samples_path}/{i}')[0]:
+    #         files = os.listdir(f'{samples_path}/{i}')
+    #         filelist[i] = [f'{samples_path}/{i}/{file}' for file in files]
+    #     else:
+    #         sub_cats = os.listdir(f'{samples_path}/{i}')
+    #         for j in sub_cats:
+    #             if '.root' in os.listdir(f'{samples_path}/{i}/{j}')[0]:
+    #                 files = os.listdir(f'{samples_path}/{i}/{j}')
+    #                 filelist[f'{i}_{j}'] = [f'{samples_path}/{i}/{j}/{file}' for file in files]
+
+    # input_dict = {}
+    # for i in filelist:
+    #     input_dict[i] = {}
+    #     input_dict[i]['files'] = {}
+    #     for j in filelist[i]:
+    #         input_dict[i]['files'][j] = {'object_path': 'Events'}
+
+    # with open('input_datasets.json', 'w') as fin:
+    #     json.dump(dict, fin)
+
+
+    ######## Uncomment the following section if you need to pre-process the datasets present in input_datasets.json ########
     
     # with open('input_datasets.json', 'r') as f:
     #     samples = json.load(f)
@@ -41,7 +71,7 @@ if __name__ == "__main__":
     # def sampler(samples):
     #     samples_ready, samples = dataset_tools.preprocess(
     #         samples,
-    #         step_size=5_000,
+    #         step_size=50_000, ## Change this step size to adjust the size of chunks of events
     #         skip_bad_files=True,
     #         recalculate_steps=True,
     #         save_form=False,
@@ -74,6 +104,9 @@ if __name__ == "__main__":
 
     # with open("samples_ready.json", "w") as fout:
     #     json.dump(samples_ready, fout)
+
+
+    ######## The analysis portion begins here ########
 
     with open("samples_ready.json", 'r') as fin:
         samples_ready = json.load(fin)
@@ -141,6 +174,9 @@ if __name__ == "__main__":
         # num_sub = ak.unflatten(num_subjets(events.FatJet, cluster_val=0.4), counts=ak.num(events.FatJet))
         # events['FatJet', 'num_subjets'] = num_sub
 
+        # region = nolepton ## Use this option to let more data through the cuts
+        region = onemuon ## Use this option to let less data through the cuts
+
 
         events['btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > 0.3040, axis=1)
 
@@ -160,7 +196,7 @@ if __name__ == "__main__":
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
-                & (onemuon)
+                & (region)
                 & (trigger)
             )
 
@@ -180,8 +216,8 @@ if __name__ == "__main__":
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
-                & (onemuon)
-                & (onemuon)
+                & (region)
+                & (trigger)
             )
 
         elif ('zqq' in dataset) or ('zz' in dataset):
@@ -200,7 +236,7 @@ if __name__ == "__main__":
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
-                & (onemuon)
+                & (region)
                 & (trigger)
             )
 
@@ -220,7 +256,7 @@ if __name__ == "__main__":
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
-                & (onemuon)
+                & (region)
                 & (trigger)
             )
     
@@ -232,8 +268,8 @@ if __name__ == "__main__":
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
+                & (region)
                 & (trigger)
-                & (onemuon)
             )
         
         events["goodjets"] = events.FatJet[fatjetSelect]
@@ -244,39 +280,6 @@ if __name__ == "__main__":
         events['goodjets', 'color_ring'] = ak.unflatten(
              color_ring(events.goodjets, cluster_val=0.4), counts=ak.num(events.goodjets)
         )
-        
-        # events['goodjets', 'd2b1'] = ak.unflatten(
-        #      d2_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'u1'] = ak.unflatten(
-        #      u_calc(events.goodjets, 1), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'u2'] = ak.unflatten(
-        #      u_calc(events.goodjets, 2), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'u3'] = ak.unflatten(
-        #      u_calc(events.goodjets, 3), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'd3'] = ak.unflatten(
-        #      d3_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'm2'] = ak.unflatten(
-        #      m2_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'm3'] = ak.unflatten(
-        #      m3_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-        
-        # events['goodjets', 'n4'] = ak.unflatten(
-        #      n4_calc(events.goodjets), counts=ak.num(events.goodjets)
-        # )
-
 
         jetdef = fastjet.JetDefinition(
             fastjet.cambridge_algorithm, 0.8
@@ -332,25 +335,26 @@ if __name__ == "__main__":
         skim_task = dak.to_parquet(
             #events,
             skim,
-            f"/project01/ndcms/cmoore24/skims/ecfs/singlemuon/ttboosted/{dataset}/",
+            f"/path/to/output/{dataset}/", ##Change this to where you'd like the output to be written
             compute=False,
         )
         return skim_task
 
+    ###### Uncomment this regeion if you want to run only one of the subsamples found in input_datasets.json ######
 
-    subset = {}
-    to_skim = 'ttboosted_1000toInf'
-    subset[to_skim] = samples_ready[to_skim]
-    files = subset[to_skim]['files']
-    form = subset[to_skim]['form']
-    dict_meta = subset[to_skim]['metadata']
-    keys = list(files.keys())
+    # subset = {}
+    # to_skim = 'ttboosted_1000toInf' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
+    # subset[to_skim] = samples_ready[to_skim]
+    # files = subset[to_skim]['files']
+    # form = subset[to_skim]['form']
+    # dict_meta = subset[to_skim]['metadata']
+    # keys = list(files.keys())
 
-    batch = {}
-    batch[to_skim] = {}
-    batch[to_skim]['files'] = {}
-    batch[to_skim]['form'] = form
-    batch[to_skim]['metadata'] = dict_meta
+    # batch = {}
+    # batch[to_skim] = {}
+    # batch[to_skim]['files'] = {}
+    # batch[to_skim]['form'] = form
+    # batch[to_skim]['metadata'] = dict_meta
 
     #for i in range(0, len(files)):
     for i in range(len(files)):
@@ -358,10 +362,8 @@ if __name__ == "__main__":
     
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        #dataset_tools.slice_files(samples_ready, slice(None, 20)),
-        #dataset_tools.slice_files(batch, slice(None, 225, None)),
-        #samples_ready,
-        batch,
+        #samples_ready, ## Run over all subsamples in input_datasets.json
+        batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )#[0]
