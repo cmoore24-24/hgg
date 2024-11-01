@@ -12,13 +12,18 @@ import os
 import warnings
 from variable_functions import *
 import scipy
+import pickle
+import argparse
 
 full_start = time.time()
+parser = argparse.ArgumentParser(description='Run ECF Skimmer')
+parser.add_argument("to_skim", type=str, help='Name of dataset to process')
+args = parser.parse_args()
 
 if __name__ == "__main__":
     m = DaskVine(
-        [9123, 9128],
-        name=f"{os.environ['USER']}-hgg2",
+        [9100, 9200],
+        name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info",
     )
 
@@ -61,49 +66,49 @@ if __name__ == "__main__":
 
     ######## Uncomment the following section if you need to pre-process the datasets present in input_datasets.json ########
     
-    # with open('input_datasets.json', 'r') as f:
-    #     samples = json.load(f)
+    with open('input_datasets.json', 'r') as f:
+        samples = json.load(f)
 
-    # print('doing samples')
-    # sample_start = time.time()
+    print('doing samples')
+    sample_start = time.time()
 
-    # @dask.delayed
-    # def sampler(samples):
-    #     samples_ready, samples = dataset_tools.preprocess(
-    #         samples,
-    #         step_size=50_000, ## Change this step size to adjust the size of chunks of events
-    #         skip_bad_files=True,
-    #         recalculate_steps=True,
-    #         save_form=False,
-    #     )
-    #     return samples_ready
+    @dask.delayed
+    def sampler(samples):
+        samples_ready, samples = dataset_tools.preprocess(
+            samples,
+            step_size=1_000, ## Change this step size to adjust the size of chunks of events
+            skip_bad_files=True,
+            recalculate_steps=True,
+            save_form=False,
+        )
+        return samples_ready
 
-    # sampler_dict = {}
-    # for i in samples:
-    #     sampler_dict[i] = sampler(samples[i])
+    sampler_dict = {}
+    for i in samples:
+        sampler_dict[i] = sampler(samples[i])
 
-    # print('Compute')
-    # samples_postprocess = dask.compute(
-    #     sampler_dict,
-    #     scheduler=m.get,
-    #     resources={"cores": 1},
-    #     resources_mode=None,
-    #     prune_files=True,
-    #     lazy_transfers=True,
-    #     #task_mode="function_calls",
-    #     lib_resources={'cores': 12, 'slots': 12},
-    # )[0]
+    print('Compute')
+    samples_postprocess = dask.compute(
+        sampler_dict,
+        scheduler=m.get,
+        resources={"cores": 1},
+        resources_mode=None,
+        prune_files=True,
+        lazy_transfers=True,
+        #task_mode="function_calls",
+        lib_resources={'cores': 12, 'slots': 12},
+    )[0]
 
-    # samples_ready = {}
-    # for i in samples_postprocess:
-    #     samples_ready[i] = samples_postprocess[i]['files']
+    samples_ready = {}
+    for i in samples_postprocess:
+        samples_ready[i] = samples_postprocess[i]['files']
 
-    # sample_stop = time.time()
-    # print('samples done')
-    # print('full sample time is ' + str((sample_stop - sample_start)/60))
+    sample_stop = time.time()
+    print('samples done')
+    print('full sample time is ' + str((sample_stop - sample_start)/60))
 
-    # with open("samples_ready.json", "w") as fout:
-    #     json.dump(samples_ready, fout)
+    with open("samples_ready.json", "w") as fout:
+        json.dump(samples_ready, fout)
 
 
     ######## The analysis portion begins here ########
@@ -163,7 +168,7 @@ if __name__ == "__main__":
             axis=1,
         )
 
-        # nolepton = ((nmuons == 0) & (nelectrons == 0) & (ntaus == 0))
+        nolepton = ((nmuons == 0) & (nelectrons == 0) & (ntaus == 0))
 
         onemuon = ((nmuons == 1) & (nelectrons == 0) & (ntaus == 0))
         # muonkin = ((leadingmuon.pt > 55.) & (abs(leadingmuon.eta) < 2.1))
@@ -174,8 +179,8 @@ if __name__ == "__main__":
         # num_sub = ak.unflatten(num_subjets(events.FatJet, cluster_val=0.4), counts=ak.num(events.FatJet))
         # events['FatJet', 'num_subjets'] = num_sub
 
-        # region = nolepton ## Use this option to let more data through the cuts
-        region = onemuon ## Use this option to let less data through the cuts
+        region = nolepton ## Use this option to let more data through the cuts
+        # region = onemuon ## Use this option to let less data through the cuts
 
 
         events['btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > 0.3040, axis=1)
@@ -188,16 +193,18 @@ if __name__ == "__main__":
             ]
             parents = events.FatJet.nearest(genhiggs, threshold=0.2)
             higgs_jets = ~ak.is_none(parents, axis=1)
-            events['GenMatch_Mask'] = higgs_jets
+            #events['GenMatch_Mask'] = higgs_jets
 
             fatjetSelect = (
-                (events.FatJet.pt > 400)
-                #& (events.FatJet.pt < 1200)
+                (events.FatJet.pt > 450)
+                & (events.FatJet.pt < 600)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (region)
                 & (trigger)
+                & (higgs_jets)
+                & (events.btag_count == 0)
             )
 
         elif ('wqq' in dataset) or ('ww' in dataset):
@@ -211,13 +218,15 @@ if __name__ == "__main__":
             events['GenMatch_Mask'] = w_jets
 
             fatjetSelect = (
-                (events.FatJet.pt > 400)
-                #& (events.FatJet.pt < 1200)
+                (events.FatJet.pt > 450)
+                & (events.FatJet.pt < 600)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (region)
                 & (trigger)
+                & (events.btag_count == 0)
+                & (w_jets)
             )
 
         elif ('zqq' in dataset) or ('zz' in dataset):
@@ -231,13 +240,15 @@ if __name__ == "__main__":
             events['GenMatch_Mask'] = z_jets
 
             fatjetSelect = (
-                (events.FatJet.pt > 400)
-                #& (events.FatJet.pt < 1200)
+                (events.FatJet.pt > 450)
+                & (events.FatJet.pt < 600)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (region)
                 & (trigger)
+                & (events.btag_count == 0)
+                & (z_jets)
             )
 
         elif ('wz' in dataset):
@@ -251,25 +262,28 @@ if __name__ == "__main__":
             events['GenMatch_Mask'] = wz_jets
 
             fatjetSelect = (
-                (events.FatJet.pt > 400)
-                #& (events.FatJet.pt < 1200)
+                (events.FatJet.pt > 450)
+                & (events.FatJet.pt < 600)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (region)
                 & (trigger)
+                & (events.btag_count == 0)
+                & (wz_jets)
             )
     
         else:
             print('background')
             fatjetSelect = (
-                (events.FatJet.pt > 400)
-                #& (events.FatJet.pt < 1200)
+                (events.FatJet.pt > 450)
+                & (events.FatJet.pt < 600)
                 & (abs(events.FatJet.eta) < 2.4)
                 & (events.FatJet.msoftdrop > 40)
                 & (events.FatJet.msoftdrop < 200)
                 & (region)
                 & (trigger)
+                & (events.btag_count == 0)
             )
         
         events["goodjets"] = events.FatJet[fatjetSelect]
@@ -295,9 +309,10 @@ if __name__ == "__main__":
                     ecf_name = f'{v}e{n}^{b/10}'
                     ecfs[ecf_name] = ak.unflatten(
                         softdrop_cluster.exclusive_jets_energy_correlator(
-                            func='generic', npoint=n, angles=v, beta=b/10), 
+                            func='generic', npoint=n, angles=v, beta=b/10, normalized=True), 
                         counts=ak.num(events.goodjets)
                     )
+        
         events["ecfs"] = ak.zip(ecfs)
 
         if (('hgg' in dataset) or ('hbb' in dataset) or ('wqq' in dataset) or ('ww' in dataset) or ('zqq' in dataset) or ('zz' in dataset) or ('wz' in dataset)):
@@ -308,10 +323,10 @@ if __name__ == "__main__":
                     "ECFs": events.ecfs,
                     "msoftdrop": events.goodjets.msoftdrop,
                     "pt": events.goodjets.pt,
-                    "btag_ak4s": events.btag_count,
+                    #"btag_ak4s": events.btag_count,
                     "pn_HbbvsQCD": events.goodjets.particleNet_HbbvsQCD,
                     "pn_md": events.goodjets.particleNetMD_QCD,
-                    "matching": events.GenMatch_Mask,
+                    #"matching": events.GenMatch_Mask,
                     
                 },
                 depth_limit=1,
@@ -323,7 +338,7 @@ if __name__ == "__main__":
                     "ECFs": events.ecfs,
                     "msoftdrop": events.goodjets.msoftdrop,
                     "pt": events.goodjets.pt,
-                    "btag_ak4s": events.btag_count,
+                    #"btag_ak4s": events.btag_count,
                     "pn_HbbvsQCD": events.goodjets.particleNet_HbbvsQCD,
                     "pn_md": events.goodjets.particleNetMD_QCD,
                     
@@ -335,15 +350,18 @@ if __name__ == "__main__":
         skim_task = dak.to_parquet(
             #events,
             skim,
-            f"/path/to/output/{dataset}/", ##Change this to where you'd like the output to be written
+            f"/project01/ndcms/cmoore24/skims/ecfs/nolepton/hgg400/individual_files/{dataset}/", ##Change this to where you'd like the output to be written
             compute=False,
         )
         return skim_task
 
     ###### Uncomment this regeion if you want to run only one of the subsamples found in input_datasets.json ######
 
+
+    
+    
     # subset = {}
-    # to_skim = 'ttboosted_1000toInf' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
+    # to_skim = args.to_skim ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     # subset[to_skim] = samples_ready[to_skim]
     # files = subset[to_skim]['files']
     # form = subset[to_skim]['form']
@@ -356,14 +374,15 @@ if __name__ == "__main__":
     # batch[to_skim]['form'] = form
     # batch[to_skim]['metadata'] = dict_meta
 
-    #for i in range(0, len(files)):
-    for i in range(len(files)):
-        batch[to_skim]['files'][keys[i]] = files[keys[i]]
+    # for i in range(156, 389):
+    # for i in range(len(files)):
+    #     batch[to_skim]['files'][keys[i]] = files[keys[i]]
     
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        #samples_ready, ## Run over all subsamples in input_datasets.json
-        batch, ## Run over only the subsample specified as the "to_skim" string
+        #dataset_tools.slice_files(batch, slice(None, 5)),
+        samples_ready, ## Run over all subsamples in input_datasets.json
+        #batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )#[0]
