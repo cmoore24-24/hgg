@@ -1,0 +1,17 @@
+universe = vanilla
+
+Log    = ./logs/$(Cluster)_$(Process).log
+
+request_gpus   = 1
+request_memory = 1 GB
+request_cpus   = 1
+request_disk   = 1 GB
+
++IsA100 = False
+
+queue arguments from (
+    32 256 3 5
+#    32 256 3 30
+#    32 256 3 40
+#    32 256 3 60
+)

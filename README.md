@@ -9,4 +9,4 @@ Installed Packages:
 
 Other important packages (awkward, hist, etc) will most likely come along with the above
 
-Note: A separate conda environment that includes pytorch is used for the ML work
+All herein work done on Notre Dame resources. Includes copies of Machine Learning work done seperately on Notre Dame's CAML nodes, which utilize different environments.
