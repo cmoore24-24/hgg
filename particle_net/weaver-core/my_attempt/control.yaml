@@ -1,0 +1,123 @@
+#treename: 'Events'
+selection:
+   ### use `&`, `|`, `~` for logical operations on numpy arrays
+   ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
+
+
+test_time_selection:
+   # (np.abs(jet_eta)<4.7) & (jet_pt>15) & (jet_pt<1000) & (event_no%7==0)
+   # (np.abs(jet_eta)<4.7) & (jet_pt>15) & (jet_pt<1000)
+   # (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)
+
+new_variables:
+   ### [format] name: formula
+   ### can use functions from `math`, `np` (numpy), and `awkward` in the expression
+   pfcand_mask: ak.ones_like(pfcand_eta)
+   sv_mask: ak.ones_like(sv_eta)
+   # probHgg:   (label_H_gg==1)
+   # probQCD:   (label_QCD==1) 
+   # probWqq:   (label_Wqq==1)
+
+
+preprocess:
+  ### method: [manual, auto] - whether to use manually specified parameters for variable standardization
+  method: auto
+  ### data_fraction: fraction of events to use when calculating the mean/scale for the standardization
+  data_fraction: 
+
+inputs:
+   pf_points:
+      length: 100
+      vars: 
+         - pfcand_eta
+         - pfcand_phi
+   pf_features:
+      length: 100
+      vars: 
+      ### [format 1]: var_name (no transformation)
+      ### [format 2]: [var_name, 
+      ###              subtract_by(optional, default=None, no transf. if preprocess.method=manual, auto transf. if preprocess.method=auto), 
+      ###              multiply_by(optional, default=1), 
+      ###              clip_min(optional, default=-5), 
+      ###              clip_max(optional, default=5), 
+      ###              pad_value(optional, default=0)]
+         - pfcand_charge
+         - pfcand_d0
+         - pfcand_dz
+         - pfcand_lostInnerHits
+         - pfcand_pt
+   pf_mask:
+      length: 100
+      vars: 
+         - pfcand_mask
+   sv_points:
+      length: 10
+      vars:
+         - sv_eta
+         - sv_phi
+   sv_features:
+      length: 10
+      vars:
+         - sv_dxy
+         - sv_mass
+         - sv_chi2
+         - sv_ntracks
+         - sv_pt
+   sv_mask:
+      length: 10
+      vars:
+         - sv_mask
+
+labels:
+   ### type can be `simple`, `custom`
+   ### [option 1] use `simple` for binary/multi-class classification, then `value` is a list of 0-1 labels
+   type: simple
+   ###value: [label_b, label_bb, label_c, label_cc, label_uds, label_g, label_undef, label_pu]
+   #value: [label_b, label_bb, label_c, label_cc, label_uds, label_g, label_undef, label_catB, label_catC]
+   
+   #value: [probHgg, probQCD]
+   value: [label_H_gg, label_QCD] #, label_Wqq]
+   ### [option 2] otherwise use `custom` to define the label, then `value` is a map
+   # type: custom
+   # value: 
+      # target_mass: np.where(fj_isQCD, fj_genjet_sdmass, fj_gen_mass) 
+
+observers:
+   - fj_sdmass
+   - fj_pt
+   - fj_eta
+   - fj_phi
+   
+monitor_variables:
+   # - jet_pt
+   # - jet_eta
+   # - jet_hadronFlavour
+   # - jet_partonFlavour
+   # - jet_nBHadrons
+   # - jet_nCHadrons
+   # - gen_pt
+
+weights:
+   ### [option 1] use precomputed weights stored in the input files
+   # use_precomputed_weights: true
+   # weight_branches: [weight, class_weight]
+   ### [option 2] compute weights on-the-fly using reweighting histograms
+   use_precomputed_weights: false
+   reweight_method: flat
+   reweight_vars:
+      # np.round(np.exp(np.linspace(np.log(15), np.log(1000), 9))).astype('int').tolist()
+      # jet_pt: [15, 25, 43, 72, 122, 207, 350, 592, 1000]
+      # np.round(np.exp(np.linspace(np.log(15), np.log(1000), 16))).astype('int').tolist()
+      fj_pt: [475, 500, 550, 600, 650, 700, 750, 800, 850, 950]
+#      fj_corrsdmass: [1, 14, 22, 40, 65, 90, 110, 140, 250]
+      fj_sdmass: [80, 90, 100, 110, 120, 130, 140, 150, 160, 170]
+#      fj_eta: [-2.4, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.4]
+   ###reweight_classes: [label_catB, label_catC, label_uds, label_g, label_undef, label_pu]
+   #reweight_classes: [label_b, label_bb, label_c, label_cc, label_catB, label_catC, label_uds, label_g, label_undef]
+   #reweight_classes: [label_b, label_bb, label_c, label_cc, label_catB, label_catC, label_uds, label_g]
+   reweight_classes: [label_H_gg, label_QCD] #, label_Wqq]
+
+
+   class_weights: [1, 1] #, 1]
+#   reweight_threshold: 15
+   reweight_hists:

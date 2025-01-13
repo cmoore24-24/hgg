@@ -1,0 +1,31 @@
+#!/bin/bash
+WORKDIR=`pwd`
+
+unset PYTHONPATH
+
+# Download miniconda
+wget https://repo.anaconda.com/miniconda/Miniconda3-py310_24.9.2-0-Linux-x86_64.sh -O miniconda_install.sh
+bash miniconda_install.sh -b -p ${WORKDIR}/miniconda
+export PATH=$WORKDIR/miniconda/bin:$PATH
+#pip install weaver-core
+#git clone git@github.com:hqucms/weaver-core.git
+cp -r /scratch365/cmoore24/weaver_changed ./weaver-core
+pip install torch
+pip install pyarrow
+cd weaver-core 
+python -m pip install -e .
+cd ../
+
+# CUDA environment setup
+export PATH=$PATH:/usr/local/cuda-10.2/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.2/lib64
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda-10.2/lib64
+
+#control command
+weaver --data-train 'sig:/scratch365/cmoore24/weaver-core/my_attempt/samples/flat/singles/*' 'qcd:/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/*' --data-config /scratch365/cmoore24/weaver-core/my_attempt/control.yaml --network-config /scratch365/cmoore24/weaver-core/my_attempt/pn_test.py --model-prefix 'output/{auto}' --data-fraction 0.5 --num-workers 3 --gpus '0,1' --batch-size 512 --start-lr 5e-3 --num-epochs 30 --optimizer adam --log train.log 
+
+#test command with test dataset
+weaver --data-train 'sig:/scratch365/cmoore24/weaver-core/my_attempt/samples/flat/singles/*' 'qcd:/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/*' --data-test '/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/*' --predict-output 'output/test8.root' --data-config /scratch365/cmoore24/weaver-core/my_attempt/control.yaml --network-config /scratch365/cmoore24/weaver-core/my_attempt/pn_test.py --model-prefix 'output/{auto}' --data-fraction 0.1 --file-fraction 0.5 --num-workers 12 --gpus '0,1' --batch-size 512 --start-lr 5e-3 --num-epochs 2 --optimizer ranger --log train.log
+
+
+weaver --predict --data-test 'sig:/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/*' 'qcd:/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/*' --data-config /scratch365/cmoore24/weaver-core/my_attempt/control.yaml --network-config /scratch365/cmoore24/weaver-core/my_attempt/pn_test.py --model-prefix /scratch365/cmoore24/weaver-core/my_attempt/output/20241123-191220_pn_test_ranger_lr0.005_batch512_epoch-1_state.pt --num-workers 12 --gpus '0,1' --batch-size 512 --predict-output 'output/test.root'

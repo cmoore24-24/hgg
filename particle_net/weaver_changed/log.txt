@@ -1,0 +1,1877 @@
+Using auto-generated model prefix output/20241122-144209_pn_test_ranger_lr0.005_batch512
+[2024-11-22 14:42:09,593] INFO: args:
+ - ('regression_mode', False)
+ - ('data_config', '/scratch365/cmoore24/weaver-core/my_attempt/control.yaml')
+ - ('extra_selection', None)
+ - ('extra_test_selection', None)
+ - ('data_train', ['sig:/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/*', 'qcd:/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/*'])
+ - ('data_val', [])
+ - ('data_test', [])
+ - ('data_fraction', 0.1)
+ - ('file_fraction', 0.5)
+ - ('fetch_by_files', False)
+ - ('fetch_step', 0.01)
+ - ('in_memory', False)
+ - ('train_val_split', 0.8)
+ - ('no_remake_weights', False)
+ - ('demo', False)
+ - ('lr_finder', None)
+ - ('tensorboard', None)
+ - ('tensorboard_custom_fn', None)
+ - ('network_config', '/scratch365/cmoore24/weaver-core/my_attempt/pn_test.py')
+ - ('network_option', [])
+ - ('model_prefix', 'output/20241122-144209_pn_test_ranger_lr0.005_batch512')
+ - ('load_model_weights', None)
+ - ('exclude_model_weights', None)
+ - ('freeze_model_weights', None)
+ - ('num_epochs', 30)
+ - ('steps_per_epoch', None)
+ - ('steps_per_epoch_val', None)
+ - ('samples_per_epoch', None)
+ - ('samples_per_epoch_val', None)
+ - ('optimizer', 'ranger')
+ - ('optimizer_option', [])
+ - ('lr_scheduler', 'flat+decay')
+ - ('warmup_steps', 0)
+ - ('load_epoch', None)
+ - ('start_lr', 0.005)
+ - ('batch_size', 512)
+ - ('use_amp', False)
+ - ('gpus', '0')
+ - ('predict_gpus', '0')
+ - ('num_workers', 4)
+ - ('predict', False)
+ - ('predict_output', 'output/test8.root')
+ - ('export_onnx', None)
+ - ('onnx_opset', 15)
+ - ('io_test', False)
+ - ('copy_inputs', False)
+ - ('log', 'train.log')
+ - ('print', False)
+ - ('profile', False)
+ - ('backend', None)
+ - ('cross_validation', None)
+ - ('_auto_model_name', '20241122-144209_pn_test_ranger_lr0.005_batch512')
+ - ('local_rank', None)
+[2024-11-22 14:42:09,593] WARNING: Use of `file-fraction` is not recommended in general -- prefer using `data-fraction` instead.
+[2024-11-22 14:42:09,593] INFO: Running in classification mode
+[2024-11-22 14:42:10,299] INFO: Using 1345 files for training, range: (0, 0.8)
+[2024-11-22 14:42:10,300] INFO: Using 1345 files for validation, range: (0.8, 1)
+[2024-11-22 14:42:10,300] INFO: Found file /scratch365/cmoore24/weaver-core/my_attempt/control.7ac103ed391cd7a285b87db9934ea71b.auto.yaml w/ auto-generated preprocessing information, will use that instead!
+[2024-11-22 14:42:10,319] INFO: [0;37mpreprocess config: {'method': 'auto', 'data_fraction': None, 'params': {'pfcand_eta': {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_phi': {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_charge': {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_d0': {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_dz': {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_lostInnerHits': {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_pt': {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_mask': {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_eta': {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_phi': {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_dxy': {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mass': {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_chi2': {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_ntracks': {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_pt': {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mask': {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}}}[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mselection: None[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mtest_time_selection: None[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_eta)')
+ - ('sv_mask', 'ak.ones_like(sv_eta)')
+ - ('probHgg', '(label_H_gg==1)')
+ - ('probQCD', '(label_QCD==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')[0m
+[2024-11-22 14:42:10,320] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-11-22 14:42:10,320] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_eta', 'pfcand_phi'])
+ - ('pf_features', ['pfcand_charge', 'pfcand_d0', 'pfcand_dz', 'pfcand_lostInnerHits', 'pfcand_pt'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_eta', 'sv_phi'])
+ - ('sv_features', ['sv_dxy', 'sv_mass', 'sv_chi2', 'sv_ntracks', 'sv_pt'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-11-22 14:42:10,320] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 5, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 5, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mpreprocess_params:
+ - ('pfcand_eta', {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phi', {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_d0', {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt', {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_eta', {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phi', {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_chi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt', {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mobserver_names: ('fj_sdmass', 'fj_pt', 'fj_eta', 'fj_phi')[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mmonitor_variables: ()[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_method: flat[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_basewgt: None[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_branches: ('fj_pt', 'fj_sdmass')[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_bins: ([400, 450, 500, 550, 600], [80, 90, 100, 110, 120, 130, 140, 150, 160, 170])[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_classes: ('probHgg', 'probQCD')[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mclass_weights: [5, 5][0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_threshold: 10[0m
+[2024-11-22 14:42:10,320] INFO: [0;37mreweight_discard_under_overflow: True[0m
+  0%|          | 0/1345 [00:00<?, ?it/s]  1%|▏         | 18/1345 [00:00<00:07, 176.89it/s]  3%|▎         | 37/1345 [00:00<00:07, 180.38it/s]  4%|▍         | 57/1345 [00:00<00:06, 187.43it/s]  6%|▌         | 77/1345 [00:00<00:06, 190.07it/s]  7%|▋         | 97/1345 [00:00<00:06, 192.05it/s]  9%|▊         | 117/1345 [00:00<00:06, 187.46it/s] 10%|█         | 137/1345 [00:00<00:06, 190.35it/s] 12%|█▏        | 157/1345 [00:00<00:06, 186.64it/s] 13%|█▎        | 176/1345 [00:00<00:06, 186.85it/s] 14%|█▍        | 195/1345 [00:01<00:09, 116.46it/s] 16%|█▌        | 216/1345 [00:01<00:08, 135.21it/s] 18%|█▊        | 237/1345 [00:01<00:07, 151.38it/s] 19%|█▉        | 258/1345 [00:01<00:06, 165.19it/s] 21%|██        | 277/1345 [00:01<00:06, 165.55it/s] 22%|██▏       | 298/1345 [00:01<00:05, 174.97it/s] 24%|██▎       | 318/1345 [00:01<00:05, 179.18it/s] 25%|██▌       | 338/1345 [00:01<00:05, 184.40it/s] 27%|██▋       | 359/1345 [00:02<00:05, 190.84it/s] 28%|██▊       | 380/1345 [00:02<00:04, 195.59it/s] 30%|██▉       | 401/1345 [00:02<00:04, 198.18it/s] 31%|███▏      | 422/1345 [00:02<00:04, 200.92it/s] 33%|███▎      | 443/1345 [00:02<00:04, 192.86it/s] 34%|███▍      | 464/1345 [00:02<00:04, 196.43it/s] 36%|███▌      | 485/1345 [00:02<00:04, 199.01it/s] 38%|███▊      | 506/1345 [00:02<00:04, 200.30it/s] 39%|███▉      | 527/1345 [00:02<00:04, 201.33it/s] 41%|████      | 548/1345 [00:03<00:03, 202.17it/s] 42%|████▏     | 569/1345 [00:03<00:03, 203.21it/s] 44%|████▍     | 590/1345 [00:03<00:05, 137.39it/s] 45%|████▌     | 611/1345 [00:03<00:04, 152.27it/s] 47%|████▋     | 629/1345 [00:03<00:04, 156.91it/s] 48%|████▊     | 650/1345 [00:03<00:04, 168.38it/s] 50%|████▉     | 671/1345 [00:03<00:03, 178.29it/s] 51%|█████▏    | 692/1345 [00:03<00:03, 186.25it/s] 53%|█████▎    | 713/1345 [00:04<00:03, 191.73it/s] 55%|█████▍    | 734/1345 [00:04<00:03, 195.51it/s] 56%|█████▌    | 755/1345 [00:04<00:02, 198.29it/s] 58%|█████▊    | 776/1345 [00:04<00:02, 200.57it/s] 59%|█████▉    | 797/1345 [00:04<00:02, 201.71it/s] 61%|██████    | 818/1345 [00:04<00:04, 124.79it/s] 62%|██████▏   | 835/1345 [00:04<00:05, 101.63it/s] 63%|██████▎   | 849/1345 [00:05<00:05, 89.87it/s]  64%|██████▍   | 861/1345 [00:05<00:05, 83.12it/s] 65%|██████▍   | 871/1345 [00:05<00:06, 78.79it/s] 65%|██████▌   | 880/1345 [00:05<00:06, 75.67it/s] 66%|██████▌   | 889/1345 [00:05<00:06, 73.13it/s] 67%|██████▋   | 897/1345 [00:05<00:06, 72.30it/s] 67%|██████▋   | 905/1345 [00:06<00:06, 70.39it/s] 68%|██████▊   | 913/1345 [00:06<00:06, 68.64it/s] 68%|██████▊   | 920/1345 [00:06<00:06, 67.60it/s] 69%|██████▉   | 927/1345 [00:06<00:07, 56.91it/s] 69%|██████▉   | 933/1345 [00:06<00:08, 46.31it/s] 70%|██████▉   | 939/1345 [00:06<00:10, 39.61it/s] 70%|███████   | 944/1345 [00:07<00:10, 36.60it/s] 70%|███████   | 948/1345 [00:07<00:11, 34.88it/s] 71%|███████   | 952/1345 [00:07<00:11, 33.95it/s] 71%|███████   | 956/1345 [00:07<00:11, 33.33it/s] 71%|███████▏  | 960/1345 [00:07<00:12, 31.55it/s] 72%|███████▏  | 964/1345 [00:07<00:12, 30.71it/s] 72%|███████▏  | 968/1345 [00:07<00:12, 30.16it/s] 72%|███████▏  | 972/1345 [00:08<00:12, 29.56it/s] 72%|███████▏  | 975/1345 [00:08<00:12, 29.25it/s] 73%|███████▎  | 978/1345 [00:08<00:12, 29.11it/s] 73%|███████▎  | 981/1345 [00:08<00:12, 29.13it/s] 73%|███████▎  | 984/1345 [00:08<00:12, 28.82it/s] 73%|███████▎  | 987/1345 [00:08<00:12, 29.10it/s] 74%|███████▎  | 990/1345 [00:08<00:12, 29.15it/s] 74%|███████▍  | 993/1345 [00:08<00:12, 29.11it/s] 74%|███████▍  | 996/1345 [00:08<00:12, 28.92it/s] 74%|███████▍  | 999/1345 [00:08<00:12, 28.74it/s] 74%|███████▍  | 1002/1345 [00:09<00:11, 28.65it/s] 75%|███████▍  | 1005/1345 [00:09<00:11, 28.98it/s] 75%|███████▍  | 1008/1345 [00:09<00:11, 28.84it/s] 75%|███████▌  | 1011/1345 [00:09<00:11, 28.61it/s] 75%|███████▌  | 1014/1345 [00:09<00:11, 28.69it/s] 76%|███████▌  | 1017/1345 [00:09<00:11, 28.75it/s] 76%|███████▌  | 1020/1345 [00:09<00:11, 28.12it/s] 76%|███████▌  | 1023/1345 [00:09<00:11, 27.93it/s] 76%|███████▋  | 1026/1345 [00:09<00:11, 27.88it/s] 77%|███████▋  | 1029/1345 [00:10<00:11, 27.68it/s] 77%|███████▋  | 1032/1345 [00:10<00:11, 27.57it/s] 77%|███████▋  | 1035/1345 [00:10<00:11, 28.14it/s] 77%|███████▋  | 1038/1345 [00:10<00:10, 27.93it/s] 77%|███████▋  | 1041/1345 [00:10<00:10, 28.22it/s] 78%|███████▊  | 1047/1345 [00:10<00:08, 34.15it/s] 78%|███████▊  | 1051/1345 [00:10<00:09, 30.73it/s] 78%|███████▊  | 1055/1345 [00:10<00:09, 30.36it/s] 79%|███████▊  | 1059/1345 [00:11<00:13, 20.76it/s] 79%|███████▉  | 1062/1345 [00:11<00:12, 22.07it/s] 79%|███████▉  | 1065/1345 [00:11<00:12, 23.29it/s] 79%|███████▉  | 1069/1345 [00:11<00:10, 26.14it/s] 80%|███████▉  | 1072/1345 [00:11<00:10, 24.89it/s] 80%|████████  | 1076/1345 [00:11<00:09, 27.56it/s] 80%|████████  | 1079/1345 [00:11<00:10, 25.83it/s] 81%|████████  | 1083/1345 [00:12<00:09, 27.84it/s] 81%|████████  | 1086/1345 [00:12<00:09, 27.67it/s] 81%|████████  | 1089/1345 [00:12<00:09, 26.70it/s] 81%|████████  | 1092/1345 [00:12<00:09, 26.39it/s] 81%|████████▏ | 1096/1345 [00:12<00:08, 28.52it/s] 82%|████████▏ | 1100/1345 [00:12<00:08, 29.68it/s] 82%|████████▏ | 1105/1345 [00:12<00:07, 33.49it/s] 83%|████████▎ | 1110/1345 [00:12<00:06, 36.57it/s] 83%|████████▎ | 1115/1345 [00:12<00:06, 37.70it/s] 83%|████████▎ | 1120/1345 [00:13<00:05, 39.02it/s] 84%|████████▎ | 1125/1345 [00:13<00:05, 40.09it/s] 84%|████████▍ | 1130/1345 [00:13<00:05, 41.74it/s] 84%|████████▍ | 1135/1345 [00:13<00:04, 42.19it/s] 85%|████████▍ | 1140/1345 [00:13<00:04, 42.37it/s] 85%|████████▌ | 1145/1345 [00:13<00:04, 42.81it/s] 86%|████████▌ | 1150/1345 [00:13<00:04, 42.55it/s] 86%|████████▌ | 1155/1345 [00:13<00:04, 43.70it/s] 86%|████████▌ | 1160/1345 [00:14<00:04, 43.31it/s] 87%|████████▋ | 1165/1345 [00:14<00:04, 43.20it/s] 87%|████████▋ | 1170/1345 [00:14<00:04, 43.33it/s] 87%|████████▋ | 1175/1345 [00:14<00:03, 43.55it/s] 88%|████████▊ | 1180/1345 [00:14<00:03, 42.40it/s] 88%|████████▊ | 1185/1345 [00:14<00:04, 38.86it/s] 88%|████████▊ | 1189/1345 [00:14<00:04, 36.68it/s] 89%|████████▊ | 1193/1345 [00:14<00:04, 35.64it/s] 89%|████████▉ | 1198/1345 [00:15<00:03, 38.42it/s] 89%|████████▉ | 1202/1345 [00:15<00:03, 36.66it/s] 90%|████████▉ | 1206/1345 [00:15<00:03, 35.52it/s] 90%|████████▉ | 1210/1345 [00:15<00:03, 34.35it/s] 90%|█████████ | 1214/1345 [00:15<00:04, 32.48it/s] 91%|█████████ | 1218/1345 [00:15<00:03, 32.07it/s] 91%|█████████ | 1222/1345 [00:15<00:03, 32.42it/s] 91%|█████████ | 1226/1345 [00:15<00:03, 32.39it/s] 91%|█████████▏| 1230/1345 [00:16<00:03, 32.94it/s] 92%|█████████▏| 1235/1345 [00:16<00:03, 35.40it/s] 92%|█████████▏| 1239/1345 [00:16<00:03, 34.73it/s] 92%|█████████▏| 1243/1345 [00:16<00:02, 34.25it/s] 93%|█████████▎| 1247/1345 [00:16<00:02, 33.51it/s] 93%|█████████▎| 1251/1345 [00:16<00:02, 33.03it/s] 93%|█████████▎| 1255/1345 [00:16<00:02, 34.63it/s] 94%|█████████▎| 1259/1345 [00:16<00:02, 34.11it/s] 94%|█████████▍| 1263/1345 [00:16<00:02, 33.75it/s] 94%|█████████▍| 1267/1345 [00:17<00:02, 33.55it/s] 94%|█████████▍| 1271/1345 [00:17<00:02, 33.51it/s] 95%|█████████▍| 1275/1345 [00:17<00:02, 33.23it/s] 95%|█████████▌| 1280/1345 [00:17<00:01, 35.01it/s] 95%|█████████▌| 1284/1345 [00:17<00:01, 34.21it/s] 96%|█████████▌| 1288/1345 [00:17<00:01, 34.03it/s] 96%|█████████▌| 1292/1345 [00:17<00:01, 33.70it/s] 96%|█████████▋| 1296/1345 [00:17<00:01, 33.30it/s] 97%|█████████▋| 1300/1345 [00:18<00:01, 33.35it/s] 97%|█████████▋| 1304/1345 [00:18<00:01, 33.34it/s] 97%|█████████▋| 1308/1345 [00:18<00:01, 33.14it/s] 98%|█████████▊| 1312/1345 [00:18<00:00, 34.05it/s] 98%|█████████▊| 1316/1345 [00:18<00:00, 33.73it/s] 98%|█████████▊| 1320/1345 [00:18<00:00, 33.35it/s] 98%|█████████▊| 1324/1345 [00:18<00:00, 33.07it/s] 99%|█████████▉| 1329/1345 [00:18<00:00, 35.01it/s] 99%|█████████▉| 1333/1345 [00:19<00:00, 34.88it/s] 99%|█████████▉| 1337/1345 [00:19<00:00, 34.15it/s]100%|█████████▉| 1341/1345 [00:19<00:00, 33.87it/s]100%|██████████| 1345/1345 [00:19<00:00, 33.14it/s]100%|██████████| 1345/1345 [00:19<00:00, 69.35it/s]
+[2024-11-22 14:43:26,738] INFO: Using 3198147 events to make weights
+[2024-11-22 14:43:26,762] INFO: probHgg (unweighted):
+ [[   0    0    0    0    0    0    0    0    0]
+ [ 609  766 1165 2574 6405 6976 3088  837  337]
+ [ 344  420  602 1398 3500 4121 1925  498  197]
+ [ 170  245  332  837 1991 2343 1059  284   88]]
+[2024-11-22 14:43:27,085] INFO: probQCD (unweighted):
+ [[     0      0      0      0      0      0      0      0      0]
+ [138846 131146 124664 118200 109899  98294  84665  70872  57875]
+ [183906 173074 163378 155295 146181 135333 121086 105399  90466]
+ [132188 122534 116172 111069 105668 100191  94980  85944  77711]]
+/var/condor/execute/dir_720094/weaver-core/weaver/utils/data/preprocess.py:250: RuntimeWarning: divide by zero encountered in divide
+  wgt = np.clip(np.nan_to_num(ref_val / hist, posinf=0), 0, 1)
+[2024-11-22 14:43:27,087] INFO: weights:
+[2024-11-22 14:43:27,087] INFO: probHgg:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.        ]
+ [0.33369458 0.26530027 0.17443776 0.07895105 0.03172833 0.02913131
+  0.06580959 0.2427957  0.6030267 ]
+ [0.5907558  0.48385713 0.33757475 0.1453648  0.05806286 0.04931327
+  0.10556883 0.4080723  0.9       ]
+ [0.9        0.8294694  0.6121084  0.2427957  0.10206931 0.08673495
+  0.191898   0.71556336 0.9       ]]
+[2024-11-22 14:43:27,088] INFO: probQCD:
+ [[0.         0.         0.         0.         0.         0.
+  0.         0.         0.        ]
+ [0.00143569 0.00151999 0.00159902 0.00168647 0.00181385 0.002028
+  0.00235446 0.00243444 0.00243444]
+ [0.00108393 0.00115176 0.00122012 0.00128362 0.00136365 0.00147296
+  0.00164627 0.00189129 0.00220348]
+ [0.00150801 0.00162682 0.00171591 0.00179474 0.00188648 0.0019896
+  0.00209876 0.00231942 0.00243444]]
+[2024-11-22 14:43:27,088] INFO: Raw hist * weights:
+[2024-11-22 14:43:27,088] INFO: probHgg:
+ [[  0   0   0   0   0   0   0   0   0]
+ [203 203 203 203 203 203 203 203 203]
+ [203 203 203 203 203 203 203 203 177]
+ [153 203 203 203 203 203 203 203  79]]
+[2024-11-22 14:43:27,088] INFO: probQCD:
+ [[  0   0   0   0   0   0   0   0   0]
+ [199 199 199 199 199 199 199 172 140]
+ [199 199 199 199 199 199 199 199 199]
+ [199 199 199 199 199 199 199 199 189]]
+[2024-11-22 14:43:27,088] INFO: Writing YAML file w/ reweighting info to /scratch365/cmoore24/weaver-core/my_attempt/control.7ac103ed391cd7a285b87db9934ea71b.auto.yaml
+[2024-11-22 14:43:27,132] INFO: [0;37mpreprocess config: {'method': 'auto', 'data_fraction': None, 'params': {'pfcand_eta': {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_phi': {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_charge': {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_d0': {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_dz': {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_lostInnerHits': {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_pt': {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_mask': {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_eta': {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_phi': {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_dxy': {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mass': {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_chi2': {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_ntracks': {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_pt': {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mask': {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}}}[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mselection: None[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mtest_time_selection: None[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_eta)')
+ - ('sv_mask', 'ak.ones_like(sv_eta)')
+ - ('probHgg', '(label_H_gg==1)')
+ - ('probQCD', '(label_QCD==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')[0m
+[2024-11-22 14:43:27,132] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-11-22 14:43:27,132] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_eta', 'pfcand_phi'])
+ - ('pf_features', ['pfcand_charge', 'pfcand_d0', 'pfcand_dz', 'pfcand_lostInnerHits', 'pfcand_pt'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_eta', 'sv_phi'])
+ - ('sv_features', ['sv_dxy', 'sv_mass', 'sv_chi2', 'sv_ntracks', 'sv_pt'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-11-22 14:43:27,132] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 5, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 5, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mpreprocess_params:
+ - ('pfcand_eta', {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phi', {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_d0', {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt', {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_eta', {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phi', {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_chi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt', {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mobserver_names: ()[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mmonitor_variables: ()[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mreweight_method: flat[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mreweight_basewgt: None[0m
+[2024-11-22 14:43:27,132] INFO: [0;37mreweight_branches: ('fj_pt', 'fj_sdmass')[0m
+[2024-11-22 14:43:27,133] INFO: [0;37mreweight_bins: ([400, 450, 500, 550, 600], [80, 90, 100, 110, 120, 130, 140, 150, 160, 170])[0m
+[2024-11-22 14:43:27,133] INFO: [0;37mreweight_classes: ('probHgg', 'probQCD')[0m
+[2024-11-22 14:43:27,133] INFO: [0;37mclass_weights: [5, 5][0m
+[2024-11-22 14:43:27,133] INFO: [0;37mreweight_threshold: 10[0m
+[2024-11-22 14:43:27,133] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-11-22 14:43:27,133] INFO: Found file /scratch365/cmoore24/weaver-core/my_attempt/control.7ac103ed391cd7a285b87db9934ea71b.auto.yaml w/ auto-generated preprocessing information, will use that instead!
+[2024-11-22 14:43:27,151] INFO: [0;37mpreprocess config: {'method': 'auto', 'data_fraction': None, 'params': {'pfcand_eta': {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_phi': {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_charge': {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_d0': {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_dz': {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_lostInnerHits': {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_pt': {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_mask': {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_eta': {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_phi': {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_dxy': {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mass': {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_chi2': {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_ntracks': {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_pt': {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mask': {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}}}[0m
+[2024-11-22 14:43:27,151] INFO: [0;37mselection: None[0m
+[2024-11-22 14:43:27,151] INFO: [0;37mtest_time_selection: None[0m
+[2024-11-22 14:43:27,151] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_eta)')
+ - ('sv_mask', 'ak.ones_like(sv_eta)')
+ - ('probHgg', '(label_H_gg==1)')
+ - ('probQCD', '(label_QCD==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')[0m
+[2024-11-22 14:43:27,151] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-11-22 14:43:27,152] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_eta', 'pfcand_phi'])
+ - ('pf_features', ['pfcand_charge', 'pfcand_d0', 'pfcand_dz', 'pfcand_lostInnerHits', 'pfcand_pt'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_eta', 'sv_phi'])
+ - ('sv_features', ['sv_dxy', 'sv_mass', 'sv_chi2', 'sv_ntracks', 'sv_pt'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-11-22 14:43:27,152] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 5, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 5, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mpreprocess_params:
+ - ('pfcand_eta', {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phi', {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_d0', {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt', {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_eta', {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phi', {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_chi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt', {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mobserver_names: ('fj_sdmass', 'fj_pt', 'fj_eta', 'fj_phi')[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mmonitor_variables: ()[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_method: flat[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_basewgt: None[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_branches: ('fj_pt', 'fj_sdmass')[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_bins: ([400, 450, 500, 550, 600], [80, 90, 100, 110, 120, 130, 140, 150, 160, 170])[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_classes: ('probHgg', 'probQCD')[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mclass_weights: [5, 5][0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_threshold: 10[0m
+[2024-11-22 14:43:27,152] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mpreprocess config: {'method': 'auto', 'data_fraction': None, 'params': {'pfcand_eta': {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_phi': {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_charge': {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_d0': {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_dz': {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_lostInnerHits': {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_pt': {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0}, 'pfcand_mask': {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_eta': {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_phi': {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_dxy': {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mass': {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_chi2': {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_ntracks': {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_pt': {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0}, 'sv_mask': {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0}}}[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mselection: None[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mtest_time_selection: None[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_eta)')
+ - ('sv_mask', 'ak.ones_like(sv_eta)')
+ - ('probHgg', '(label_H_gg==1)')
+ - ('probQCD', '(label_QCD==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probHgg),ak.to_numpy(probQCD)], axis=1), axis=1)')[0m
+[2024-11-22 14:43:27,170] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-11-22 14:43:27,170] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_eta', 'pfcand_phi'])
+ - ('pf_features', ['pfcand_charge', 'pfcand_d0', 'pfcand_dz', 'pfcand_lostInnerHits', 'pfcand_pt'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_eta', 'sv_phi'])
+ - ('sv_features', ['sv_dxy', 'sv_mass', 'sv_chi2', 'sv_ntracks', 'sv_pt'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-11-22 14:43:27,170] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 5, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 5, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mpreprocess_params:
+ - ('pfcand_eta', {'length': 100, 'pad_mode': 'constant', 'center': -0.00494384765625, 'scale': 0.9000714167994287, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phi', {'length': 100, 'pad_mode': 'constant', 'center': -0.027347564697265625, 'scale': 0.4687563144521157, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_d0', {'length': 100, 'pad_mode': 'constant', 'center': -0.010162353515625, 'scale': 1.010266687220595, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': -0.02142333984375, 'scale': 1.0218923470342418, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt', {'length': 100, 'pad_mode': 'constant', 'center': 2.220703125, 'scale': 0.12275233756892831, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_eta', {'length': 7, 'pad_mode': 'constant', 'center': -0.0007281899452209473, 'scale': 0.7533542286866969, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phi', {'length': 7, 'pad_mode': 'constant', 'center': -0.01973724365234375, 'scale': 0.4696793243199662, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2744140625, 'scale': 0.3976699029126214, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 0.85986328125, 'scale': 0.38561476181510074, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_chi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.734375, 'scale': 0.6632124352331606, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 2.0, 'scale': 0.3333333333333333, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt', {'length': 7, 'pad_mode': 'constant', 'center': 15.0625, 'scale': 0.019704433497536946, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mobserver_names: ()[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mmonitor_variables: ()[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mreweight_method: flat[0m
+[2024-11-22 14:43:27,170] INFO: [0;37mreweight_basewgt: None[0m
+[2024-11-22 14:43:27,171] INFO: [0;37mreweight_branches: ('fj_pt', 'fj_sdmass')[0m
+[2024-11-22 14:43:27,171] INFO: [0;37mreweight_bins: ([400, 450, 500, 550, 600], [80, 90, 100, 110, 120, 130, 140, 150, 160, 170])[0m
+[2024-11-22 14:43:27,171] INFO: [0;37mreweight_classes: ('probHgg', 'probQCD')[0m
+[2024-11-22 14:43:27,171] INFO: [0;37mclass_weights: [5, 5][0m
+[2024-11-22 14:43:27,171] INFO: [0;37mreweight_threshold: 10[0m
+[2024-11-22 14:43:27,171] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-11-22 14:43:27,173] INFO: Network options: {}
+AAAAAAAAAAAAAAAAAAAAAA
+(64, 64, 64)
+AAAAAAAAAAAAAAAAAAAAAA
+(128, 128, 128)
+AAAAAAAAAAAAAAAAAAAAAA
+(256, 256, 256)
+[2024-11-22 14:43:27,435] INFO: [0;37mWarning: module FeatureConv is treated as a zero-op.[0m
+[2024-11-22 14:43:27,436] INFO: [0;37mWarning: module EdgeConvBlock is treated as a zero-op.[0m
+[2024-11-22 14:43:27,436] INFO: [0;37mWarning: module Dropout is treated as a zero-op.[0m
+[2024-11-22 14:43:27,436] INFO: [0;37mWarning: module ParticleNet is treated as a zero-op.[0m
+[2024-11-22 14:43:27,436] INFO: [0;37mWarning: module ParticleNetTagger is treated as a zero-op.[0m
+[2024-11-22 14:43:27,749] INFO: [0;37mParticleNetTagger(
+  |0.577 M, 100.000% Params, 472.085 MMac, 100.000% MACs|
+  (pf_conv): FeatureConv(
+    |0.0 M, 0.041% Params, 26.6 KMac, 0.006% MACs|
+    (conv): Sequential(
+      |0.0 M, 0.041% Params, 26.6 KMac, 0.006% MACs|
+      (0): BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.002% Params, 1.0 KMac, 0.000% MACs|)
+      (1): Conv1d(5, 32, kernel_size=(1,), stride=(1,), bias=False, |0.0 M, 0.028% Params, 16.0 KMac, 0.003% MACs|)
+      (2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.011% Params, 6.4 KMac, 0.001% MACs|)
+      (3): ReLU(|0.0 M, 0.000% Params, 3.2 KMac, 0.001% MACs|)
+    )
+  )
+  (sv_conv): FeatureConv(
+    |0.0 M, 0.041% Params, 1.862 KMac, 0.000% MACs|
+    (conv): Sequential(
+      |0.0 M, 0.041% Params, 1.862 KMac, 0.000% MACs|
+      (0): BatchNorm1d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.002% Params, 70.0 Mac, 0.000% MACs|)
+      (1): Conv1d(5, 32, kernel_size=(1,), stride=(1,), bias=False, |0.0 M, 0.028% Params, 1.12 KMac, 0.000% MACs|)
+      (2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.011% Params, 448.0 Mac, 0.000% MACs|)
+      (3): ReLU(|0.0 M, 0.000% Params, 224.0 Mac, 0.000% MACs|)
+    )
+  )
+  (pn): ParticleNet(
+    |0.577 M, 99.919% Params, 472.057 MMac, 99.994% MACs|
+    (edge_convs): ModuleList(
+      (0): EdgeConvBlock(
+        |0.015 M, 2.573% Params, 22.263 MMac, 4.716% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.004 M, 0.710% Params, 7.012 MMac, 1.485% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.022% Params, 219.136 KMac, 0.046% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 109.568 KMac, 0.023% MACs|)
+        )
+        (sc): Conv1d(32, 64, kernel_size=(1,), stride=(1,), bias=False, |0.002 M, 0.355% Params, 219.136 KMac, 0.046% MACs|)
+        (sc_bn): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.022% Params, 13.696 KMac, 0.003% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 6.848 KMac, 0.001% MACs|)
+      )
+      (1): EdgeConvBlock(
+        |0.058 M, 10.116% Params, 87.038 MMac, 18.437% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.016 M, 2.840% Params, 28.049 MMac, 5.942% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.044% Params, 438.272 KMac, 0.093% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 219.136 KMac, 0.046% MACs|)
+        )
+        (sc): Conv1d(64, 128, kernel_size=(1,), stride=(1,), bias=False, |0.008 M, 1.420% Params, 876.544 KMac, 0.186% MACs|)
+        (sc_bn): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.044% Params, 27.392 KMac, 0.006% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 13.696 KMac, 0.003% MACs|)
+      )
+      (2): EdgeConvBlock(
+        |0.231 M, 40.109% Params, 344.126 MMac, 72.895% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.066 M, 11.358% Params, 112.198 MMac, 23.766% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.089% Params, 876.544 KMac, 0.186% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 438.272 KMac, 0.093% MACs|)
+        )
+        (sc): Conv1d(128, 256, kernel_size=(1,), stride=(1,), bias=False, |0.033 M, 5.679% Params, 3.506 MMac, 0.743% MACs|)
+        (sc_bn): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.089% Params, 54.784 KMac, 0.012% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 27.392 KMac, 0.006% MACs|)
+      )
+    )
+    (fusion_block): Sequential(
+      |0.173 M, 29.949% Params, 18.531 MMac, 3.925% MACs|
+      (0): Conv1d(448, 384, kernel_size=(1,), stride=(1,), bias=False, |0.172 M, 29.816% Params, 18.407 MMac, 3.899% MACs|)
+      (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.133% Params, 82.176 KMac, 0.017% MACs|)
+      (2): ReLU(|0.0 M, 0.000% Params, 41.088 KMac, 0.009% MACs|)
+    )
+    (fc): Sequential(
+      |0.099 M, 17.171% Params, 99.33 KMac, 0.021% MACs|
+      (0): Sequential(
+        |0.099 M, 17.082% Params, 98.816 KMac, 0.021% MACs|
+        (0): Linear(in_features=384, out_features=256, bias=True, |0.099 M, 17.082% Params, 98.56 KMac, 0.021% MACs|)
+        (1): ReLU(|0.0 M, 0.000% Params, 256.0 Mac, 0.000% MACs|)
+        (2): Dropout(p=0.1, inplace=False, |0.0 M, 0.000% Params, 0.0 Mac, 0.000% MACs|)
+      )
+      (1): Linear(in_features=256, out_features=2, bias=True, |0.001 M, 0.089% Params, 514.0 Mac, 0.000% MACs|)
+    )
+  )
+)[0m
+[2024-11-22 14:43:27,750] INFO: Computational complexity:       472.09 MMac
+[2024-11-22 14:43:27,750] INFO: Number of parameters:           576.98 k
+[2024-11-22 14:43:27,750] INFO: Using loss function CrossEntropyLoss() with options {}
+[2024-11-22 14:43:27,753] INFO: Optimizer options: {}
+[2024-11-22 14:43:28,638] INFO: --------------------------------------------------
+[2024-11-22 14:43:28,639] INFO: Epoch #0 training
+0it [00:00, ?it/s]=== Restarting DataIter train_worker0, seed=744439047 ===
+[2024-11-22 14:43:28,697] INFO: Restarted DataIter train_worker0, load_range=(0.6210828383249113, 0.7010828383249113), file_list:
+{
+  "sig": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part000.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part004.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part008.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part012.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part016.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part020.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part024.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part028.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part032.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part036.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part040.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part044.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part048.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part052.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part056.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part060.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part064.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part068.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part072.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part076.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part080.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part084.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part088.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part092.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part096.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part100.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part104.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part108.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part112.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part116.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part120.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part124.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part128.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part132.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part136.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part140.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part144.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part148.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part152.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part156.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part160.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part164.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part168.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part172.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part176.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part180.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part184.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part188.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part192.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part196.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part200.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part204.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part208.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part212.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part216.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part220.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part224.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part228.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part232.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part236.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part240.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part244.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part248.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part252.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part256.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part260.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part264.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part268.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part272.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part276.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part280.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part284.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part288.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part292.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part296.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part300.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part304.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part308.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part312.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part316.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part320.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part324.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part328.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part332.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part336.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part340.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part344.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part348.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part352.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part356.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part360.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part364.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part368.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part372.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part376.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part380.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part384.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part388.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part392.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part396.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part400.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part404.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part408.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part412.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part416.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part420.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part424.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part428.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part432.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part436.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part440.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part444.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part448.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part452.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part456.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part460.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part464.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part468.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part472.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part476.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part480.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part484.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part488.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part492.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part496.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part500.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part504.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part508.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part512.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part516.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part520.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part524.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part528.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part532.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part536.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part540.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part544.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part548.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part552.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part556.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part560.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part564.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part568.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part572.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part576.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part580.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part584.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part588.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part592.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part596.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part600.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part604.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part608.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part612.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part616.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part620.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part624.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part628.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part632.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part636.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part640.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part644.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part648.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part652.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part656.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part660.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part664.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part668.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part672.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part676.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part680.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part684.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part688.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part692.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part696.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part700.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part704.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part708.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part712.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part716.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part720.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part724.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part728.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part732.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part736.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part740.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part744.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part748.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part752.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part756.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part760.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part764.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part768.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part772.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part776.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part780.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part784.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part788.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part792.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part796.parquet"
+  ],
+  "qcd": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part000.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part004.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part008.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part012.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part016.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part020.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part024.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part028.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part032.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part036.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part040.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part044.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part048.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part052.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part056.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part060.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part064.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part068.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part072.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part076.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part080.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part084.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part088.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part092.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part096.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part100.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part104.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part108.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part112.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part116.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part120.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part124.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part128.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part132.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part136.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part140.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part144.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part148.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part152.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part156.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part160.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part164.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part168.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part172.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part176.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part180.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part184.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part188.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part192.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part196.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part200.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part204.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part208.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part212.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part216.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part220.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part224.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part228.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part232.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part236.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part240.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part244.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part248.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part252.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part256.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part260.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part264.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part268.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part272.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part276.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part280.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part284.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part288.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part292.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part296.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part300.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part304.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part308.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part312.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part316.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part320.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part324.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part328.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part332.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part336.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part340.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part344.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part348.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part352.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part356.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part360.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part364.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part368.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part372.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part376.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part380.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part384.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part388.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part392.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part396.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part400.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part404.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part408.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part412.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part416.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part420.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part424.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part428.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part432.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part436.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part440.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part444.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part448.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part452.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part456.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part460.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part464.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part468.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part472.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part476.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part480.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part484.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part488.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part492.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part496.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part500.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part504.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part508.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part512.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part516.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part520.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part524.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part528.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part532.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part536.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part540.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part544.parquet"
+  ]
+}
+=== Restarting DataIter train_worker1, seed=744439048 ===
+[2024-11-22 14:43:28,714] INFO: Restarted DataIter train_worker1, load_range=(0.13145862061842742, 0.21145862061842743), file_list:
+{
+  "sig": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part001.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part005.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part009.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part013.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part017.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part021.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part025.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part029.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part033.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part037.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part041.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part045.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part049.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part053.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part057.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part061.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part065.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part069.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part073.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part077.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part081.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part085.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part089.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part093.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part097.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part101.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part105.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part109.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part113.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part117.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part121.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part125.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part129.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part133.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part137.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part141.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part145.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part149.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part153.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part157.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part161.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part165.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part169.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part173.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part177.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part181.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part185.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part189.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part193.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part197.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part201.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part205.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part209.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part213.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part217.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part221.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part225.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part229.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part233.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part237.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part241.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part245.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part249.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part253.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part257.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part261.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part265.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part269.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part273.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part277.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part281.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part285.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part289.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part293.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part297.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part301.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part305.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part309.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part313.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part317.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part321.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part325.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part329.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part333.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part337.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part341.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part345.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part349.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part353.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part357.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part361.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part365.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part369.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part373.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part377.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part381.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part385.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part389.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part393.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part397.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part401.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part405.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part409.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part413.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part417.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part421.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part425.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part429.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part433.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part437.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part441.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part445.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part449.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part453.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part457.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part461.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part465.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part469.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part473.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part477.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part481.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part485.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part489.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part493.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part497.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part501.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part505.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part509.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part513.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part517.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part521.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part525.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part529.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part533.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part537.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part541.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part545.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part549.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part553.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part557.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part561.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part565.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part569.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part573.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part577.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part581.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part585.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part589.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part593.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part597.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part601.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part605.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part609.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part613.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part617.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part621.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part625.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part629.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part633.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part637.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part641.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part645.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part649.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part653.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part657.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part661.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part665.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part669.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part673.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part677.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part681.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part685.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part689.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part693.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part697.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part701.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part705.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part709.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part713.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part717.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part721.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part725.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part729.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part733.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part737.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part741.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part745.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part749.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part753.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part757.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part761.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part765.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part769.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part773.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part777.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part781.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part785.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part789.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part793.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part797.parquet"
+  ],
+  "qcd": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part001.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part005.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part009.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part013.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part017.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part021.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part025.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part029.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part033.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part037.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part041.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part045.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part049.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part053.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part057.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part061.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part065.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part069.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part073.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part077.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part081.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part085.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part089.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part093.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part097.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part101.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part105.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part109.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part113.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part117.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part121.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part125.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part129.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part133.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part137.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part141.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part145.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part149.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part153.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part157.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part161.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part165.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part169.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part173.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part177.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part181.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part185.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part189.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part193.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part197.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part201.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part205.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part209.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part213.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part217.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part221.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part225.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part229.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part233.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part237.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part241.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part245.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part249.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part253.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part257.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part261.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part265.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part269.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part273.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part277.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part281.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part285.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part289.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part293.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part297.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part301.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part305.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part309.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part313.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part317.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part321.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part325.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part329.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part333.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part337.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part341.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part345.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part349.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part353.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part357.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part361.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part365.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part369.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part373.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part377.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part381.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part385.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part389.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part393.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part397.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part401.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part405.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part409.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part413.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part417.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part421.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part425.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part429.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part433.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part437.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part441.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part445.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part449.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part453.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part457.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part461.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part465.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part469.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part473.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part477.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part481.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part485.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part489.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part493.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part497.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part501.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part505.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part509.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part513.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part517.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part521.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part525.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part529.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part533.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part537.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part541.parquet"
+  ]
+}
+=== Restarting DataIter train_worker2, seed=744439049 ===
+[2024-11-22 14:43:28,729] INFO: Restarted DataIter train_worker2, load_range=(0.0549678793100438, 0.1349678793100438), file_list:
+{
+  "sig": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part002.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part006.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part010.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part014.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part018.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part022.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part026.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part030.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part034.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part038.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part042.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part046.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part050.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part054.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part058.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part062.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part066.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part070.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part074.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part078.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part082.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part086.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part090.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part094.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part098.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part102.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part106.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part110.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part114.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part118.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part122.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part126.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part130.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part134.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part138.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part142.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part146.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part150.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part154.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part158.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part162.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part166.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part170.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part174.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part178.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part182.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part186.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part190.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part194.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part198.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part202.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part206.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part210.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part214.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part218.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part222.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part226.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part230.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part234.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part238.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part242.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part246.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part250.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part254.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part258.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part262.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part266.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part270.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part274.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part278.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part282.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part286.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part290.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part294.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part298.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part302.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part306.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part310.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part314.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part318.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part322.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part326.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part330.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part334.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part338.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part342.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part346.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part350.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part354.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part358.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part362.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part366.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part370.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part374.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part378.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part382.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part386.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part390.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part394.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part398.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part402.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part406.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part410.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part414.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part418.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part422.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part426.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part430.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part434.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part438.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part442.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part446.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part450.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part454.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part458.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part462.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part466.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part470.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part474.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part478.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part482.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part486.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part490.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part494.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part498.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part502.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part506.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part510.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part514.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part518.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part522.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part526.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part530.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part534.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part538.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part542.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part546.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part550.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part554.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part558.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part562.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part566.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part570.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part574.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part578.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part582.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part586.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part590.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part594.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part598.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part602.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part606.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part610.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part614.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part618.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part622.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part626.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part630.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part634.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part638.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part642.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part646.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part650.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part654.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part658.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part662.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part666.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part670.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part674.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part678.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part682.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part686.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part690.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part694.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part698.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part702.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part706.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part710.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part714.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part718.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part722.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part726.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part730.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part734.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part738.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part742.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part746.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part750.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part754.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part758.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part762.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part766.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part770.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part774.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part778.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part782.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part786.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part790.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part794.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part798.parquet"
+  ],
+  "qcd": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part002.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part006.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part010.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part014.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part018.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part022.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part026.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part030.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part034.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part038.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part042.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part046.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part050.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part054.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part058.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part062.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part066.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part070.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part074.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part078.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part082.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part086.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part090.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part094.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part098.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part102.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part106.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part110.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part114.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part118.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part122.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part126.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part130.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part134.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part138.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part142.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part146.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part150.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part154.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part158.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part162.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part166.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part170.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part174.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part178.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part182.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part186.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part190.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part194.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part198.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part202.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part206.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part210.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part214.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part218.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part222.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part226.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part230.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part234.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part238.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part242.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part246.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part250.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part254.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part258.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part262.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part266.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part270.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part274.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part278.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part282.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part286.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part290.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part294.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part298.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part302.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part306.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part310.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part314.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part318.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part322.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part326.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part330.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part334.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part338.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part342.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part346.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part350.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part354.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part358.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part362.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part366.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part370.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part374.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part378.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part382.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part386.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part390.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part394.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part398.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part402.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part406.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part410.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part414.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part418.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part422.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part426.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part430.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part434.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part438.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part442.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part446.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part450.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part454.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part458.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part462.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part466.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part470.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part474.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part478.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part482.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part486.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part490.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part494.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part498.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part502.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part506.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part510.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part514.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part518.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part522.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part526.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part530.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part534.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part538.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part542.parquet"
+  ]
+}
+=== Restarting DataIter train_worker3, seed=744439050 ===
+[2024-11-22 14:43:28,767] INFO: Restarted DataIter train_worker3, load_range=(0.055770696627121, 0.13577069662712102), file_list:
+{
+  "sig": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part003.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part007.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part011.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part015.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part019.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part023.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part027.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part031.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part035.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part039.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part043.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part047.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part051.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part055.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part059.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part063.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part067.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part071.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part075.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part079.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part083.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part087.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part091.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part095.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part099.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part103.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part107.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part111.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part115.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part119.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part123.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part127.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part131.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part135.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part139.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part143.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part147.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part151.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part155.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part159.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part163.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part167.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part171.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part175.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part179.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part183.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part187.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part191.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part195.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part199.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part203.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part207.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part211.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part215.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part219.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part223.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part227.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part231.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part235.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part239.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part243.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part247.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part251.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part255.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part259.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part263.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part267.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part271.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part275.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part279.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part283.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part287.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part291.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part295.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part299.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part303.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part307.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part311.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part315.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part319.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part323.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part327.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part331.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part335.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part339.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part343.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part347.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part351.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part355.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part359.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part363.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part367.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part371.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part375.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part379.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part383.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part387.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part391.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part395.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part399.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part403.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part407.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part411.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part415.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part419.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part423.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part427.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part431.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part435.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part439.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part443.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part447.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part451.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part455.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part459.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part463.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part467.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part471.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part475.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part479.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part483.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part487.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part491.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part495.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part499.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part503.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part507.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part511.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part515.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part519.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part523.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part527.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part531.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part535.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part539.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part543.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part547.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part551.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part555.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part559.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part563.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part567.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part571.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part575.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part579.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part583.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part587.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part591.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part595.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part599.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part603.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part607.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part611.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part615.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part619.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part623.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part627.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part631.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part635.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part639.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part643.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part647.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part651.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part655.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part659.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part663.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part667.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part671.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part675.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part679.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part683.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part687.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part691.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part695.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part699.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part703.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part707.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part711.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part715.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part719.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part723.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part727.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part731.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part735.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part739.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part743.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part747.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part751.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part755.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part759.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part763.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part767.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part771.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part775.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part779.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part783.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part787.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part791.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part795.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/hgg/part799.parquet"
+  ],
+  "qcd": [
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part003.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part007.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part011.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part015.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part019.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part023.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part027.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part031.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part035.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part039.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part043.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part047.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part051.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part055.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part059.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part063.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part067.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part071.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part075.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part079.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part083.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part087.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part091.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part095.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part099.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part103.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part107.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part111.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part115.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part119.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part123.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part127.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part131.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part135.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part139.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part143.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part147.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part151.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part155.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part159.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part163.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part167.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part171.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part175.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part179.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part183.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part187.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part191.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part195.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part199.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part203.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part207.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part211.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part215.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part219.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part223.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part227.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part231.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part235.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part239.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part243.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part247.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part251.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part255.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part259.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part263.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part267.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part271.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part275.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part279.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part283.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part287.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part291.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part295.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part299.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part303.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part307.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part311.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part315.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part319.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part323.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part327.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part331.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part335.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part339.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part343.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part347.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part351.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part355.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part359.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part363.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part367.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part371.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part375.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part379.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part383.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part387.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part391.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part395.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part399.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part403.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part407.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part411.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part415.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part419.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part423.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part427.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part431.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part435.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part439.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part443.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part447.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part451.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part455.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part459.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part463.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part467.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part471.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part475.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part479.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part483.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part487.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part491.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part495.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part499.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part503.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part507.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part511.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part515.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part519.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part523.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part527.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part531.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part535.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part539.parquet",
+    "/scratch365/cmoore24/weaver-core/my_attempt/samples/470to600/part543.parquet"
+  ]
+}
+0it [00:10, ?it/s]
+Traceback (most recent call last):
+  File "/var/condor/execute/dir_720094/miniconda/bin/weaver", line 33, in <module>
+    sys.exit(load_entry_point('weaver-core', 'console_scripts', 'weaver')())
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/train.py", line 982, in main
+    _main(args)
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/train.py", line 828, in _main
+    train(model, loss_func, opt, scheduler, train_loader, dev, epoch,
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/utils/nn/tools.py", line 66, in train_classification
+    for X, y, _ in tq:
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 701, in __next__
+    data = self._next_data()
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1465, in _next_data
+    return self._process_data(data)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1491, in _process_data
+    data.reraise()
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/torch/_utils.py", line 715, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/_dispatch.py", line 64, in dispatch
+    next(gen_or_result)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/operations/ak_to_numpy.py", line 48, in to_numpy
+    return _impl(array, allow_missing)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/operations/ak_to_numpy.py", line 60, in _impl
+    return numpy_layout.to_backend_array(allow_missing=allow_missing)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/contents/content.py", line 1112, in to_backend_array
+    return self._to_backend_array(allow_missing, backend)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/contents/listoffsetarray.py", line 2106, in _to_backend_array
+    return self.to_RegularArray()._to_backend_array(allow_missing, backend)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/contents/listoffsetarray.py", line 284, in to_RegularArray
+    self._backend.maybe_kernel_error(
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/_backends/backend.py", line 67, in maybe_kernel_error
+    raise ValueError(self.format_kernel_error(error))
+ValueError: cannot convert to RegularArray because subarray lengths are not regular (in compiled code: https://github.com/scikit-hep/awkward/blob/awkward-cpp-42/awkward-cpp/src/cpu-kernels/awkward_ListOffsetArray_toRegularArray.cpp#L22)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 351, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 33, in fetch
+    data.append(next(self.dataset_iter))
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/utils/dataset.py", line 219, in __next__
+    self.table, self.indices = self.prefetch.result()
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/utils/dataset.py", line 115, in _load_next
+    table, indices = _preprocess(table, data_config, options)
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/utils/dataset.py", line 107, in _preprocess
+    table = _finalize_inputs(table, data_config)
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/utils/dataset.py", line 35, in _finalize_inputs
+    table[k] = _clip((table[k] - params['center']) * params['scale'], params['min'], params['max'])
+  File "/var/condor/execute/dir_720094/weaver-core/weaver/utils/data/tools.py", line 65, in _clip
+    return ak.unflatten(np.clip(ak.to_numpy(ak.flatten(a)), a_min, a_max), ak.num(a))
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/_dispatch.py", line 38, in dispatch
+    with OperationErrorContext(name, args, kwargs):
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/_errors.py", line 85, in __exit__
+    self.handle_exception(exception_type, exception_value)
+  File "/var/condor/execute/dir_720094/miniconda/lib/python3.10/site-packages/awkward/_errors.py", line 95, in handle_exception
+    raise self.decorate_exception(cls, exception)
+ValueError: cannot convert to RegularArray because subarray lengths are not regular (in compiled code: https://github.com/scikit-hep/awkward/blob/awkward-cpp-42/awkward-cpp/src/cpu-kernels/awkward_ListOffsetArray_toRegularArray.cpp#L22)
+
+This error occurred while calling
+
+    ak.to_numpy(
+        <Array [[0.133, 0.338, ..., 0.388], ...] type='342834 * var * ?float32'>
+    )
+

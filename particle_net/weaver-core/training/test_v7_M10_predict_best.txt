@@ -1,0 +1,588 @@
+[2024-09-25 11:26:14,182] INFO: args:
+ - ('regression_mode', False)
+ - ('data_config', 'CMSAK8_PN_v8.yaml')
+ - ('extra_selection', None)
+ - ('extra_test_selection', None)
+ - ('data_train', [])
+ - ('data_val', [])
+ - ('data_test', ['/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/*.root'])
+ - ('data_fraction', 1)
+ - ('file_fraction', 1)
+ - ('fetch_by_files', False)
+ - ('fetch_step', 0.01)
+ - ('in_memory', False)
+ - ('train_val_split', 0.8)
+ - ('no_remake_weights', False)
+ - ('demo', False)
+ - ('lr_finder', None)
+ - ('tensorboard', None)
+ - ('tensorboard_custom_fn', None)
+ - ('network_config', 'PN_network_v7.py')
+ - ('network_option', [])
+ - ('model_prefix', 'output/20240912-170452_PN_network_v7_ranger_lr0.005_batch512_best_epoch_state.pt')
+ - ('load_model_weights', None)
+ - ('exclude_model_weights', None)
+ - ('freeze_model_weights', None)
+ - ('num_epochs', 20)
+ - ('steps_per_epoch', None)
+ - ('steps_per_epoch_val', None)
+ - ('samples_per_epoch', None)
+ - ('samples_per_epoch_val', None)
+ - ('optimizer', 'ranger')
+ - ('optimizer_option', [])
+ - ('lr_scheduler', 'flat+decay')
+ - ('warmup_steps', 0)
+ - ('load_epoch', None)
+ - ('start_lr', 0.005)
+ - ('batch_size', 512)
+ - ('use_amp', False)
+ - ('gpus', '0')
+ - ('predict_gpus', '0')
+ - ('num_workers', 1)
+ - ('predict', True)
+ - ('predict_output', 'output/test7_M10_best.root')
+ - ('export_onnx', None)
+ - ('onnx_opset', 15)
+ - ('io_test', False)
+ - ('copy_inputs', False)
+ - ('log', '')
+ - ('print', False)
+ - ('profile', False)
+ - ('backend', None)
+ - ('cross_validation', None)
+ - ('local_rank', None)
+[2024-09-25 11:26:14,183] INFO: Running in classification mode
+[2024-09-25 11:26:21,359] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mselection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mtest_time_selection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('probXbb', '((label_Z_bb==1) | (label_H_bb==1))')
+ - ('probXcc', '((label_Z_cc==1) | (label_H_cc==1))')
+ - ('probXqq', '((label_Z_qq==1) | (label_W_qq==1))')
+ - ('probQCDbb', '(label_QCD_bb==1)')
+ - ('probQCDcc', '(label_QCD_cc==1)')
+ - ('probQCDb', '(label_QCD_b==1)')
+ - ('probQCDc', '(label_QCD_c==1)')
+ - ('probQCDothers', '(label_QCD_others==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')[0m
+[2024-09-25 11:26:21,359] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-09-25 11:26:21,359] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_VTX_ass', 'pfcand_abseta', 'pfcand_btagEtaRel', 'pfcand_btagJetDistVal', 'pfcand_btagPParRatio', 'pfcand_btagPtRatio', 'pfcand_btagSip3dSig', 'pfcand_btagSip3dVal', 'pfcand_charge', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_phirel', 'pfcand_pt_log', 'pfcand_quality'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_abseta', 'sv_costhetasvpv', 'sv_d3d', 'sv_d3dsig', 'sv_dxy', 'sv_dxysig', 'sv_etarel', 'sv_mass', 'sv_normchi2', 'sv_ntracks', 'sv_phirel', 'sv_pt_log'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-09-25 11:26:21,359] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': -0.0048187340144068, 'scale': 4.447982755171238, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': -0.00010839945389307104, 'scale': 4.3979230443753865, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 7.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.5702078342437744, 'scale': 1.650397941755878, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 1.0216445922851562, 'scale': 0.45049464765653174, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': -8.01788191893138e-05, 'scale': 172.90023485322902, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.7776329517364502, 'scale': 1.285953736614434, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.00793754169717431, 'scale': 4.417789653724297, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 252.16555414799987, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 0.8715343291648558, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 473.799859237899, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.6631890202427042, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 297.4582326677144, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.386900984493749, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 11.421553075313568, 'scale': 0.5199271364891452, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.001004016064257028, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.12241530418396, 'scale': 0.5143548435556096, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 5.0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': -0.002474044682458043, 'scale': 8.444601883624355, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': 0.000502154347486794, 'scale': 8.732433887710727, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.5491966009140015, 'scale': 1.5939476880115426, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_costhetasvpv', {'length': 7, 'pad_mode': 'constant', 'center': 0.9997627139091492, 'scale': 183.23339376597278, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.5513421297073364, 'scale': 0.22312815380609285, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 8.356559753417969, 'scale': 0.02389999546951837, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.4215024411678314, 'scale': 0.31221827708813427, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 8.344268798828125, 'scale': 0.02390170557794748, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.3346953392028809, 'scale': 0.30923084883711116, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.8069154620170593, 'scale': 0.7244960986579544, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 3.7832536697387695, 'scale': 0.6925381441482783, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'fj_corrsdmass', 'fj_sdmass', 'fj_pt', 'fj_eta', 'fj_phi', 'sample_isQCD', 'gen_pt', 'npfcands', 'pfMassDecorrelatedParticleNetJetTags_probQCDb', 'pfMassDecorrelatedParticleNetJetTags_probQCDbb', 'pfMassDecorrelatedParticleNetJetTags_probQCDc', 'pfMassDecorrelatedParticleNetJetTags_probQCDcc', 'pfMassDecorrelatedParticleNetJetTags_probQCDothers', 'pfMassDecorrelatedParticleNetJetTags_probXbb', 'pfMassDecorrelatedParticleNetJetTags_probXcc', 'pfMassDecorrelatedParticleNetJetTags_probXqq')[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mmonitor_variables: ()[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mreweight_method: flat[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mreweight_basewgt: None[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mreweight_branches: ('fj_pt', 'fj_corrsdmass')[0m
+[2024-09-25 11:26:21,359] INFO: [0;37mreweight_bins: ([110, 120, 170, 220, 300, 400, 700, 1000], [1, 15, 22, 60, 90, 110, 140, 250])[0m
+[2024-09-25 11:26:21,360] INFO: [0;37mreweight_classes: ('probXbb', 'probXcc', 'probXqq', 'probQCDbb', 'probQCDcc', 'probQCDb', 'probQCDc', 'probQCDothers')[0m
+[2024-09-25 11:26:21,360] INFO: [0;37mclass_weights: [5, 5, 5, 2, 2, 1, 1, 2][0m
+[2024-09-25 11:26:21,360] INFO: [0;37mreweight_threshold: 10[0m
+[2024-09-25 11:26:21,360] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mselection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mtest_time_selection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('probXbb', '((label_Z_bb==1) | (label_H_bb==1))')
+ - ('probXcc', '((label_Z_cc==1) | (label_H_cc==1))')
+ - ('probXqq', '((label_Z_qq==1) | (label_W_qq==1))')
+ - ('probQCDbb', '(label_QCD_bb==1)')
+ - ('probQCDcc', '(label_QCD_cc==1)')
+ - ('probQCDb', '(label_QCD_b==1)')
+ - ('probQCDc', '(label_QCD_c==1)')
+ - ('probQCDothers', '(label_QCD_others==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')[0m
+[2024-09-25 11:26:21,371] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-09-25 11:26:21,371] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_VTX_ass', 'pfcand_abseta', 'pfcand_btagEtaRel', 'pfcand_btagJetDistVal', 'pfcand_btagPParRatio', 'pfcand_btagPtRatio', 'pfcand_btagSip3dSig', 'pfcand_btagSip3dVal', 'pfcand_charge', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_phirel', 'pfcand_pt_log', 'pfcand_quality'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_abseta', 'sv_costhetasvpv', 'sv_d3d', 'sv_d3dsig', 'sv_dxy', 'sv_dxysig', 'sv_etarel', 'sv_mass', 'sv_normchi2', 'sv_ntracks', 'sv_phirel', 'sv_pt_log'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-09-25 11:26:21,371] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': -0.0048187340144068, 'scale': 4.447982755171238, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': -0.00010839945389307104, 'scale': 4.3979230443753865, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 7.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.5702078342437744, 'scale': 1.650397941755878, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 1.0216445922851562, 'scale': 0.45049464765653174, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': -8.01788191893138e-05, 'scale': 172.90023485322902, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.7776329517364502, 'scale': 1.285953736614434, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.00793754169717431, 'scale': 4.417789653724297, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 252.16555414799987, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 0.8715343291648558, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 473.799859237899, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.6631890202427042, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 297.4582326677144, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.386900984493749, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 11.421553075313568, 'scale': 0.5199271364891452, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.001004016064257028, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.12241530418396, 'scale': 0.5143548435556096, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 5.0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': -0.002474044682458043, 'scale': 8.444601883624355, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': 0.000502154347486794, 'scale': 8.732433887710727, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.5491966009140015, 'scale': 1.5939476880115426, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_costhetasvpv', {'length': 7, 'pad_mode': 'constant', 'center': 0.9997627139091492, 'scale': 183.23339376597278, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.5513421297073364, 'scale': 0.22312815380609285, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 8.356559753417969, 'scale': 0.02389999546951837, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.4215024411678314, 'scale': 0.31221827708813427, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 8.344268798828125, 'scale': 0.02390170557794748, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.3346953392028809, 'scale': 0.30923084883711116, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.8069154620170593, 'scale': 0.7244960986579544, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 3.7832536697387695, 'scale': 0.6925381441482783, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'fj_corrsdmass', 'fj_sdmass', 'fj_pt', 'fj_eta', 'fj_phi', 'sample_isQCD', 'gen_pt', 'npfcands', 'pfMassDecorrelatedParticleNetJetTags_probQCDb', 'pfMassDecorrelatedParticleNetJetTags_probQCDbb', 'pfMassDecorrelatedParticleNetJetTags_probQCDc', 'pfMassDecorrelatedParticleNetJetTags_probQCDcc', 'pfMassDecorrelatedParticleNetJetTags_probQCDothers', 'pfMassDecorrelatedParticleNetJetTags_probXbb', 'pfMassDecorrelatedParticleNetJetTags_probXcc', 'pfMassDecorrelatedParticleNetJetTags_probXqq')[0m
+[2024-09-25 11:26:21,371] INFO: [0;37mmonitor_variables: ()[0m
+[2024-09-25 11:26:21,399] INFO: Network options: {}
+[2024-09-25 11:26:22,037] INFO: [0;37mWarning: module FeatureConv is treated as a zero-op.[0m
+[2024-09-25 11:26:22,038] INFO: [0;37mWarning: module EdgeConvBlock is treated as a zero-op.[0m
+[2024-09-25 11:26:22,040] INFO: [0;37mWarning: module Dropout is treated as a zero-op.[0m
+[2024-09-25 11:26:22,040] INFO: [0;37mWarning: module ParticleNet is treated as a zero-op.[0m
+[2024-09-25 11:26:22,040] INFO: [0;37mWarning: module ParticleNetTagger is treated as a zero-op.[0m
+[2024-09-25 11:26:28,720] INFO: [0;37mParticleNetTagger(
+  |0.579 M, 100.000% Params, 472.139 MMac, 100.000% MACs|
+  (pf_conv): FeatureConv(
+    |0.001 M, 0.128% Params, 77.6 KMac, 0.016% MACs|
+    (conv): Sequential(
+      |0.001 M, 0.128% Params, 77.6 KMac, 0.016% MACs|
+      (0): BatchNorm1d(20, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.007% Params, 4.0 KMac, 0.001% MACs|)
+      (1): Conv1d(20, 32, kernel_size=(1,), stride=(1,), bias=False, |0.001 M, 0.110% Params, 64.0 KMac, 0.014% MACs|)
+      (2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.011% Params, 6.4 KMac, 0.001% MACs|)
+      (3): ReLU(|0.0 M, 0.000% Params, 3.2 KMac, 0.001% MACs|)
+    )
+  )
+  (sv_conv): FeatureConv(
+    |0.0 M, 0.081% Params, 3.528 KMac, 0.001% MACs|
+    (conv): Sequential(
+      |0.0 M, 0.081% Params, 3.528 KMac, 0.001% MACs|
+      (0): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.004% Params, 168.0 Mac, 0.000% MACs|)
+      (1): Conv1d(12, 32, kernel_size=(1,), stride=(1,), bias=False, |0.0 M, 0.066% Params, 2.688 KMac, 0.001% MACs|)
+      (2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.011% Params, 448.0 Mac, 0.000% MACs|)
+      (3): ReLU(|0.0 M, 0.000% Params, 224.0 Mac, 0.000% MACs|)
+    )
+  )
+  (pn): ParticleNet(
+    |0.578 M, 99.790% Params, 472.058 MMac, 99.983% MACs|
+    (edge_convs): ModuleList(
+      (0): EdgeConvBlock(
+        |0.015 M, 2.563% Params, 22.263 MMac, 4.715% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.004 M, 0.707% Params, 7.012 MMac, 1.485% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.022% Params, 219.136 KMac, 0.046% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 109.568 KMac, 0.023% MACs|)
+        )
+        (sc): Conv1d(32, 64, kernel_size=(1,), stride=(1,), bias=False, |0.002 M, 0.354% Params, 219.136 KMac, 0.046% MACs|)
+        (sc_bn): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.022% Params, 13.696 KMac, 0.003% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 6.848 KMac, 0.001% MACs|)
+      )
+      (1): EdgeConvBlock(
+        |0.058 M, 10.076% Params, 87.038 MMac, 18.435% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.016 M, 2.828% Params, 28.049 MMac, 5.941% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.044% Params, 438.272 KMac, 0.093% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 219.136 KMac, 0.046% MACs|)
+        )
+        (sc): Conv1d(64, 128, kernel_size=(1,), stride=(1,), bias=False, |0.008 M, 1.414% Params, 876.544 KMac, 0.186% MACs|)
+        (sc_bn): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.044% Params, 27.392 KMac, 0.006% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 13.696 KMac, 0.003% MACs|)
+      )
+      (2): EdgeConvBlock(
+        |0.231 M, 39.951% Params, 344.126 MMac, 72.886% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.066 M, 11.314% Params, 112.198 MMac, 23.764% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.088% Params, 876.544 KMac, 0.186% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 438.272 KMac, 0.093% MACs|)
+        )
+        (sc): Conv1d(128, 256, kernel_size=(1,), stride=(1,), bias=False, |0.033 M, 5.657% Params, 3.506 MMac, 0.743% MACs|)
+        (sc_bn): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.088% Params, 54.784 KMac, 0.012% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 27.392 KMac, 0.006% MACs|)
+      )
+    )
+    (fusion_block): Sequential(
+      |0.173 M, 29.831% Params, 18.531 MMac, 3.925% MACs|
+      (0): Conv1d(448, 384, kernel_size=(1,), stride=(1,), bias=False, |0.172 M, 29.698% Params, 18.407 MMac, 3.899% MACs|)
+      (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.133% Params, 82.176 KMac, 0.017% MACs|)
+      (2): ReLU(|0.0 M, 0.000% Params, 41.088 KMac, 0.009% MACs|)
+    )
+    (fc): Sequential(
+      |0.101 M, 17.369% Params, 100.872 KMac, 0.021% MACs|
+      (0): Sequential(
+        |0.099 M, 17.014% Params, 98.816 KMac, 0.021% MACs|
+        (0): Linear(in_features=384, out_features=256, bias=True, |0.099 M, 17.014% Params, 98.56 KMac, 0.021% MACs|)
+        (1): ReLU(|0.0 M, 0.000% Params, 256.0 Mac, 0.000% MACs|)
+        (2): Dropout(p=0.1, inplace=False, |0.0 M, 0.000% Params, 0.0 Mac, 0.000% MACs|)
+      )
+      (1): Linear(in_features=256, out_features=8, bias=True, |0.002 M, 0.355% Params, 2.056 KMac, 0.000% MACs|)
+    )
+  )
+)[0m
+[2024-09-25 11:26:28,723] INFO: Computational complexity:       472.14 MMac
+[2024-09-25 11:26:28,723] INFO: Number of parameters:           579.27 k
+[2024-09-25 11:26:28,723] INFO: Using loss function CrossEntropyLoss() with options {}
+[2024-09-25 11:26:28,734] INFO: Loading model output/20240912-170452_PN_network_v7_ranger_lr0.005_batch512_best_epoch_state.pt for eval
+[2024-09-25 11:26:28,766] INFO: Running on test file group  with 47 files:
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_38.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_39.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_40.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_41.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_42.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_43.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_44.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_45.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_46.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_9.root
+[2024-09-25 11:26:28,778] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-09-25 11:26:28,778] INFO: [0;37mselection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:28,778] INFO: [0;37mtest_time_selection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:28,778] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('probXbb', '((label_Z_bb==1) | (label_H_bb==1))')
+ - ('probXcc', '((label_Z_cc==1) | (label_H_cc==1))')
+ - ('probXqq', '((label_Z_qq==1) | (label_W_qq==1))')
+ - ('probQCDbb', '(label_QCD_bb==1)')
+ - ('probQCDcc', '(label_QCD_cc==1)')
+ - ('probQCDb', '(label_QCD_b==1)')
+ - ('probQCDc', '(label_QCD_c==1)')
+ - ('probQCDothers', '(label_QCD_others==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')[0m
+[2024-09-25 11:26:28,778] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-09-25 11:26:28,778] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_VTX_ass', 'pfcand_abseta', 'pfcand_btagEtaRel', 'pfcand_btagJetDistVal', 'pfcand_btagPParRatio', 'pfcand_btagPtRatio', 'pfcand_btagSip3dSig', 'pfcand_btagSip3dVal', 'pfcand_charge', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_phirel', 'pfcand_pt_log', 'pfcand_quality'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_abseta', 'sv_costhetasvpv', 'sv_d3d', 'sv_d3dsig', 'sv_dxy', 'sv_dxysig', 'sv_etarel', 'sv_mass', 'sv_normchi2', 'sv_ntracks', 'sv_phirel', 'sv_pt_log'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-09-25 11:26:28,778] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-09-25 11:26:28,778] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': -0.0048187340144068, 'scale': 4.447982755171238, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': -0.00010839945389307104, 'scale': 4.3979230443753865, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 7.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.5702078342437744, 'scale': 1.650397941755878, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 1.0216445922851562, 'scale': 0.45049464765653174, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': -8.01788191893138e-05, 'scale': 172.90023485322902, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.7776329517364502, 'scale': 1.285953736614434, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.00793754169717431, 'scale': 4.417789653724297, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 252.16555414799987, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 0.8715343291648558, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 473.799859237899, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.6631890202427042, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 297.4582326677144, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.386900984493749, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 11.421553075313568, 'scale': 0.5199271364891452, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.001004016064257028, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.12241530418396, 'scale': 0.5143548435556096, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 5.0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': -0.002474044682458043, 'scale': 8.444601883624355, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': 0.000502154347486794, 'scale': 8.732433887710727, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.5491966009140015, 'scale': 1.5939476880115426, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_costhetasvpv', {'length': 7, 'pad_mode': 'constant', 'center': 0.9997627139091492, 'scale': 183.23339376597278, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.5513421297073364, 'scale': 0.22312815380609285, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 8.356559753417969, 'scale': 0.02389999546951837, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.4215024411678314, 'scale': 0.31221827708813427, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 8.344268798828125, 'scale': 0.02390170557794748, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.3346953392028809, 'scale': 0.30923084883711116, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.8069154620170593, 'scale': 0.7244960986579544, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 3.7832536697387695, 'scale': 0.6925381441482783, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-09-25 11:26:28,778] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'fj_corrsdmass', 'fj_sdmass', 'fj_pt', 'fj_eta', 'fj_phi', 'sample_isQCD', 'gen_pt', 'npfcands', 'pfMassDecorrelatedParticleNetJetTags_probQCDb', 'pfMassDecorrelatedParticleNetJetTags_probQCDbb', 'pfMassDecorrelatedParticleNetJetTags_probQCDc', 'pfMassDecorrelatedParticleNetJetTags_probQCDcc', 'pfMassDecorrelatedParticleNetJetTags_probQCDothers', 'pfMassDecorrelatedParticleNetJetTags_probXbb', 'pfMassDecorrelatedParticleNetJetTags_probXcc', 'pfMassDecorrelatedParticleNetJetTags_probXqq')[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mmonitor_variables: ()[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_method: flat[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_basewgt: None[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_branches: ('fj_pt', 'fj_corrsdmass')[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_bins: ([110, 120, 170, 220, 300, 400, 700, 1000], [1, 15, 22, 60, 90, 110, 140, 250])[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_classes: ('probXbb', 'probXcc', 'probXqq', 'probQCDbb', 'probQCDcc', 'probQCDb', 'probQCDc', 'probQCDothers')[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mclass_weights: [5, 5, 5, 2, 2, 1, 1, 2][0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_threshold: 10[0m
+[2024-09-25 11:26:28,779] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-09-25 11:26:28,790] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-09-25 11:26:28,790] INFO: [0;37mselection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:28,790] INFO: [0;37mtest_time_selection: (np.abs(fj_eta)<2.4) & (fj_pt>110) & (fj_pt<1000) & (fj_corrsdmass>1) & (fj_corrsdmass<250)[0m
+[2024-09-25 11:26:28,790] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('probXbb', '((label_Z_bb==1) | (label_H_bb==1))')
+ - ('probXcc', '((label_Z_cc==1) | (label_H_cc==1))')
+ - ('probXqq', '((label_Z_qq==1) | (label_W_qq==1))')
+ - ('probQCDbb', '(label_QCD_bb==1)')
+ - ('probQCDcc', '(label_QCD_cc==1)')
+ - ('probQCDb', '(label_QCD_b==1)')
+ - ('probQCDc', '(label_QCD_c==1)')
+ - ('probQCDothers', '(label_QCD_others==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(probXbb),ak.to_numpy(probXcc),ak.to_numpy(probXqq),ak.to_numpy(probQCDbb),ak.to_numpy(probQCDcc),ak.to_numpy(probQCDb),ak.to_numpy(probQCDc),ak.to_numpy(probQCDothers)], axis=1), axis=1)')[0m
+[2024-09-25 11:26:28,790] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-09-25 11:26:28,790] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_VTX_ass', 'pfcand_abseta', 'pfcand_btagEtaRel', 'pfcand_btagJetDistVal', 'pfcand_btagPParRatio', 'pfcand_btagPtRatio', 'pfcand_btagSip3dSig', 'pfcand_btagSip3dVal', 'pfcand_charge', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_phirel', 'pfcand_pt_log', 'pfcand_quality'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_abseta', 'sv_costhetasvpv', 'sv_d3d', 'sv_d3dsig', 'sv_dxy', 'sv_dxysig', 'sv_etarel', 'sv_mass', 'sv_normchi2', 'sv_ntracks', 'sv_phirel', 'sv_pt_log'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-09-25 11:26:28,791] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-09-25 11:26:28,791] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': -0.0048187340144068, 'scale': 4.447982755171238, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': -0.00010839945389307104, 'scale': 4.3979230443753865, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 7.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.5702078342437744, 'scale': 1.650397941755878, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 1.0216445922851562, 'scale': 0.45049464765653174, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': -8.01788191893138e-05, 'scale': 172.90023485322902, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.7776329517364502, 'scale': 1.285953736614434, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0.00793754169717431, 'scale': 4.417789653724297, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 252.16555414799987, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 0.8715343291648558, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 473.799859237899, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.6631890202427042, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 297.4582326677144, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.386900984493749, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 11.421553075313568, 'scale': 0.5199271364891452, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': -1.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.001004016064257028, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.12241530418396, 'scale': 0.5143548435556096, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 5.0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': -0.002474044682458043, 'scale': 8.444601883624355, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': 0.000502154347486794, 'scale': 8.732433887710727, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.5491966009140015, 'scale': 1.5939476880115426, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_costhetasvpv', {'length': 7, 'pad_mode': 'constant', 'center': 0.9997627139091492, 'scale': 183.23339376597278, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.5513421297073364, 'scale': 0.22312815380609285, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 8.356559753417969, 'scale': 0.02389999546951837, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.4215024411678314, 'scale': 0.31221827708813427, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 8.344268798828125, 'scale': 0.02390170557794748, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.3346953392028809, 'scale': 0.30923084883711116, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.8069154620170593, 'scale': 0.7244960986579544, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3.0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 3.7832536697387695, 'scale': 0.6925381441482783, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': 0.0, 'scale': 1.0, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-09-25 11:26:28,791] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-09-25 11:26:28,791] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'fj_corrsdmass', 'fj_sdmass', 'fj_pt', 'fj_eta', 'fj_phi', 'sample_isQCD', 'gen_pt', 'npfcands', 'pfMassDecorrelatedParticleNetJetTags_probQCDb', 'pfMassDecorrelatedParticleNetJetTags_probQCDbb', 'pfMassDecorrelatedParticleNetJetTags_probQCDc', 'pfMassDecorrelatedParticleNetJetTags_probQCDcc', 'pfMassDecorrelatedParticleNetJetTags_probQCDothers', 'pfMassDecorrelatedParticleNetJetTags_probXbb', 'pfMassDecorrelatedParticleNetJetTags_probXcc', 'pfMassDecorrelatedParticleNetJetTags_probXqq')[0m
+[2024-09-25 11:26:28,791] INFO: [0;37mmonitor_variables: ()[0m
+=== Restarting DataIter test__worker0, seed=3498301568 ===
+[2024-09-25 11:26:29,185] INFO: Restarted DataIter test__worker0, load_range=(0, 1), file_list:
+{
+  "": [
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_38.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_39.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_40.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_41.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_42.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_43.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_44.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_45.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_46.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/PN_test/Zprime/M10/PN_test_M10_Ntuple_9.root"
+  ]
+}
+[2024-09-25 11:29:00,541] INFO: Processed 218787 entries in total (avg. speed 1441.8 entries/s)
+[2024-09-25 11:29:00,541] INFO: Evaluation class distribution: 
+    [(0, 14093), (1, 12199), (2, 38321), (3, 1348), (4, 6053), (5, 4360), (6, 17670), (7, 124743)]
+[2024-09-25 11:29:01,827] INFO: Evaluation metrics: 
+    - roc_auc_score: 
+0.6849779743243679
+    - roc_auc_score_matrix: 
+[[0.         0.39514303 0.5837025  0.50883305 0.5048894  0.39799634
+  0.4705496  0.5862124 ]
+ [0.         0.         0.8035465  0.87642026 0.67295676 0.71661466
+  0.6684095  0.8122697 ]
+ [0.         0.         0.         0.9612641  0.8123596  0.87812656
+  0.7321157  0.67790824]
+ [0.         0.         0.         0.         0.8765798  0.78880656
+  0.92427164 0.9593008 ]
+ [0.         0.         0.         0.         0.         0.71931845
+  0.67983407 0.7813219 ]
+ [0.         0.         0.         0.         0.         0.
+  0.7612342  0.8563654 ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.68055266]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.        ]]
+    - confusion_matrix: 
+[[9.45150075e-02 1.53409494e-01 5.58504222e-01 1.89455758e-02
+  5.27212091e-02 1.70297311e-03 7.09572128e-05 1.20130561e-01]
+ [1.71243545e-01 4.28477744e-01 2.63546192e-01 1.96737437e-02
+  6.73825723e-02 4.18067055e-03 8.19739323e-05 4.54135585e-02]
+ [1.98324678e-02 1.47256074e-01 7.21901829e-01 4.14916103e-03
+  3.07142298e-02 6.26288458e-04 1.82667467e-04 7.53372824e-02]
+ [5.05192878e-01 1.06824926e-01 5.26706231e-02 2.33679525e-01
+  7.49258160e-02 8.16023739e-03 0.00000000e+00 1.85459941e-02]
+ [1.04245829e-01 2.83495787e-01 2.79696019e-01 3.25458450e-02
+  1.71815629e-01 3.46935404e-03 1.65207335e-04 1.24566331e-01]
+ [3.70642202e-01 2.13532110e-01 1.81880734e-01 6.85779817e-02
+  6.76605505e-02 2.77522936e-02 4.58715596e-04 6.94954128e-02]
+ [6.18562535e-02 3.03848331e-01 3.97566497e-01 7.35710243e-03
+  8.27391058e-02 4.64063384e-03 2.82965478e-04 1.41709111e-01]
+ [1.63055242e-02 1.19790289e-01 5.65009660e-01 2.83783459e-03
+  7.11542932e-02 8.17681152e-04 2.16445011e-04 2.23868273e-01]]
+[2024-09-25 11:29:02,171] INFO: [1mTest metric 0.29083[0m
+[2024-09-25 11:29:02,798] INFO: [1mWritten output to output/test7_M10_best.root[0m

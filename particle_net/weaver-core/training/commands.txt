@@ -1,0 +1,19 @@
+nvidia-smi
+
+weaver --data-train '/cms/akobert/UL/Ntupler/flat_2018/flat_2018_Ntuple_*.root' '/cms/akobert/UL/Ntupler/GJets/*/*.root' --data-val '/cms/akobert/UL/Ntupler/Zprime/M*/*.root' --fetch-by-file --fetch-step 1 --num-workers 3 --data-config CMSAK8_PN.yaml --network-config PN_network.py --model-prefix particlenet --gpus 0 --batch-size 1024 --start-lr 5e-3 --num-epochs 20 --optimizer ranger --log train.log
+
+weaver --data-train '/cms/akobert/UL/Ntupler/flat_2018/flat_2018_Ntuple_*.root' '/cms/akobert/UL/Ntupler/GJets/*/*.root' --data-config CMSAK8_PN_v2.yaml --network-config PN_network_v2.py --model-prefix 'output/{auto}' --gpus 0 --batch-size 512 --start-lr 5e-3 --num-epochs 20 --optimizer ranger --log train.log
+
+weaver --predict --data-test '/cms/akobert/UL/Ntupler/Zprime/M*/*.root' --data-config CMSAK8_PN_v2.yaml  --network-config PN_network_v2.py  --model-prefix output/20240807-141430_PN_network_v2_ranger_lr0.005_batch512_best_epoch_state.pt --gpus 0 --batch-size 512 --predict-output output/test0.root
+
+weaver --data-train 'sig:/cms/akobert/UL/Ntupler/flat_2018/PN_test_flat_2018_Ntuple_*.root' 'qcd:/cms/akobert/UL/Ntupler/QCD/*/*/*/*/*/output_*.root' --data-test '/cms/akobert/UL/Ntupler/Zprime/M*/*.root' --predict-output 'output/test8.root' --data-config CMSAK8_PN_v8.yaml --network-config PN_network_v8.py --model-prefix 'output/{auto}' --data-fraction 0.1 --file-fraction 0.5 --num-workers 4 --gpus 0 --batch-size 512 --start-lr 5e-3 --num-epochs 30 --optimizer ranger --log train.log > test_v8_training.txt &
+
+
+
+
+
+Trying:
+weaver --data-train '/d1/akobert/flat_2018/*.root' '/d1/akobert/QCD/*/*.root' --data-test '/d1/akobert/Zprime/M*/*.root' --predict-output 'output/test8.root' --data-config CMSAK8_PN_v8.yaml --network-config PN_network_v8.py --model-prefix 'output/{auto}' --num-workers 4 --gpus 1 --batch-size 512 --start-lr 5e-3 --num-epochs 30 --optimizer ranger --log train_v8.log > test_v8_training_fast.txt &
+
+Low pT:
+weaver --data-train '/d1/akobert/flat_2018/*.root' '/d1/akobert/QCD/*/output_1*.root' --data-test '/d1/akobert/Zprime/M*/*.root' --predict-output 'output/test8_lowPT.root' --data-config CMSAK8_PN_v8_lowPT.yaml --network-config PN_network_v8_lowPT.py --model-prefix 'output/{auto}' --num-workers 1 --gpus 0 --batch-size 512 --start-lr 5e-3 --num-epochs 30 --optimizer ranger --log train_v8_lowPT.log > test_v8_training_lowPT.txt &

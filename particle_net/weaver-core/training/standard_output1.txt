@@ -1,0 +1,1104 @@
+[2024-08-26 10:44:46,390] INFO: args:
+ - ('regression_mode', False)
+ - ('data_config', 'CMSAK8_PN_v4.yaml')
+ - ('extra_selection', None)
+ - ('extra_test_selection', None)
+ - ('data_train', [])
+ - ('data_val', [])
+ - ('data_test', ['/cms/akobert/UL/Ntupler/Zprime/M*/*.root'])
+ - ('data_fraction', 1)
+ - ('file_fraction', 1)
+ - ('fetch_by_files', False)
+ - ('fetch_step', 0.01)
+ - ('in_memory', False)
+ - ('train_val_split', 0.8)
+ - ('no_remake_weights', False)
+ - ('demo', False)
+ - ('lr_finder', None)
+ - ('tensorboard', None)
+ - ('tensorboard_custom_fn', None)
+ - ('network_config', 'PN_network_v4.py')
+ - ('network_option', [])
+ - ('model_prefix', 'ParticleNetMD_standard.onnx')
+ - ('load_model_weights', None)
+ - ('exclude_model_weights', None)
+ - ('freeze_model_weights', None)
+ - ('num_epochs', 20)
+ - ('steps_per_epoch', None)
+ - ('steps_per_epoch_val', None)
+ - ('samples_per_epoch', None)
+ - ('samples_per_epoch_val', None)
+ - ('optimizer', 'ranger')
+ - ('optimizer_option', [])
+ - ('lr_scheduler', 'flat+decay')
+ - ('warmup_steps', 0)
+ - ('load_epoch', None)
+ - ('start_lr', 0.005)
+ - ('batch_size', 512)
+ - ('use_amp', False)
+ - ('gpus', '0')
+ - ('predict_gpus', '0')
+ - ('num_workers', 1)
+ - ('predict', True)
+ - ('predict_output', 'output/standard1.root')
+ - ('export_onnx', None)
+ - ('onnx_opset', 15)
+ - ('io_test', False)
+ - ('copy_inputs', False)
+ - ('log', '')
+ - ('print', False)
+ - ('profile', False)
+ - ('backend', None)
+ - ('cross_validation', None)
+ - ('local_rank', None)
+[2024-08-26 10:44:46,390] INFO: Running in classification mode
+[2024-08-26 10:44:48,754] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-08-26 10:44:48,754] INFO: [0;37mselection: (np.abs(jet_eta)<2.4) & (jet_pt>110) & (jet_pt<1000) & ( (gen_pt>0))[0m
+[2024-08-26 10:44:48,754] INFO: [0;37mtest_time_selection: (np.abs(jet_eta)<2.4) & (jet_corr_pt>110) & (jet_corr_pt<1000)[0m
+[2024-08-26 10:44:48,754] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('label_b', '(gen_pt>0) & (isB==1) & (isLeptonicB==0) & (isLeptonicB_C==0)')
+ - ('label_bb', '(gen_pt>0) & (isBB==1)')
+ - ('label_c', '(gen_pt>0) & (isB==0) & (isBB==0) & (isC==1)')
+ - ('label_cc', '(gen_pt>0) & (isB==0) & (isBB==0) & (isCC==1)')
+ - ('label_uds', '(gen_pt>0) & ((isUD==1) | (isS==1))')
+ - ('label_g', '(gen_pt>0) & (isG==1)')
+ - ('label_catB', '(gen_pt>0) & (isLeptonicB==1)')
+ - ('label_catC', '(gen_pt>0) & (isLeptonicB_C==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')[0m
+[2024-08-26 10:44:48,754] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-08-26 10:44:48,754] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_VTX_ass', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio', 'pfcand_btagSip3dVal', 'pfcand_btagSip3dSig', 'pfcand_btagJetDistVal'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_pt_log', 'sv_ptrel_log', 'sv_mass', 'sv_etarel', 'sv_phirel', 'sv_abseta', 'sv_ntracks', 'sv_normchi2', 'sv_dxy', 'sv_dxysig', 'sv_d3d', 'sv_d3dsig'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-08-26 10:44:48,755] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 4, 'scale': 0.3, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 90, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 50, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ptrel_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.1, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.7, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.35, 'scale': 0.4, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'jet_corr_pt', 'jet_pt', 'jet_eta', 'jet_phi', 'isB', 'isBB', 'isC', 'isCC', 'gen_pt', 'npfcands')[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mmonitor_variables: ()[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_method: flat[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_basewgt: None[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_branches: ('jet_pt', 'jet_eta')[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_bins: ([110, 120, 170, 220, 300, 400, 700, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_classes: ('label_b', 'label_bb', 'label_c', 'label_cc', 'label_catB', 'label_catC', 'label_uds', 'label_g')[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mclass_weights: [1, 2.5, 1, 2.5, 5, 5, 2.5, 2.5][0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_threshold: 15[0m
+[2024-08-26 10:44:48,755] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mselection: (np.abs(jet_eta)<2.4) & (jet_pt>110) & (jet_pt<1000) & ( (gen_pt>0))[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mtest_time_selection: (np.abs(jet_eta)<2.4) & (jet_corr_pt>110) & (jet_corr_pt<1000)[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('label_b', '(gen_pt>0) & (isB==1) & (isLeptonicB==0) & (isLeptonicB_C==0)')
+ - ('label_bb', '(gen_pt>0) & (isBB==1)')
+ - ('label_c', '(gen_pt>0) & (isB==0) & (isBB==0) & (isC==1)')
+ - ('label_cc', '(gen_pt>0) & (isB==0) & (isBB==0) & (isCC==1)')
+ - ('label_uds', '(gen_pt>0) & ((isUD==1) | (isS==1))')
+ - ('label_g', '(gen_pt>0) & (isG==1)')
+ - ('label_catB', '(gen_pt>0) & (isLeptonicB==1)')
+ - ('label_catC', '(gen_pt>0) & (isLeptonicB_C==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')[0m
+[2024-08-26 10:44:48,766] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-08-26 10:44:48,766] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_VTX_ass', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio', 'pfcand_btagSip3dVal', 'pfcand_btagSip3dSig', 'pfcand_btagJetDistVal'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_pt_log', 'sv_ptrel_log', 'sv_mass', 'sv_etarel', 'sv_phirel', 'sv_abseta', 'sv_ntracks', 'sv_normchi2', 'sv_dxy', 'sv_dxysig', 'sv_d3d', 'sv_d3dsig'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-08-26 10:44:48,766] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 4, 'scale': 0.3, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 90, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 50, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ptrel_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.1, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.7, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.35, 'scale': 0.4, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'jet_corr_pt', 'jet_pt', 'jet_eta', 'jet_phi', 'isB', 'isBB', 'isC', 'isCC', 'gen_pt', 'npfcands')[0m
+[2024-08-26 10:44:48,766] INFO: [0;37mmonitor_variables: ()[0m
+[2024-08-26 10:44:48,772] INFO: Network options: {}
+[2024-08-26 10:44:49,298] INFO: [0;37mWarning: module FeatureConv is treated as a zero-op.[0m
+[2024-08-26 10:44:49,299] INFO: [0;37mWarning: module EdgeConvBlock is treated as a zero-op.[0m
+[2024-08-26 10:44:49,301] INFO: [0;37mWarning: module Dropout is treated as a zero-op.[0m
+[2024-08-26 10:44:49,301] INFO: [0;37mWarning: module ParticleNet is treated as a zero-op.[0m
+[2024-08-26 10:44:49,301] INFO: [0;37mWarning: module ParticleNetTagger is treated as a zero-op.[0m
+[2024-08-26 10:44:55,768] INFO: [0;37mParticleNetTagger(
+  |0.579 M, 100.000% Params, 472.139 MMac, 100.000% MACs|
+  (pf_conv): FeatureConv(
+    |0.001 M, 0.128% Params, 77.6 KMac, 0.016% MACs|
+    (conv): Sequential(
+      |0.001 M, 0.128% Params, 77.6 KMac, 0.016% MACs|
+      (0): BatchNorm1d(20, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.007% Params, 4.0 KMac, 0.001% MACs|)
+      (1): Conv1d(20, 32, kernel_size=(1,), stride=(1,), bias=False, |0.001 M, 0.110% Params, 64.0 KMac, 0.014% MACs|)
+      (2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.011% Params, 6.4 KMac, 0.001% MACs|)
+      (3): ReLU(|0.0 M, 0.000% Params, 3.2 KMac, 0.001% MACs|)
+    )
+  )
+  (sv_conv): FeatureConv(
+    |0.0 M, 0.081% Params, 3.528 KMac, 0.001% MACs|
+    (conv): Sequential(
+      |0.0 M, 0.081% Params, 3.528 KMac, 0.001% MACs|
+      (0): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.004% Params, 168.0 Mac, 0.000% MACs|)
+      (1): Conv1d(12, 32, kernel_size=(1,), stride=(1,), bias=False, |0.0 M, 0.066% Params, 2.688 KMac, 0.001% MACs|)
+      (2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.011% Params, 448.0 Mac, 0.000% MACs|)
+      (3): ReLU(|0.0 M, 0.000% Params, 224.0 Mac, 0.000% MACs|)
+    )
+  )
+  (pn): ParticleNet(
+    |0.578 M, 99.790% Params, 472.058 MMac, 99.983% MACs|
+    (edge_convs): ModuleList(
+      (0): EdgeConvBlock(
+        |0.015 M, 2.563% Params, 22.263 MMac, 4.715% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.004 M, 0.707% Params, 7.012 MMac, 1.485% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.022% Params, 219.136 KMac, 0.046% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 109.568 KMac, 0.023% MACs|)
+        )
+        (sc): Conv1d(32, 64, kernel_size=(1,), stride=(1,), bias=False, |0.002 M, 0.354% Params, 219.136 KMac, 0.046% MACs|)
+        (sc_bn): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.022% Params, 13.696 KMac, 0.003% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 6.848 KMac, 0.001% MACs|)
+      )
+      (1): EdgeConvBlock(
+        |0.058 M, 10.076% Params, 87.038 MMac, 18.435% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.016 M, 2.828% Params, 28.049 MMac, 5.941% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.044% Params, 438.272 KMac, 0.093% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 219.136 KMac, 0.046% MACs|)
+        )
+        (sc): Conv1d(64, 128, kernel_size=(1,), stride=(1,), bias=False, |0.008 M, 1.414% Params, 876.544 KMac, 0.186% MACs|)
+        (sc_bn): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.0 M, 0.044% Params, 27.392 KMac, 0.006% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 13.696 KMac, 0.003% MACs|)
+      )
+      (2): EdgeConvBlock(
+        |0.231 M, 39.951% Params, 344.126 MMac, 72.886% MACs|
+        (convs): ModuleList(
+          (0-2): 3 x Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False, |0.066 M, 11.314% Params, 112.198 MMac, 23.764% MACs|)
+        )
+        (bns): ModuleList(
+          (0-2): 3 x BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.088% Params, 876.544 KMac, 0.186% MACs|)
+        )
+        (acts): ModuleList(
+          (0-2): 3 x ReLU(|0.0 M, 0.000% Params, 438.272 KMac, 0.093% MACs|)
+        )
+        (sc): Conv1d(128, 256, kernel_size=(1,), stride=(1,), bias=False, |0.033 M, 5.657% Params, 3.506 MMac, 0.743% MACs|)
+        (sc_bn): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.088% Params, 54.784 KMac, 0.012% MACs|)
+        (sc_act): ReLU(|0.0 M, 0.000% Params, 27.392 KMac, 0.006% MACs|)
+      )
+    )
+    (fusion_block): Sequential(
+      |0.173 M, 29.831% Params, 18.531 MMac, 3.925% MACs|
+      (0): Conv1d(448, 384, kernel_size=(1,), stride=(1,), bias=False, |0.172 M, 29.698% Params, 18.407 MMac, 3.899% MACs|)
+      (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, |0.001 M, 0.133% Params, 82.176 KMac, 0.017% MACs|)
+      (2): ReLU(|0.0 M, 0.000% Params, 41.088 KMac, 0.009% MACs|)
+    )
+    (fc): Sequential(
+      |0.101 M, 17.369% Params, 100.872 KMac, 0.021% MACs|
+      (0): Sequential(
+        |0.099 M, 17.014% Params, 98.816 KMac, 0.021% MACs|
+        (0): Linear(in_features=384, out_features=256, bias=True, |0.099 M, 17.014% Params, 98.56 KMac, 0.021% MACs|)
+        (1): ReLU(|0.0 M, 0.000% Params, 256.0 Mac, 0.000% MACs|)
+        (2): Dropout(p=0.1, inplace=False, |0.0 M, 0.000% Params, 0.0 Mac, 0.000% MACs|)
+      )
+      (1): Linear(in_features=256, out_features=8, bias=True, |0.002 M, 0.355% Params, 2.056 KMac, 0.000% MACs|)
+    )
+  )
+)[0m
+[2024-08-26 10:44:55,770] INFO: Computational complexity:       472.14 MMac
+[2024-08-26 10:44:55,770] INFO: Number of parameters:           579.27 k
+[2024-08-26 10:44:55,771] INFO: Using loss function CrossEntropyLoss() with options {}
+[2024-08-26 10:44:55,771] INFO: Running on test file group  with 305 files:
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_38.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_39.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_40.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_41.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_42.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_43.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_44.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_45.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_46.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_38.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_39.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_38.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_38.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_9.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_0.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_1.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_10.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_11.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_12.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_13.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_14.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_15.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_16.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_17.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_18.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_19.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_2.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_20.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_21.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_22.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_23.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_24.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_25.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_26.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_27.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_28.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_29.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_3.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_30.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_31.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_32.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_33.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_34.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_35.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_36.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_37.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_38.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_39.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_4.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_40.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_5.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_6.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_7.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_8.root
+.../cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_9.root
+[2024-08-26 10:44:55,787] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mselection: (np.abs(jet_eta)<2.4) & (jet_pt>110) & (jet_pt<1000) & ( (gen_pt>0))[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mtest_time_selection: (np.abs(jet_eta)<2.4) & (jet_corr_pt>110) & (jet_corr_pt<1000)[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('label_b', '(gen_pt>0) & (isB==1) & (isLeptonicB==0) & (isLeptonicB_C==0)')
+ - ('label_bb', '(gen_pt>0) & (isBB==1)')
+ - ('label_c', '(gen_pt>0) & (isB==0) & (isBB==0) & (isC==1)')
+ - ('label_cc', '(gen_pt>0) & (isB==0) & (isBB==0) & (isCC==1)')
+ - ('label_uds', '(gen_pt>0) & ((isUD==1) | (isS==1))')
+ - ('label_g', '(gen_pt>0) & (isG==1)')
+ - ('label_catB', '(gen_pt>0) & (isLeptonicB==1)')
+ - ('label_catC', '(gen_pt>0) & (isLeptonicB_C==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')[0m
+[2024-08-26 10:44:55,787] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-08-26 10:44:55,787] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_VTX_ass', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio', 'pfcand_btagSip3dVal', 'pfcand_btagSip3dSig', 'pfcand_btagJetDistVal'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_pt_log', 'sv_ptrel_log', 'sv_mass', 'sv_etarel', 'sv_phirel', 'sv_abseta', 'sv_ntracks', 'sv_normchi2', 'sv_dxy', 'sv_dxysig', 'sv_d3d', 'sv_d3dsig'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-08-26 10:44:55,787] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 4, 'scale': 0.3, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 90, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 50, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ptrel_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.1, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.7, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.35, 'scale': 0.4, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'jet_corr_pt', 'jet_pt', 'jet_eta', 'jet_phi', 'isB', 'isBB', 'isC', 'isCC', 'gen_pt', 'npfcands')[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mmonitor_variables: ()[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mreweight_method: flat[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mreweight_basewgt: None[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mreweight_branches: ('jet_pt', 'jet_eta')[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mreweight_bins: ([110, 120, 170, 220, 300, 400, 700, 1000], [-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5])[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mreweight_classes: ('label_b', 'label_bb', 'label_c', 'label_cc', 'label_catB', 'label_catC', 'label_uds', 'label_g')[0m
+[2024-08-26 10:44:55,787] INFO: [0;37mclass_weights: [1, 2.5, 1, 2.5, 5, 5, 2.5, 2.5][0m
+[2024-08-26 10:44:55,788] INFO: [0;37mreweight_threshold: 15[0m
+[2024-08-26 10:44:55,788] INFO: [0;37mreweight_discard_under_overflow: True[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mpreprocess config: {'method': 'manual', 'data_fraction': None, 'params': None}[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mselection: (np.abs(jet_eta)<2.4) & (jet_pt>110) & (jet_pt<1000) & ( (gen_pt>0))[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mtest_time_selection: (np.abs(jet_eta)<2.4) & (jet_corr_pt>110) & (jet_corr_pt<1000)[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mvar_funcs:
+ - ('pfcand_mask', 'ak.ones_like(pfcand_etarel)')
+ - ('sv_mask', 'ak.ones_like(sv_etarel)')
+ - ('label_b', '(gen_pt>0) & (isB==1) & (isLeptonicB==0) & (isLeptonicB_C==0)')
+ - ('label_bb', '(gen_pt>0) & (isBB==1)')
+ - ('label_c', '(gen_pt>0) & (isB==0) & (isBB==0) & (isC==1)')
+ - ('label_cc', '(gen_pt>0) & (isB==0) & (isBB==0) & (isCC==1)')
+ - ('label_uds', '(gen_pt>0) & ((isUD==1) | (isS==1))')
+ - ('label_g', '(gen_pt>0) & (isG==1)')
+ - ('label_catB', '(gen_pt>0) & (isLeptonicB==1)')
+ - ('label_catC', '(gen_pt>0) & (isLeptonicB_C==1)')
+ - ('_label_', 'np.argmax(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')
+ - ('_labelcheck_', 'np.sum(np.stack([ak.to_numpy(label_b),ak.to_numpy(label_bb),ak.to_numpy(label_c),ak.to_numpy(label_cc),ak.to_numpy(label_uds),ak.to_numpy(label_g),ak.to_numpy(label_catB),ak.to_numpy(label_catC)], axis=1), axis=1)')[0m
+[2024-08-26 10:44:55,799] INFO: [0;37minput_names: ('pf_points', 'pf_features', 'pf_mask', 'sv_points', 'sv_features', 'sv_mask')[0m
+[2024-08-26 10:44:55,799] INFO: [0;37minput_dicts:
+ - ('pf_points', ['pfcand_etarel', 'pfcand_phirel'])
+ - ('pf_features', ['pfcand_pt_log', 'pfcand_e_log', 'pfcand_etarel', 'pfcand_phirel', 'pfcand_abseta', 'pfcand_charge', 'pfcand_VTX_ass', 'pfcand_lostInnerHits', 'pfcand_normchi2', 'pfcand_quality', 'pfcand_dz', 'pfcand_dzsig', 'pfcand_dxy', 'pfcand_dxysig', 'pfcand_btagEtaRel', 'pfcand_btagPtRatio', 'pfcand_btagPParRatio', 'pfcand_btagSip3dVal', 'pfcand_btagSip3dSig', 'pfcand_btagJetDistVal'])
+ - ('pf_mask', ['pfcand_mask'])
+ - ('sv_points', ['sv_etarel', 'sv_phirel'])
+ - ('sv_features', ['sv_pt_log', 'sv_ptrel_log', 'sv_mass', 'sv_etarel', 'sv_phirel', 'sv_abseta', 'sv_ntracks', 'sv_normchi2', 'sv_dxy', 'sv_dxysig', 'sv_d3d', 'sv_d3dsig'])
+ - ('sv_mask', ['sv_mask'])[0m
+[2024-08-26 10:44:55,799] INFO: [0;37minput_shapes:
+ - ('pf_points', (-1, 2, 100))
+ - ('pf_features', (-1, 20, 100))
+ - ('pf_mask', (-1, 1, 100))
+ - ('sv_points', (-1, 2, 7))
+ - ('sv_features', (-1, 12, 7))
+ - ('sv_mask', (-1, 1, 7))[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mpreprocess_params:
+ - ('pfcand_etarel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_phirel', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_pt_log', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_e_log', {'length': 100, 'pad_mode': 'constant', 'center': 1.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_abseta', {'length': 100, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_charge', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_VTX_ass', {'length': 100, 'pad_mode': 'constant', 'center': 4, 'scale': 0.3, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_lostInnerHits', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_normchi2', {'length': 100, 'pad_mode': 'constant', 'center': 5, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_quality', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dz', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 150, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dzsig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxy', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 270, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_dxysig', {'length': 100, 'pad_mode': 'constant', 'center': 1.1, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagEtaRel', {'length': 100, 'pad_mode': 'constant', 'center': 2.1, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPtRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagPParRatio', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 90, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagSip3dSig', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_btagJetDistVal', {'length': 100, 'pad_mode': 'constant', 'center': 0, 'scale': 50, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('pfcand_mask', {'length': 100, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_etarel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_phirel', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_pt_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ptrel_log', {'length': 7, 'pad_mode': 'constant', 'center': 2.8, 'scale': 0.8, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mass', {'length': 7, 'pad_mode': 'constant', 'center': 1.1, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_abseta', {'length': 7, 'pad_mode': 'constant', 'center': 0.8, 'scale': 1.2, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_ntracks', {'length': 7, 'pad_mode': 'constant', 'center': 3, 'scale': 0.5, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_normchi2', {'length': 7, 'pad_mode': 'constant', 'center': 0.7, 'scale': 0.7, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxy', {'length': 7, 'pad_mode': 'constant', 'center': 0.2, 'scale': 0.6, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_dxysig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3d', {'length': 7, 'pad_mode': 'constant', 'center': 0.35, 'scale': 0.4, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_d3dsig', {'length': 7, 'pad_mode': 'constant', 'center': 5, 'scale': 0.03, 'min': -5, 'max': 5, 'pad_value': 0})
+ - ('sv_mask', {'length': 7, 'pad_mode': 'constant', 'center': None, 'scale': 1, 'min': -5, 'max': 5, 'pad_value': 0})[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mlabel_names: ('_label_',)[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mobserver_names: ('event_no', 'jet_no', 'jet_corr_pt', 'jet_pt', 'jet_eta', 'jet_phi', 'isB', 'isBB', 'isC', 'isCC', 'gen_pt', 'npfcands')[0m
+[2024-08-26 10:44:55,799] INFO: [0;37mmonitor_variables: ()[0m
+[2024-08-26 10:44:55,800] INFO: Loading model ParticleNetMD_standard.onnx for eval
+=== Restarting DataIter test__worker0, seed=2326557709 ===
+[2024-08-26 10:44:56,279] INFO: Restarted DataIter test__worker0, load_range=(0, 1), file_list:
+{
+  "": [
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_38.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_39.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_40.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_41.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_42.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_43.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_44.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_45.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_46.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M10/M10_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M100/M100_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_38.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_39.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M125/M125_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M150/M150_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_38.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M20/M20_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M25/M25_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_38.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M50/M50_Ntuple_9.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_0.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_1.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_10.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_11.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_12.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_13.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_14.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_15.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_16.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_17.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_18.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_19.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_2.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_20.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_21.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_22.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_23.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_24.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_25.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_26.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_27.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_28.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_29.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_3.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_30.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_31.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_32.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_33.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_34.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_35.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_36.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_37.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_38.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_39.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_4.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_40.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_5.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_6.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_7.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_8.root",
+    "/cms/akobert/UL/Ntupler/Zprime/M75/M75_Ntuple_9.root"
+  ]
+}
+[2024-08-26 14:46:03,002] INFO: Processed 2572631 entries in total (avg. speed 177.8 entries/s)
+[2024-08-26 14:46:03,002] INFO: Evaluation class distribution: 
+    [(0, 676887), (1, 63239), (2, 256634), (3, 118136), (4, 1073823), (5, 338860), (6, 23156), (7, 21896)]
+[2024-08-26 14:46:17,834] INFO: Evaluation metrics: 
+    - roc_auc_score: 
+0.5391308770260146
+    - roc_auc_score_matrix: 
+[[0.         0.16576931 0.20269272 0.7002005  0.5288694  0.1735859
+  0.28017628 0.24842742]
+ [0.         0.         0.5696166  0.6350856  0.60378295 0.44752836
+  0.5951608  0.5377879 ]
+ [0.         0.         0.         0.5798233  0.5311512  0.41462627
+  0.53702384 0.52685016]
+ [0.         0.         0.         0.         0.6305214  0.51709145
+  0.64061594 0.62148374]
+ [0.         0.         0.         0.         0.         0.40932283
+  0.5473012  0.53999346]
+ [0.         0.         0.         0.         0.         0.
+  0.5565756  0.5538208 ]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.47872138]
+ [0.         0.         0.         0.         0.         0.
+  0.         0.        ]]
+    - confusion_matrix: 
+[[5.49574744e-04 5.71794110e-02 8.62861896e-02 7.30757128e-02
+  2.38573056e-01 1.72539877e-02 2.48682572e-02 5.02213811e-01]
+ [1.58130268e-05 6.32521071e-05 2.40358007e-03 3.83908664e-01
+  3.88700011e-01 1.37146381e-01 3.81093945e-02 4.96529041e-02]
+ [5.45523976e-05 2.23275170e-03 3.36666225e-03 3.70169190e-01
+  5.15247395e-01 2.45680619e-02 1.59643695e-02 6.83970168e-02]
+ [0.00000000e+00 2.28550146e-04 6.34861516e-04 5.42087086e-01
+  3.96373671e-01 2.77138214e-02 1.14105776e-02 2.15514322e-02]
+ [1.95562956e-05 1.55332862e-03 2.47526827e-03 3.33089345e-01
+  5.91796786e-01 1.86324934e-02 1.03145490e-02 4.21186732e-02]
+ [7.96789234e-05 5.28241752e-03 8.68795373e-03 5.12291212e-01
+  3.40524110e-01 1.04881072e-02 1.10576639e-02 1.11588857e-01]
+ [4.31853515e-05 7.34150976e-04 2.54793574e-03 3.13482467e-01
+  4.62687856e-01 9.76420798e-02 4.62946968e-02 7.65676283e-02]
+ [4.56704421e-05 4.56704421e-04 1.78114724e-03 3.43533065e-01
+  4.33321155e-01 1.13582389e-01 4.28388747e-02 6.44409938e-02]]
+[2024-08-26 14:46:20,285] INFO: [1mTest metric 0.27474[0m
+[2024-08-26 14:46:25,370] INFO: [1mWritten output to output/standard1.root[0m

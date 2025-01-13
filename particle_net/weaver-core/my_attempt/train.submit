@@ -1,0 +1,22 @@
+Universe                = vanilla
+executable              = train.sh
+output                  = logs/job.$(ClusterId).$(ProcId).out
+error                   = logs/job.$(ClusterId).$(ProcId).err
+log                     = logs/job.$(ClusterId).log
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+#transfer_output_files   = output
+
+
+request_gpus   = 4
+request_memory = 180 GB
+request_cpus   = 24
+request_disk   = 60 GB
+
++IsA100 = True
+
+
+#requirements = TARGET.Machine != "qa-rtx6k-029.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-030.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-034.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-020.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-028.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-026.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-024.crc.nd.edu" && TARGET.Machine != "qa-rtx6k-038.crc.nd.edu"
+
+
+queue
