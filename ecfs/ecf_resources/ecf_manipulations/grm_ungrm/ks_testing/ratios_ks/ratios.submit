@@ -1,0 +1,16 @@
+Universe                = vanilla
+executable              = run.sh
+output                  = logs/job.$(ClusterId).$(ProcId).out
+error                   = logs/job.$(ClusterId).$(ProcId).err
+log                     = logs/job.$(ClusterId).log
+arguments               = $(ProcId)
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+transfer_output_files   = outputs
+transfer_input_files    = calculate_ratios.py, event_totals.json, run.sh
+
+request_memory = 20 GB
+request_cpus   = 2
+request_disk   = 60 GB
+
+queue 1
