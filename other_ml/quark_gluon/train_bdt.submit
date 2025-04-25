@@ -1,0 +1,22 @@
+universe = vanilla
+executable = bdt.sh
+
+Log    = ./logs/$(Cluster)_$(Process).log
+Output = ./logs/$(Cluster)/$(Cluster)_$(Process).out
+Error  = ./logs/$(Cluster)/$(Cluster)_$(Process).err
+
+should_transfer_files = YES
+transfer_input_files = bdt.sh, score_bdt.py
+when_to_transfer_output = ON_EXIT
+# transfer_output_files = outputs
+
+request_gpus   = 1
+request_memory = 90 GB
+request_cpus   = 6
+# request_disk   = 20 GB
+
++IsA100 = False
+
+queue arguments from (
+    500 6
+)

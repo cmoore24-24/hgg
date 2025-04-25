@@ -12,8 +12,15 @@ import os
 import warnings
 from variable_functions import *
 import scipy
-#from coffea.ml_tools.torch_wrapper import torch_wrapper
 import pickle
+import subprocess
+import argparse
+
+# parser = argparse.ArgumentParser(description="Select dataset to process")
+# parser.add_argument("--dataset", type=str, required=True, help="String to match in dataset names")
+# args = parser.parse_args()
+
+# skim_ds = args.dataset
 
 
 full_start = time.time()
@@ -22,11 +29,13 @@ if __name__ == "__main__":
     m = DaskVine(
         [9101, 9200],
         name=f"{os.environ['USER']}-hgg",
-        run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info",
+        run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/",
+        run_info_template='gluons',
     )
 
     m.tune("temp-replica-count", 3)
-    m.tune("transfer-temps-recovery", 1)
+    m.tune("worker-source-max-transfers", 100000)
+    # m.tune("transfer-temps-recovery", 1)
     
     warnings.filterwarnings("ignore", "Found duplicate branch")
     warnings.filterwarnings("ignore", "Missing cross-reference index for")
@@ -62,7 +71,7 @@ if __name__ == "__main__":
     #     json.dump(dict, fin)
 
 
-    ######## Uncomment the following section if you need to pre-process the datasets present in input_datasets.json ########
+    ####### Uncomment the following section if you need to pre-process the datasets present in input_datasets.json ########
     
     # with open('input_datasets.json', 'r') as f:
     #     samples = json.load(f)
@@ -90,11 +99,12 @@ if __name__ == "__main__":
     #    sampler_dict,
     #    scheduler=m.get,
     #    resources={"cores": 1},
-    #    resources_mode=None,
-    #    prune_files=True,
-    #    lazy_transfers=True,
-    #    #task_mode="function_calls",
-    #    lib_resources={'cores': 12, 'slots': 12},
+    #    # resources_mode=None,
+    #    # prune_files=True,
+    #    prune_depth=0,
+    #    worker_transfers=True,
+    #    task_mode="function-calls",
+    #    lib_resources={'cores': 24, 'slots': 24},
     # )[0]
     
     # samples_ready = {}
@@ -115,16 +125,18 @@ if __name__ == "__main__":
 
     with open('triggers.json', 'r') as f:
         triggers = json.load(f)
-    
-    def apply_selections(events, region, trigger, pdgid=None, is_wz=False):     
+
+    def apply_selections(events, region, trigger, goodmuon, pdgid=None, is_wz=False):     
         fatjetSelect = (
             (events.FatJet.pt >= 450)
-            & (events.FatJet.pt <= 600)
+            & (events.FatJet.pt <= 1600)
             & (abs(events.FatJet.eta) <= 2.4)
-            & (events.FatJet.msoftdrop >= 80)
-            & (events.FatJet.msoftdrop <= 170)
+            # & (events.FatJet.msoftdrop >= 40)
+            # & (events.FatJet.msoftdrop <= 200)
+            # & (events.FatJet.num_fatjets >= 3)
             & (region)
-            & (trigger)
+            # & (ak.fill_none(events.FatJet.delta_r(events.FatJet.nearest(events.Muon[goodmuon], axis=1)) > 0.8, True))
+            # & (trigger)
             & (events.FatJet.btag_count == 0)
         )
         
@@ -144,42 +156,6 @@ if __name__ == "__main__":
             fatjetSelect = ((fatjetSelect) & (matched_jets))
         return fatjetSelect
 
-    def labels(events, to_be_true):
-            events['goodjets', 'label_H_gg'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_H_bb'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_QCD'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_Wqq'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_Zqq'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_WW'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_WZ'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_ZZ'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_TTBoosted'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', 'label_Singletop'] = ak.zeros_like(events.goodjets.pt)
-            events['goodjets', to_be_true] = ak.ones_like(events.goodjets.pt)
-            return events
-
-    # class EnergyCorrelatorFunctionTagger(torch_wrapper):
-    #     def prepare_awkward(self, events, scaler, imap):
-    #         fatjets = events
-    
-    #         retmap = {
-    #             k: ak.concatenate([x[:, np.newaxis] for x in imap[k].values()], axis=1)
-    #             for k in imap.keys()
-    #         }
-    #         x = ak.values_astype(scaler.transform(retmap['vars']), "float32")
-    #         return (x,), {}
-
-    # def imapper(array, ratio_list):
-    #     imap = {}
-    #     imap['vars'] = {}
-    #     for i in ratio_list:
-    #         try:
-    #             imap['vars'][i] = array[i]
-    #         except:
-    #             imap['vars'][i] = array[i]
-    #     return imap
-
-
     def analysis(events):
         dataset = events.metadata["dataset"]
 
@@ -197,12 +173,14 @@ if __name__ == "__main__":
                 trigger = trigger | events.HLT[t]
         trigger = ak.fill_none(trigger, False)
 
-        events['FatJet', 'num_fatjets'] = ak.num(events.FatJet)
+        # event.MET < 140 for regular boosted higgs, try > 50 to try focusing on W jets
+
+        # events['FatJet', 'num_fatjets'] = ak.num(events.FatJet)
 
         goodmuon = (
             (events.Muon.pt > 10)
             & (abs(events.Muon.eta) < 2.4)
-            & (events.Muon.pfRelIso04_all < 0.25)
+            & (events.Muon.pfRelIso04_all < 0.25) # invert the isolation cut; > 0.25, check for QCD (maybe try > 1.0)
             & events.Muon.looseId
         )
 
@@ -240,101 +218,57 @@ if __name__ == "__main__":
         # events['FatJet', 'num_subjets'] = num_sub
 
         region = nolepton ## Use this option to let more data through the cuts
-        #region = onemuon ## Use this option to let less data through the cuts
+        # region = onemuon ## Use this option to let less data through the cuts
 
 
         events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > 0.3040, axis=1)
+        events['FatJet', 'trigger_mask'] = trigger
 
         if ('hgg' in dataset) or ('hbb' in dataset) or ('flat' in dataset):
+            print(f'Higgs {dataset}')
+            fatjetSelect= apply_selections(events, region, trigger, goodmuon, 25)
+            do_li = True
+        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset):
             print(dataset)
-            fatjetSelect = apply_selections(events, region, trigger, 25)
-            do_li = False
-        elif ('wqq' in dataset) or ('ww' in dataset):
-            print(dataset)
-            fatjetSelect = apply_selections(events, region, trigger, 24)
-            do_li = False
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, 24)
+            do_li = True
         elif ('zqq' in dataset) or ('zz' in dataset):
             print(dataset)
-            fatjetSelect = apply_selections(events, region, trigger, 23)
-            do_li = False
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, 23)
+            do_li = True
         elif ('wz' in dataset):
             print(dataset)
-            fatjetSelect = apply_selections(events, region, trigger, is_wz=True)
-            do_li = False
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, is_wz=True)
+            do_li = True
         else:
             print(dataset)
-            fatjetSelect = apply_selections(events, region, trigger)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon)
             do_li = True
 
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
-        
-        if do_li:
-            events['goodjets'] = events.goodjets[(ak.local_index(events.goodjets, axis=1) == 0)]
+        events = events[ak.num(events.goodjets) >=3]
 
-        if ('hgg' in dataset) or ('flat' in dataset):
-            events = labels(events, 'label_H_gg') 
-        elif ('qcd' in dataset):
-            events = labels(events, 'label_QCD') 
-        elif ('wqq' in dataset):
-            events = labels(events, 'label_Wqq') 
-        elif ('zqq' in dataset):
-            events = labels(events, 'label_Zqq') 
-        elif ('ww' in dataset):
-            events = labels(events, 'label_WW')
-        elif ('wz' in dataset):
-            events = labels(events, 'label_WZ')
-        elif ('zz' in dataset):
-            events = labels(events, 'label_ZZ')
-        elif ('ttboosted' in dataset):
-            events = labels(events, 'label_TTBoosted')
-        elif ('singletop' in dataset):
-            events = labels(events, 'label_Singletop')
-        elif ('hbb' in dataset):
-            events = labels(events, 'label_H_bb')
         
-        pfcands = events.goodjets.constituents.pf
-        goodjets = ak.flatten(events.goodjets)
-        sv = events.SV
-
-        # pf = ak.flatten(events.goodjets.constituents.pf, axis=1)
-        # jetdef = fastjet.JetDefinition(fastjet.cambridge_algorithm, 0.8)
-        # cluster = fastjet.ClusterSequence(pf, jetdef)
-        # softdrop = cluster.exclusive_jets_softdrop_grooming()
         
-
+        # if do_li:
+        #     events['goodjets'] = events.goodjets[(ak.local_index(events.goodjets, axis=1) == 0)]
+        
         skim = ak.zip(
             {
-                'pfcand_eta':ak.flatten(pfcands.eta),
-                'pfcand_phi':ak.flatten(pfcands.phi),
-                'pfcand_charge':ak.flatten(pfcands.charge),
-                'pfcand_d0':ak.flatten(pfcands.d0),
-                'pfcand_dz':ak.flatten(pfcands.dz),
-                'pfcand_lostInnerHits':ak.flatten(pfcands.lostInnerHits),
-                'pfcand_pt':ak.flatten(pfcands.pt),
-                'sv_eta':sv.eta,
-                'sv_phi':sv.phi,
-                'sv_dxy':sv.dxy,
-                'sv_mass':sv.mass,
-                'sv_chi2':sv.chi2,
-                'sv_ntracks':sv.ntracks,
-                'sv_pt':sv.pt,
-                'fj_sdmass':goodjets.msoftdrop,
-                'fj_pt':goodjets.pt,
-                'fj_eta':goodjets.eta,
-                'fj_phi':goodjets.phi,
-                'label_H_gg':goodjets.label_H_gg,
-                'label_QCD':goodjets.label_QCD,
-                'label_Wqq':goodjets.label_Wqq,
-                
+                'goodjets':events.goodjets,
+                'event': events.event,
+                'GenJetAK8': events.GenJetAK8,
+                'GenPart': events.GenPart,
             },
             depth_limit=1,
         )
-        
+
+        path = f"/project01/ndcms/cmoore24/skims/gluon_finding/mc/samples/{dataset}"
         skim_task = dak.to_parquet(
             skim,
-            f"/scratch365/cmoore24/weaver-core/my_attempt/samples/{dataset}/", ##Change this to where you'd like the output to be written
+            path, ##Change this to where you'd like the output to be written
             compute=False,
         )
         return skim_task
@@ -342,26 +276,35 @@ if __name__ == "__main__":
     ###### Uncomment this regeion if you want to run only one of the subsamples found in input_datasets.json ######
 
     subset = {}
-    to_skim = 'hgg' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
-    subset[to_skim] = samples_ready[to_skim]
-    files = subset[to_skim]['files']
-    form = subset[to_skim]['form']
-    dict_meta = subset[to_skim]['metadata']
-    keys = list(files.keys())
-
     batch = {}
-    batch[to_skim] = {}
-    batch[to_skim]['files'] = {}
-    batch[to_skim]['form'] = form
-    batch[to_skim]['metadata'] = dict_meta
-
-    #for i in range(0, 100):
-    for i in range(len(files)):
-        batch[to_skim]['files'][keys[i]] = files[keys[i]]
-    
+    # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
+    for to_skim in samples_ready:
+        # if (skim_ds in to_skim):
+        if ('qcd' in to_skim):
+            subset[to_skim] = samples_ready[to_skim]
+            files = subset[to_skim]['files']
+            form = subset[to_skim]['form']
+            dict_meta = subset[to_skim]['metadata']
+            keys = list(files.keys())
+        
+            batch[to_skim] = {}
+            batch[to_skim]['files'] = {}
+            batch[to_skim]['form'] = form
+            batch[to_skim]['metadata'] = dict_meta
+        
+            # for i in range(6, 7):
+            for i in range(len(files)):
+                # print(keys[i], flush=True)
+                batch[to_skim]['files'][keys[i]] = files[keys[i]]
+        else:
+            continue
+            
+    # with open('to_reduce.json', 'w') as f:
+    #     json.dump(batch, f)
+            
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        #samples_ready, ## Run over all subsamples in input_datasets.json
+        # samples_ready, ## Run over all subsamples in input_datasets.json
         batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
@@ -371,12 +314,12 @@ if __name__ == "__main__":
     computed = dask.compute(
             tasks,
             scheduler=m.get,
+            # scheduling_mode="breadth-first",
+            worker_transfers=True,
             resources={"cores": 1},
-            resources_mode=None,
-            lazy_transfers=False,
-            prune_files=True,
-            #task_mode="function_calls",
-            lib_resources={'cores': 12, 'slots': 12},
+            task_mode="function-calls",
+            lib_resources={'cores': 24, 'slots': 24},
+            prune_depth=2, 
         )
 
     full_stop = time.time()

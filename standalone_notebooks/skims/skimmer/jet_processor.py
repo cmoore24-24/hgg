@@ -29,12 +29,13 @@ if __name__ == "__main__":
     m = DaskVine(
         [9101, 9200],
         name=f"{os.environ['USER']}-hgg",
-        run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/from_github/data",
-        run_info_template='SingleE',
+        run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/",
+        run_info_template='gluons',
     )
 
-    m.tune("temp-replica-count", 2)
-    m.tune("transfer-temps-recovery", 1)
+    m.tune("temp-replica-count", 3)
+    m.tune("worker-source-max-transfers", 100000)
+    # m.tune("transfer-temps-recovery", 1)
     
     warnings.filterwarnings("ignore", "Found duplicate branch")
     warnings.filterwarnings("ignore", "Missing cross-reference index for")
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     def sampler(samples):
        samples_ready, samples = dataset_tools.preprocess(
            samples,
-           step_size=6_000, ## Change this step size to adjust the size of chunks of events
+           step_size=50_000, ## Change this step size to adjust the size of chunks of events
            skip_bad_files=True,
            recalculate_steps=True,
            save_form=False,
@@ -97,13 +98,13 @@ if __name__ == "__main__":
     samples_postprocess = dask.compute(
        sampler_dict,
        scheduler=m.get,
-       resources={"cores": 4},
+       resources={"cores": 1},
        resources_mode=None,
        # prune_files=True,
        prune_depth=0,
-       lazy_transfers=True,
-       #task_mode="function_calls",
-       lib_resources={'cores': 12, 'slots': 12},
+       worker_transfers=True,
+       task_mode="function_calls",
+       lib_resources={'cores': 24, 'slots': 24},
     )[0]
     
     samples_ready = {}
@@ -114,12 +115,12 @@ if __name__ == "__main__":
     print('samples done')
     print('full sample time is ' + str((sample_stop - sample_start)/60))
     
-    with open("samples_ready2.json", "w") as fout:
+    with open("samples_ready.json", "w") as fout:
        json.dump(samples_ready, fout)
 
     ######## The analysis portion begins here ########
     
-    with open("samples_ready2.json", 'r') as f:
+    with open("samples_ready.json", 'r') as f:
         samples_ready = json.load(f)
 
     with open('triggers.json', 'r') as f:
@@ -281,7 +282,7 @@ if __name__ == "__main__":
             print(f'Higgs {dataset}')
             fatjetSelect = apply_selections(events, region, trigger, goodmuon, 25)
             do_li = True
-        elif ('wqq' in dataset) or ('ww' in dataset):
+        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset):
             print(dataset)
             fatjetSelect = apply_selections(events, region, trigger, goodmuon, 24)
             do_li = True
@@ -301,6 +302,8 @@ if __name__ == "__main__":
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
+
+        
         
         if do_li:
             events['goodjets'] = events.goodjets[(ak.local_index(events.goodjets, axis=1) == 0)]
@@ -335,7 +338,7 @@ if __name__ == "__main__":
         #         ecf_result = cluster.exclusive_jets_energy_correlator(
         #                 func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
         #         )
-        #         ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = ((n*(n-1))/2))
+        #         ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = ak.Array([int((n*(n-1))/2)]))
                 
         # groomed_ecf_classes = {}
         # for n in range(2, 6):
@@ -344,7 +347,7 @@ if __name__ == "__main__":
         #         ecf_result = softdrop_cluster.exclusive_jets_energy_correlator(
         #                     func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
         #         )
-        #         groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = ((n*(n-1))/2))
+        #         groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = ak.Array([int((n*(n-1))/2)]))
                 
         # ungroomed_ecfs = ecf_reorg(ungroomed_ecf_classes, events.goodjets)
         # groomed_ecfs = ecf_reorg(groomed_ecf_classes, events.goodjets)
@@ -448,7 +451,7 @@ if __name__ == "__main__":
             depth_limit=1,
         )
 
-        path = f"/project01/ndcms/cmoore24/skims/singlemuon/full/data/{dataset}"
+        path = f"/project01/ndcms/cmoore24/skims/singlemuon/full/mc/{dataset}"
         skim_task = dak.to_parquet(
             skim,
             path, ##Change this to where you'd like the output to be written
@@ -463,7 +466,7 @@ if __name__ == "__main__":
     # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     for to_skim in samples_ready:
         # if (skim_ds in to_skim):
-        if ('qcd' in to_skim):
+        if ('wlnuv' in to_skim):
             subset[to_skim] = samples_ready[to_skim]
             files = subset[to_skim]['files']
             form = subset[to_skim]['form']
@@ -487,8 +490,8 @@ if __name__ == "__main__":
             
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        samples_ready, ## Run over all subsamples in input_datasets.json
-        # batch, ## Run over only the subsample specified as the "to_skim" string
+        # samples_ready, ## Run over all subsamples in input_datasets.json
+        batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )#[0]
@@ -498,13 +501,11 @@ if __name__ == "__main__":
             tasks,
             scheduler=m.get,
             # scheduling_mode="breadth-first",
+            worker_transfers=True,
             resources={"cores": 1},
-            resources_mode=None,
-            lazy_transfers=False,
-            prune_depth=2,
-            # prune_files=True,
-            #task_mode="function-calls",
-            lib_resources={'cores': 12, 'slots': 12},
+            task_mode="function-calls",
+            lib_resources={'cores': 24, 'slots': 24},
+            prune_depth=2, 
         )
 
     full_stop = time.time()
