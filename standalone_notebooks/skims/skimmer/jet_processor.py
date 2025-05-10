@@ -83,7 +83,7 @@ if __name__ == "__main__":
     def sampler(samples):
        samples_ready, samples = dataset_tools.preprocess(
            samples,
-           step_size=50_000, ## Change this step size to adjust the size of chunks of events
+           step_size=3_000, ## Change this step size to adjust the size of chunks of events
            skip_bad_files=True,
            recalculate_steps=True,
            save_form=False,
@@ -99,11 +99,11 @@ if __name__ == "__main__":
        sampler_dict,
        scheduler=m.get,
        resources={"cores": 1},
-       resources_mode=None,
+       # resources_mode=None,
        # prune_files=True,
        prune_depth=0,
        worker_transfers=True,
-       task_mode="function_calls",
+       task_mode="function-calls",
        lib_resources={'cores': 24, 'slots': 24},
     )[0]
     
@@ -139,13 +139,13 @@ if __name__ == "__main__":
     def apply_selections(events, region, trigger, goodmuon, pdgid=None, is_wz=False):     
         fatjetSelect = (
             (events.FatJet.pt >= 450)
-            & (events.FatJet.pt <= 1200)
+            & (events.FatJet.pt <= 1000)
             & (abs(events.FatJet.eta) <= 2.4)
             & (events.FatJet.msoftdrop >= 40)
             & (events.FatJet.msoftdrop <= 200)
             & (region)
-            & (ak.fill_none(events.FatJet.delta_r(events.FatJet.nearest(events.Muon[goodmuon], axis=1)) > 0.8, True))
-            # & (trigger)
+            # & (ak.fill_none(events.FatJet.delta_r(events.FatJet.nearest(events.Muon[goodmuon], axis=1)) > 0.8, True))
+            & (trigger)
             & (events.FatJet.btag_count == 0)
         )
         
@@ -271,18 +271,18 @@ if __name__ == "__main__":
         # num_sub = ak.unflatten(num_subjets(events.FatJet, cluster_val=0.4), counts=ak.num(events.FatJet))
         # events['FatJet', 'num_subjets'] = num_sub
 
-        # region = nolepton ## Use this option to let more data through the cuts
-        region = onemuon ## Use this option to let less data through the cuts
+        region = nolepton ## Use this option to let more data through the cuts
+        # region = onemuon ## Use this option to let less data through the cuts
 
 
         events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > 0.3040, axis=1)
         events['FatJet', 'trigger_mask'] = trigger
 
-        if ('hgg' in dataset) or ('hbb' in dataset) or ('flat' in dataset):
+        if ('hgg' in dataset) or ('hbb' in dataset) or ('flat' in dataset) or ('hww' in dataset):
             print(f'Higgs {dataset}')
             fatjetSelect = apply_selections(events, region, trigger, goodmuon, 25)
             do_li = True
-        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset):
+        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset) and ('hww' not in dataset):
             print(dataset)
             fatjetSelect = apply_selections(events, region, trigger, goodmuon, 24)
             do_li = True
@@ -302,6 +302,7 @@ if __name__ == "__main__":
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
+        events = events[ak.num(events.goodjets) < 3]
 
         
         
@@ -317,10 +318,10 @@ if __name__ == "__main__":
             fastjet.cambridge_algorithm, 1.0
         )
         pf = ak.flatten(events.goodjets.constituents.pf, axis=1)
-        pf['px'] = pf.px
-        pf['py'] = pf.py
-        pf['pz'] = pf.pz
-        pf['E'] = pf.E
+        # pf['px'] = pf.px
+        # pf['py'] = pf.py
+        # pf['pz'] = pf.pz
+        # pf['E'] = pf.E
         cluster = fastjet.ClusterSequence(pf, jetdef)
 
         softdrop = cluster.exclusive_jets_softdrop_grooming()
@@ -382,60 +383,50 @@ if __name__ == "__main__":
         events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
 
         
-        # if ('hgg' in dataset) or ('flat' in dataset):
-        #     events = labels(events, 'label_H_gg') 
-        # elif ('qcd' in dataset):
-        #     events = labels(events, 'label_QCD') 
-        # else: #('wqq' in dataset):
-        #     events = labels(events, None) 
+        if ('hgg' in dataset) or ('flat' in dataset):
+            events = labels(events, 'label_H_gg') 
+        elif ('qcd' in dataset):
+            events = labels(events, 'label_QCD') 
+        else: #('wqq' in dataset):
+            events = labels(events, None) 
 
-        # pfcands = events.goodjets.constituents.pf
-        # goodjets = ak.flatten(events.goodjets)
-        # sv = events.SV
+        pfcands = events.goodjets.constituents.pf
+        goodjets = ak.flatten(events.goodjets)
+        sv = events.SV
 
-        # pn_vals = ak.zip(
-        #     {
-        #         'pfcand_eta':ak.flatten(pfcands.eta),
-        #         'pfcand_phi':ak.flatten(pfcands.phi),
-        #         'pfcand_charge':ak.flatten(pfcands.charge),
-        #         'pfcand_d0':ak.flatten(pfcands.d0),
-        #         'pfcand_dz':ak.flatten(pfcands.dz),
-        #         'pfcand_lostInnerHits':ak.flatten(pfcands.lostInnerHits),
-        #         'pfcand_pt':ak.flatten(pfcands.pt),
-        #         # 'pfcand_eta':pfcands.eta,
-        #         # 'pfcand_phi':pfcands.phi,
-        #         # 'pfcand_charge':pfcands.charge,
-        #         # 'pfcand_d0':pfcands.d0,
-        #         # 'pfcand_dz':pfcands.dz,
-        #         # 'pfcand_lostInnerHits':pfcands.lostInnerHits,
-        #         # 'pfcand_pt':pfcands.pt,
-        #         'sv_eta':sv.eta,
-        #         'sv_phi':sv.phi,
-        #         'sv_dxy':sv.dxy,
-        #         'sv_mass':sv.mass,
-        #         'sv_chi2':sv.chi2,
-        #         'sv_ntracks':sv.ntracks,
-        #         'sv_pt':sv.pt,
-        #         'lnDelta': np.log(goodjets.lund_decluster.Delta),
-        #         'lnkt': np.log(goodjets.lund_decluster.kt),
-        #         'lnz': np.log(goodjets.lund_decluster.z),
-        #         'psi': goodjets.lund_decluster.psi,
-        #         'lnm': np.log(goodjets.lund_decluster.m),
-        #         'slund_lnDelta': np.log(goodjets.softdrop_lund_decluster.Delta),
-        #         'slund_lnkt': np.log(goodjets.softdrop_lund_decluster.kt),
-        #         'slund_lnz': np.log(goodjets.softdrop_lund_decluster.z),
-        #         'slund_psi': goodjets.softdrop_lund_decluster.psi,
-        #         'slund_lnm': np.log(goodjets.softdrop_lund_decluster.m),
-        #         'fj_sdmass':goodjets.msoftdrop,
-        #         'fj_mass': goodjets.mass,
-        #         'fj_pt':goodjets.pt,
-        #         'fj_eta':goodjets.eta,
-        #         'fj_phi':goodjets.phi,
-        #         'label_H_gg':goodjets.label_H_gg,
-        #         'label_QCD':goodjets.label_QCD,             
-        #     },
-        #     depth_limit=1,
-        # )
+        pn_vals = ak.zip(
+            {
+                'pfcand_eta':ak.flatten(pfcands.eta),
+                'pfcand_phi':ak.flatten(pfcands.phi),
+                'pfcand_charge':ak.flatten(pfcands.charge),
+                'pfcand_d0':ak.flatten(pfcands.d0),
+                'pfcand_dz':ak.flatten(pfcands.dz),
+                'pfcand_lostInnerHits':ak.flatten(pfcands.lostInnerHits),
+                'pfcand_pt':ak.flatten(pfcands.pt),
+                # 'pfcand_eta':pfcands.eta,
+                # 'pfcand_phi':pfcands.phi,
+                # 'pfcand_charge':pfcands.charge,
+                # 'pfcand_d0':pfcands.d0,
+                # 'pfcand_dz':pfcands.dz,
+                # 'pfcand_lostInnerHits':pfcands.lostInnerHits,
+                # 'pfcand_pt':pfcands.pt,
+                'sv_eta':sv.eta,
+                'sv_phi':sv.phi,
+                'sv_dxy':sv.dxy,
+                'sv_mass':sv.mass,
+                'sv_chi2':sv.chi2,
+                'sv_ntracks':sv.ntracks,
+                'sv_pt':sv.pt,
+                'fj_sdmass':goodjets.msoftdrop,
+                'fj_mass': goodjets.mass,
+                'fj_pt':goodjets.pt,
+                'fj_eta':goodjets.eta,
+                'fj_phi':goodjets.phi,
+                'label_H_gg':goodjets.label_H_gg,
+                'label_QCD':goodjets.label_QCD,             
+            },
+            depth_limit=1,
+        )
 
         
 
@@ -445,13 +436,14 @@ if __name__ == "__main__":
                 'ungroomed_ecfs':ak.firsts(events.ungroomed_ecfs),
                 'groomed_ecfs':ak.firsts(events.groomed_ecfs),
                 'event': events.event,
-                # 'pnet_vals': pn_vals,
-                # 'GenJetAK8': ak.firsts(events.GenJetAK8[ak.unflatten(ak.firsts(events.goodjets.genJetAK8Idx), counts=ak.ones_like(ak.firsts(events.goodjets.genJetAK8Idx)))])
+                'pnet_vals': pn_vals,
+                'GenJetAK8': events.GenJetAK8,
+                'GenPart': events.GenPart,
             },
             depth_limit=1,
         )
 
-        path = f"/project01/ndcms/cmoore24/skims/singlemuon/full/mc/{dataset}"
+        path = f"/project01/ndcms/cmoore24/skims/full_skims/nolepton/mc/{dataset}"
         skim_task = dak.to_parquet(
             skim,
             path, ##Change this to where you'd like the output to be written
@@ -466,7 +458,7 @@ if __name__ == "__main__":
     # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     for to_skim in samples_ready:
         # if (skim_ds in to_skim):
-        if ('wlnuv' in to_skim):
+        if ('hww' in to_skim):
             subset[to_skim] = samples_ready[to_skim]
             files = subset[to_skim]['files']
             form = subset[to_skim]['form']
@@ -490,8 +482,8 @@ if __name__ == "__main__":
             
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        # samples_ready, ## Run over all subsamples in input_datasets.json
-        batch, ## Run over only the subsample specified as the "to_skim" string
+        samples_ready, ## Run over all subsamples in input_datasets.json
+        # batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )#[0]

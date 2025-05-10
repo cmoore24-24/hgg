@@ -10,7 +10,6 @@ import fastjet
 import time
 import os
 import warnings
-from variable_functions import *
 import scipy
 import pickle
 import subprocess
@@ -119,9 +118,9 @@ if __name__ == "__main__":
     #    json.dump(samples_ready, fout)
 
     ######## The analysis portion begins here ########
-    
+
     with open("samples_ready.json", 'r') as f:
-        samples_ready = json.load(f)
+            samples_ready = json.load(f)
 
     with open('triggers.json', 'r') as f:
         triggers = json.load(f)
@@ -131,12 +130,10 @@ if __name__ == "__main__":
             (events.FatJet.pt >= 450)
             & (events.FatJet.pt <= 1000)
             & (abs(events.FatJet.eta) <= 2.4)
-            # & (events.FatJet.msoftdrop >= 40)
-            # & (events.FatJet.msoftdrop <= 200)
-            # & (events.FatJet.num_fatjets >= 3)
+            & (events.FatJet.msoftdrop >= 40)
+            & (events.FatJet.msoftdrop <= 200)
             & (region)
-            # & (ak.fill_none(events.FatJet.delta_r(events.FatJet.nearest(events.Muon[goodmuon], axis=1)) > 0.8, True))
-            # & (trigger)
+            & (trigger)
             & (events.FatJet.btag_count == 0)
         )
         
@@ -155,6 +152,7 @@ if __name__ == "__main__":
             matched_jets = ~ak.is_none(parents, axis=1)
             fatjetSelect = ((fatjetSelect) & (matched_jets))
         return fatjetSelect
+    
 
     def analysis(events):
         dataset = events.metadata["dataset"]
@@ -175,7 +173,7 @@ if __name__ == "__main__":
 
         # event.MET < 140 for regular boosted higgs, try > 50 to try focusing on W jets
 
-        # events['FatJet', 'num_fatjets'] = ak.num(events.FatJet)
+        events['FatJet', 'num_fatjets'] = ak.num(events.FatJet)
 
         goodmuon = (
             (events.Muon.pt > 10)
@@ -209,13 +207,6 @@ if __name__ == "__main__":
         nolepton = ((nmuons == 0) & (nelectrons == 0) & (ntaus == 0))
 
         onemuon = ((nmuons == 1) & (nelectrons == 0) & (ntaus == 0))
-        # muonkin = ((leadingmuon.pt > 55.) & (abs(leadingmuon.eta) < 2.1))
-        # muonDphiAK8 = (abs(leadingmuon.delta_phi(events.FatJet)) > 2*np.pi/3)
-
-
-        
-        # num_sub = ak.unflatten(num_subjets(events.FatJet, cluster_val=0.4), counts=ak.num(events.FatJet))
-        # events['FatJet', 'num_subjets'] = num_sub
 
         region = nolepton ## Use this option to let more data through the cuts
         # region = onemuon ## Use this option to let less data through the cuts
@@ -224,11 +215,11 @@ if __name__ == "__main__":
         events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > 0.3040, axis=1)
         events['FatJet', 'trigger_mask'] = trigger
 
-        if ('hgg' in dataset) or ('hbb' in dataset) or ('flat' in dataset):
+        if ('hgg' in dataset) or ('hbb' in dataset) or ('flat' in dataset) or ('hww' in dataset):
             print(f'Higgs {dataset}')
-            fatjetSelect= apply_selections(events, region, trigger, goodmuon, 25)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, 25)
             do_li = True
-        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset):
+        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset) and ('hww' not in dataset):
             print(dataset)
             fatjetSelect = apply_selections(events, region, trigger, goodmuon, 24)
             do_li = True
@@ -248,24 +239,29 @@ if __name__ == "__main__":
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
-        events = events[ak.num(events.goodjets) >=3]
+        events = events[ak.num(events.goodjets) < 3]
 
-        
-        
-        # if do_li:
-        #     events['goodjets'] = events.goodjets[(ak.local_index(events.goodjets, axis=1) == 0)]
-        
+        if do_li:
+            events['goodjets'] = events.goodjets[(ak.local_index(events.goodjets, axis=1) == 0)]
+
+
+        pf_info = events.goodjets.constituents.pf
+        pf_info['px'] = events.goodjets.constituents.pf.px
+        pf_info['py'] = events.goodjets.constituents.pf.py
+        pf_info['pz'] = events.goodjets.constituents.pf.pz
+        pf_info['E'] = events.goodjets.constituents.pf.E
+
         skim = ak.zip(
             {
-                'goodjets':events.goodjets,
+                'goodjets_pt':ak.firsts(events.goodjets).pt,
+                'goodjets_msd':ak.firsts(events.goodjets).msoftdrop,
+                # 'JetCons':ak.firsts(pf_info),
                 'event': events.event,
-                # 'GenJetAK8': events.GenJetAK8,
-                # 'GenPart': events.GenPart,
             },
             depth_limit=1,
         )
 
-        path = f"/project01/ndcms/cmoore24/skims/gluon_finding/data/samples/{dataset}"
+        path = f"/project01/ndcms/cmoore24/skims/jet_skims/nolepton/mc/comparison/{dataset}"
         skim_task = dak.to_parquet(
             skim,
             path, ##Change this to where you'd like the output to be written
@@ -280,7 +276,7 @@ if __name__ == "__main__":
     # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     for to_skim in samples_ready:
         # if (skim_ds in to_skim):
-        if ('qcd' in to_skim):
+        if ('hgg' in to_skim):
             subset[to_skim] = samples_ready[to_skim]
             files = subset[to_skim]['files']
             form = subset[to_skim]['form']
