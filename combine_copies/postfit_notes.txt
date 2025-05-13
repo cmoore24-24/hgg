@@ -2,6 +2,6 @@ Link to Postfit Github:
 	https://github.com/andrzejnovak/combine_postfits/tree/master
 
 Basic Run Command:
-	combine_postfits -i fitDiagnostics.root
+	combine_postfits -i fitDiagnosticsTest.root --MC
 
- 
+combine_postfits -i fitDiagnosticsTest.root --MC --dpi 100 --bkgs 'qcd,wqq,zqq,ttboosted,ww,wz,zz,singletop,hbb' --sigs 'hgg' 
