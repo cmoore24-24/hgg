@@ -10,7 +10,6 @@ import fastjet
 import time
 import os
 import warnings
-from variable_functions import *
 import scipy
 import pickle
 import subprocess
@@ -30,7 +29,7 @@ if __name__ == "__main__":
         [9101, 9200],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/",
-        run_info_template='gluons',
+        run_info_template='gluons2',
     )
 
     m.tune("temp-replica-count", 3)
@@ -169,29 +168,29 @@ if __name__ == "__main__":
         output_dict = {}        
         for i in ecf_dict:
             if i[1] == '2':
-                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i], counts = dak.num(jet_array))
+                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i], counts = ak.num(jet_array))
             elif i[1] == '3':
-                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i][:,0], counts = dak.num(jet_array))
-                output_dict[f'2{i}'] = ak.unflatten(ecf_dict[i][:,1], counts = dak.num(jet_array))
-                output_dict[f'3{i}'] = ak.unflatten(ecf_dict[i][:,2], counts = dak.num(jet_array))
+                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i][:,0], counts = ak.num(jet_array))
+                output_dict[f'2{i}'] = ak.unflatten(ecf_dict[i][:,1], counts = ak.num(jet_array))
+                output_dict[f'3{i}'] = ak.unflatten(ecf_dict[i][:,2], counts = ak.num(jet_array))
             elif i[1] == '4':
-                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i][:,0], counts = dak.num(jet_array))
-                output_dict[f'2{i}'] = ak.unflatten(ecf_dict[i][:,1], counts = dak.num(jet_array))
-                output_dict[f'3{i}'] = ak.unflatten(ecf_dict[i][:,2], counts = dak.num(jet_array))
-                output_dict[f'4{i}'] = ak.unflatten(ecf_dict[i][:,3], counts = dak.num(jet_array))
-                output_dict[f'5{i}'] = ak.unflatten(ecf_dict[i][:,4], counts = dak.num(jet_array))
-                output_dict[f'6{i}'] = ak.unflatten(ecf_dict[i][:,5], counts = dak.num(jet_array))
+                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i][:,0], counts = ak.num(jet_array))
+                output_dict[f'2{i}'] = ak.unflatten(ecf_dict[i][:,1], counts = ak.num(jet_array))
+                output_dict[f'3{i}'] = ak.unflatten(ecf_dict[i][:,2], counts = ak.num(jet_array))
+                output_dict[f'4{i}'] = ak.unflatten(ecf_dict[i][:,3], counts = ak.num(jet_array))
+                output_dict[f'5{i}'] = ak.unflatten(ecf_dict[i][:,4], counts = ak.num(jet_array))
+                output_dict[f'6{i}'] = ak.unflatten(ecf_dict[i][:,5], counts = ak.num(jet_array))
             elif i[1] == '5':
-                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i][:,0], counts = dak.num(jet_array))
-                output_dict[f'2{i}'] = ak.unflatten(ecf_dict[i][:,1], counts = dak.num(jet_array))
-                output_dict[f'3{i}'] = ak.unflatten(ecf_dict[i][:,2], counts = dak.num(jet_array))
-                output_dict[f'4{i}'] = ak.unflatten(ecf_dict[i][:,3], counts = dak.num(jet_array))
-                output_dict[f'5{i}'] = ak.unflatten(ecf_dict[i][:,4], counts = dak.num(jet_array))
-                output_dict[f'6{i}'] = ak.unflatten(ecf_dict[i][:,5], counts = dak.num(jet_array))
-                output_dict[f'7{i}'] = ak.unflatten(ecf_dict[i][:,6], counts = dak.num(jet_array))
-                output_dict[f'8{i}'] = ak.unflatten(ecf_dict[i][:,7], counts = dak.num(jet_array))
-                output_dict[f'9{i}'] = ak.unflatten(ecf_dict[i][:,8], counts = dak.num(jet_array))
-                output_dict[f'10{i}'] = ak.unflatten(ecf_dict[i][:,9], counts = dak.num(jet_array))
+                output_dict[f'1{i}'] = ak.unflatten(ecf_dict[i][:,0], counts = ak.num(jet_array))
+                output_dict[f'2{i}'] = ak.unflatten(ecf_dict[i][:,1], counts = ak.num(jet_array))
+                output_dict[f'3{i}'] = ak.unflatten(ecf_dict[i][:,2], counts = ak.num(jet_array))
+                output_dict[f'4{i}'] = ak.unflatten(ecf_dict[i][:,3], counts = ak.num(jet_array))
+                output_dict[f'5{i}'] = ak.unflatten(ecf_dict[i][:,4], counts = ak.num(jet_array))
+                output_dict[f'6{i}'] = ak.unflatten(ecf_dict[i][:,5], counts = ak.num(jet_array))
+                output_dict[f'7{i}'] = ak.unflatten(ecf_dict[i][:,6], counts = ak.num(jet_array))
+                output_dict[f'8{i}'] = ak.unflatten(ecf_dict[i][:,7], counts = ak.num(jet_array))
+                output_dict[f'9{i}'] = ak.unflatten(ecf_dict[i][:,8], counts = ak.num(jet_array))
+                output_dict[f'10{i}'] = ak.unflatten(ecf_dict[i][:,9], counts = ak.num(jet_array))
         return output_dict
     
 
@@ -318,10 +317,6 @@ if __name__ == "__main__":
             fastjet.cambridge_algorithm, 1.0
         )
         pf = ak.flatten(events.goodjets.constituents.pf, axis=1)
-        # pf['px'] = pf.px
-        # pf['py'] = pf.py
-        # pf['pz'] = pf.pz
-        # pf['E'] = pf.E
         cluster = fastjet.ClusterSequence(pf, jetdef)
 
         softdrop = cluster.exclusive_jets_softdrop_grooming()
@@ -331,7 +326,6 @@ if __name__ == "__main__":
         # events['goodjets', 'softdrop_lund_decluster'] = softdrop_cluster.exclusive_jets_lund_declusterings(1)
 
         #### all angles, if possible 
-        
         # ungroomed_ecf_classes = {}
         # for n in range(2, 6):
         #     for b in range(5, 45, 5):
@@ -339,7 +333,7 @@ if __name__ == "__main__":
         #         ecf_result = cluster.exclusive_jets_energy_correlator(
         #                 func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
         #         )
-        #         ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = ak.Array([int((n*(n-1))/2)]))
+        #         ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
                 
         # groomed_ecf_classes = {}
         # for n in range(2, 6):
@@ -348,10 +342,11 @@ if __name__ == "__main__":
         #         ecf_result = softdrop_cluster.exclusive_jets_energy_correlator(
         #                     func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
         #         )
-        #         groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = ak.Array([int((n*(n-1))/2)]))
+        #         groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
                 
         # ungroomed_ecfs = ecf_reorg(ungroomed_ecf_classes, events.goodjets)
         # groomed_ecfs = ecf_reorg(groomed_ecf_classes, events.goodjets)
+        
         # events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
         # events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
 
@@ -439,6 +434,7 @@ if __name__ == "__main__":
                 'pnet_vals': pn_vals,
                 'GenJetAK8': events.GenJetAK8,
                 'GenPart': events.GenPart,
+                'MET': events.MET,
             },
             depth_limit=1,
         )
@@ -451,14 +447,14 @@ if __name__ == "__main__":
         )
         return skim_task
 
-    ###### Uncomment this regeion if you want to run only one of the subsamples found in input_datasets.json ######
+    ###### Uncomment this region if you want to run only one of the subsamples found in input_datasets.json ######
 
     subset = {}
     batch = {}
     # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     for to_skim in samples_ready:
         # if (skim_ds in to_skim):
-        if ('hww' in to_skim):
+        if ('470to600' in to_skim):
             subset[to_skim] = samples_ready[to_skim]
             files = subset[to_skim]['files']
             form = subset[to_skim]['form']
@@ -482,8 +478,8 @@ if __name__ == "__main__":
             
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        samples_ready, ## Run over all subsamples in input_datasets.json
-        # batch, ## Run over only the subsample specified as the "to_skim" string
+        # samples_ready, ## Run over all subsamples in input_datasets.json
+        batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )#[0]
