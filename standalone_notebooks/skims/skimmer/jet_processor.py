@@ -29,7 +29,7 @@ if __name__ == "__main__":
         [9101, 9200],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/",
-        run_info_template='gluons2',
+        run_info_template='gluons3',
     )
 
     m.tune("temp-replica-count", 3)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     def sampler(samples):
        samples_ready, samples = dataset_tools.preprocess(
            samples,
-           step_size=3_000, ## Change this step size to adjust the size of chunks of events
+           step_size=10_000, ## Change this step size to adjust the size of chunks of events
            skip_bad_files=True,
            recalculate_steps=True,
            save_form=False,
@@ -326,56 +326,56 @@ if __name__ == "__main__":
         # events['goodjets', 'softdrop_lund_decluster'] = softdrop_cluster.exclusive_jets_lund_declusterings(1)
 
         #### all angles, if possible 
-        # ungroomed_ecf_classes = {}
-        # for n in range(2, 6):
-        #     for b in range(5, 45, 5):
-        #         ecf_class = f'e{n}^{b/10}'
-        #         ecf_result = cluster.exclusive_jets_energy_correlator(
-        #                 func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
-        #         )
-        #         ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
+        ungroomed_ecf_classes = {}
+        for n in range(2, 6):
+            for b in range(5, 45, 5):
+                ecf_class = f'e{n}^{b/10}'
+                ecf_result = cluster.exclusive_jets_energy_correlator(
+                        func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
+                )
+                ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
                 
-        # groomed_ecf_classes = {}
-        # for n in range(2, 6):
-        #     for b in range(5, 45, 5):
-        #         ecf_class = f'e{n}^{b/10}'
-        #         ecf_result = softdrop_cluster.exclusive_jets_energy_correlator(
-        #                     func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
-        #         )
-        #         groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
+        groomed_ecf_classes = {}
+        for n in range(2, 6):
+            for b in range(5, 45, 5):
+                ecf_class = f'e{n}^{b/10}'
+                ecf_result = softdrop_cluster.exclusive_jets_energy_correlator(
+                            func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
+                )
+                groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
                 
-        # ungroomed_ecfs = ecf_reorg(ungroomed_ecf_classes, events.goodjets)
-        # groomed_ecfs = ecf_reorg(groomed_ecf_classes, events.goodjets)
-        
-        # events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
-        # events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
-
-        #### slower ecfs
-
-        groomed_ecfs = {}
-        for n in range(2,6):
-            for v in range(1, int(scipy.special.binom(n, 2))+1):
-                for b in range(5, 45, 5):
-                    ecf_name = f'{v}e{n}^{b/10}'
-                    groomed_ecfs[ecf_name] = ak.unflatten(
-                        softdrop_cluster.exclusive_jets_energy_correlator(
-                            func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
-                        counts=dak.num(events.goodjets)
-                    )
-
-        ungroomed_ecfs = {}
-        for n in range(2,6):
-            for v in range(1, int(scipy.special.binom(n, 2))+1):
-                for b in range(5, 45, 5):
-                    ecf_name = f'{v}e{n}^{b/10}'
-                    ungroomed_ecfs[ecf_name] = ak.unflatten(
-                        cluster.exclusive_jets_energy_correlator(
-                            func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
-                        counts=dak.num(events.goodjets)
-                    )
+        ungroomed_ecfs = ecf_reorg(ungroomed_ecf_classes, events.goodjets)
+        groomed_ecfs = ecf_reorg(groomed_ecf_classes, events.goodjets)
         
         events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
         events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
+
+        #### slower ecfs
+
+        # groomed_ecfs = {}
+        # for n in range(2,6):
+        #     for v in range(1, int(scipy.special.binom(n, 2))+1):
+        #         for b in range(5, 45, 5):
+        #             ecf_name = f'{v}e{n}^{b/10}'
+        #             groomed_ecfs[ecf_name] = ak.unflatten(
+        #                 softdrop_cluster.exclusive_jets_energy_correlator(
+        #                     func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
+        #                 counts=dak.num(events.goodjets)
+        #             )
+
+        # ungroomed_ecfs = {}
+        # for n in range(2,6):
+        #     for v in range(1, int(scipy.special.binom(n, 2))+1):
+        #         for b in range(5, 45, 5):
+        #             ecf_name = f'{v}e{n}^{b/10}'
+        #             ungroomed_ecfs[ecf_name] = ak.unflatten(
+        #                 cluster.exclusive_jets_energy_correlator(
+        #                     func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
+        #                 counts=dak.num(events.goodjets)
+        #             )
+        
+        # events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
+        # events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
 
         
         if ('hgg' in dataset) or ('flat' in dataset):
