@@ -30,7 +30,7 @@ if __name__ == "__main__":
         [9101, 9200],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/",
-        run_info_template=f'{pick_name}',
+        run_info_template=f'{template_name}',
     )
 
     m.tune("temp-replica-count", 3)
@@ -440,7 +440,7 @@ if __name__ == "__main__":
             depth_limit=1,
         )
 
-        path = f"/path/to/output/{dataset}" #Edit this for parquet file destination!
+        path = f"/project01/ndcms/cmoore24/test_output/{dataset}" #Edit this for parquet file destination!
         skim_task = dak.to_parquet(
             skim,
             path, ##Change this to where you'd like the output to be written
