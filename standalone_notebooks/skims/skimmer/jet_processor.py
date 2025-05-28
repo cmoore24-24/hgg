@@ -21,7 +21,8 @@ import argparse
 
 # skim_ds = args.dataset
 
-
+index = '470to600'
+template_name = 'gluons8'
 full_start = time.time()
 
 if __name__ == "__main__":
@@ -29,7 +30,7 @@ if __name__ == "__main__":
         [9101, 9200],
         name=f"{os.environ['USER']}-hgg",
         run_info_path=f"/project01/ndcms/{os.environ['USER']}/vine-run-info/",
-        run_info_template='gluons3',
+        run_info_template=f'{pick_name}',
     )
 
     m.tune("temp-replica-count", 3)
@@ -72,50 +73,50 @@ if __name__ == "__main__":
 
     ####### Uncomment the following section if you need to pre-process the datasets present in input_datasets.json ########
     
-    with open('input_datasets.json', 'r') as f:
-        samples = json.load(f)
+    # with open('input_datasets.json', 'r') as f:
+    #     samples = json.load(f)
 
-    print('doing samples')
-    sample_start = time.time()
+    # print('doing samples')
+    # sample_start = time.time()
 
-    @dask.delayed
-    def sampler(samples):
-       samples_ready, samples = dataset_tools.preprocess(
-           samples,
-           step_size=10_000, ## Change this step size to adjust the size of chunks of events
-           skip_bad_files=True,
-           recalculate_steps=True,
-           save_form=False,
-       )
-       return samples_ready
+    # @dask.delayed
+    # def sampler(samples):
+    #    samples_ready, samples = dataset_tools.preprocess(
+    #        samples,
+    #        step_size=3_000, ## Change this step size to adjust the size of chunks of events
+    #        skip_bad_files=True,
+    #        recalculate_steps=True,
+    #        save_form=False,
+    #    )
+    #    return samples_ready
     
-    sampler_dict = {}
-    for i in samples:
-       sampler_dict[i] = sampler(samples[i])
+    # sampler_dict = {}
+    # for i in samples:
+    #    sampler_dict[i] = sampler(samples[i])
     
-    print('Compute')
-    samples_postprocess = dask.compute(
-       sampler_dict,
-       scheduler=m.get,
-       resources={"cores": 1},
-       # resources_mode=None,
-       # prune_files=True,
-       prune_depth=0,
-       worker_transfers=True,
-       task_mode="function-calls",
-       lib_resources={'cores': 24, 'slots': 24},
-    )[0]
+    # print('Compute')
+    # samples_postprocess = dask.compute(
+    #    sampler_dict,
+    #    scheduler=m.get,
+    #    resources={"cores": 1},
+    #    # resources_mode=None,
+    #    # prune_files=True,
+    #    prune_depth=0,
+    #    worker_transfers=True,
+    #    task_mode="function-calls",
+    #    lib_resources={'cores': 24, 'slots': 24},
+    # )[0]
     
-    samples_ready = {}
-    for i in samples_postprocess:
-       samples_ready[i] = samples_postprocess[i]['files']
+    # samples_ready = {}
+    # for i in samples_postprocess:
+    #    samples_ready[i] = samples_postprocess[i]['files']
     
-    sample_stop = time.time()
-    print('samples done')
-    print('full sample time is ' + str((sample_stop - sample_start)/60))
+    # sample_stop = time.time()
+    # print('samples done')
+    # print('full sample time is ' + str((sample_stop - sample_start)/60))
     
-    with open("samples_ready.json", "w") as fout:
-       json.dump(samples_ready, fout)
+    # with open("samples_ready.json", "w") as fout:
+    #    json.dump(samples_ready, fout)
 
     ######## The analysis portion begins here ########
     
@@ -326,56 +327,56 @@ if __name__ == "__main__":
         # events['goodjets', 'softdrop_lund_decluster'] = softdrop_cluster.exclusive_jets_lund_declusterings(1)
 
         #### all angles, if possible 
-        ungroomed_ecf_classes = {}
-        for n in range(2, 6):
-            for b in range(5, 45, 5):
-                ecf_class = f'e{n}^{b/10}'
-                ecf_result = cluster.exclusive_jets_energy_correlator(
-                        func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
-                )
-                ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
+        # ungroomed_ecf_classes = {}
+        # for n in range(2, 6):
+        #     for b in range(5, 45, 5):
+        #         ecf_class = f'e{n}^{b/10}'
+        #         ecf_result = cluster.exclusive_jets_energy_correlator(
+        #                 func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
+        #         )
+        #         ungroomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
                 
-        groomed_ecf_classes = {}
-        for n in range(2, 6):
-            for b in range(5, 45, 5):
-                ecf_class = f'e{n}^{b/10}'
-                ecf_result = softdrop_cluster.exclusive_jets_energy_correlator(
-                            func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
-                )
-                groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
+        # groomed_ecf_classes = {}
+        # for n in range(2, 6):
+        #     for b in range(5, 45, 5):
+        #         ecf_class = f'e{n}^{b/10}'
+        #         ecf_result = softdrop_cluster.exclusive_jets_energy_correlator(
+        #                     func='generalized', npoint=n, beta=b/10, normalized=True, all_angles=True
+        #         )
+        #         groomed_ecf_classes[ecf_class] = ak.unflatten(ecf_result, counts = int((n*(n-1))/2))
                 
-        ungroomed_ecfs = ecf_reorg(ungroomed_ecf_classes, events.goodjets)
-        groomed_ecfs = ecf_reorg(groomed_ecf_classes, events.goodjets)
-        
-        events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
-        events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
-
-        #### slower ecfs
-
-        # groomed_ecfs = {}
-        # for n in range(2,6):
-        #     for v in range(1, int(scipy.special.binom(n, 2))+1):
-        #         for b in range(5, 45, 5):
-        #             ecf_name = f'{v}e{n}^{b/10}'
-        #             groomed_ecfs[ecf_name] = ak.unflatten(
-        #                 softdrop_cluster.exclusive_jets_energy_correlator(
-        #                     func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
-        #                 counts=dak.num(events.goodjets)
-        #             )
-
-        # ungroomed_ecfs = {}
-        # for n in range(2,6):
-        #     for v in range(1, int(scipy.special.binom(n, 2))+1):
-        #         for b in range(5, 45, 5):
-        #             ecf_name = f'{v}e{n}^{b/10}'
-        #             ungroomed_ecfs[ecf_name] = ak.unflatten(
-        #                 cluster.exclusive_jets_energy_correlator(
-        #                     func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
-        #                 counts=dak.num(events.goodjets)
-        #             )
+        # ungroomed_ecfs = ecf_reorg(ungroomed_ecf_classes, events.goodjets)
+        # groomed_ecfs = ecf_reorg(groomed_ecf_classes, events.goodjets)
         
         # events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
         # events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
+
+        #### slower ecfs
+
+        groomed_ecfs = {}
+        for n in range(2,6):
+            for v in range(1, int(scipy.special.binom(n, 2))+1):
+                for b in range(5, 45, 5):
+                    ecf_name = f'{v}e{n}^{b/10}'
+                    groomed_ecfs[ecf_name] = ak.unflatten(
+                        softdrop_cluster.exclusive_jets_energy_correlator(
+                            func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
+                        counts=dak.num(events.goodjets)
+                    )
+
+        ungroomed_ecfs = {}
+        for n in range(2,6):
+            for v in range(1, int(scipy.special.binom(n, 2))+1):
+                for b in range(5, 45, 5):
+                    ecf_name = f'{v}e{n}^{b/10}'
+                    ungroomed_ecfs[ecf_name] = ak.unflatten(
+                        cluster.exclusive_jets_energy_correlator(
+                            func='generalized', npoint=n, angles=v, beta=b/10, normalized=True), 
+                        counts=dak.num(events.goodjets)
+                    )
+        
+        events["groomed_ecfs"] = ak.zip(groomed_ecfs, depth_limit=1)
+        events["ungroomed_ecfs"] = ak.zip(ungroomed_ecfs, depth_limit=1)
 
         
         if ('hgg' in dataset) or ('flat' in dataset):
@@ -439,7 +440,7 @@ if __name__ == "__main__":
             depth_limit=1,
         )
 
-        path = f"/project01/ndcms/cmoore24/skims/full_skims/nolepton/mc/{dataset}"
+        path = f"/path/to/output/{dataset}" #Edit this for parquet file destination!
         skim_task = dak.to_parquet(
             skim,
             path, ##Change this to where you'd like the output to be written
@@ -454,7 +455,7 @@ if __name__ == "__main__":
     # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     for to_skim in samples_ready:
         # if (skim_ds in to_skim):
-        if ('470to600' in to_skim):
+        if (f'{index}' in to_skim):
             subset[to_skim] = samples_ready[to_skim]
             files = subset[to_skim]['files']
             form = subset[to_skim]['form']
