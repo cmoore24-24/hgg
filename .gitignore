@@ -5,3 +5,7 @@
 *.parquet
 *.pyc
 *.pt
+*.log
+*.out
+*.err
+*.json

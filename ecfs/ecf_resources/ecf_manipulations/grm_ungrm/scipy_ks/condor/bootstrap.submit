@@ -1,0 +1,15 @@
+Universe                = vanilla
+executable              = run.sh
+output                  = logs/job.$(ClusterId).$(ProcId).out
+error                   = logs/job.$(ClusterId).$(ProcId).err
+log                     = logs/job.$(ClusterId).$(ProcId).log
+arguments               = $(ProcId)
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+transfer_input_files    = condor_bootstrap.py, run.sh, 
+
+request_memory = 6 GB
+request_cpus   = 1
+request_disk   = 35 GB
+
+queue 2000

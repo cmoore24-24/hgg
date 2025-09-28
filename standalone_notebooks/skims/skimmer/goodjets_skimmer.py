@@ -103,7 +103,7 @@ if __name__ == "__main__":
     #    prune_depth=0,
     #    worker_transfers=True,
     #    task_mode="function-calls",
-    #    lib_resources={'cores': 24, 'slots': 24},
+    #    lib_resources={'cores': 6, 'slots': 6},
     # )[0]
     
     # samples_ready = {}
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     # print('samples done')
     # print('full sample time is ' + str((sample_stop - sample_start)/60))
     
-    # with open("samples_ready.json", "w") as fout:
+    # with open("samples_ready2.json", "w") as fout:
     #    json.dump(samples_ready, fout)
 
     ######## The analysis portion begins here ########
@@ -135,6 +135,7 @@ if __name__ == "__main__":
             & (region)
             & (trigger)
             & (events.FatJet.btag_count == 0)
+            & (ak.num(events.FatJet) < 3)
         )
         
         if (pdgid != None) or (is_wz):
@@ -239,29 +240,31 @@ if __name__ == "__main__":
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
         events = events[mask]
-        events = events[ak.num(events.goodjets) < 3]
 
         if do_li:
             events['goodjets'] = events.goodjets[(ak.local_index(events.goodjets, axis=1) == 0)]
 
+        jetdef = fastjet.JetDefinition(
+            fastjet.cambridge_algorithm, 1.0
+        )
+        pf = ak.flatten(events.goodjets.constituents.pf, axis=1)
+        cluster = fastjet.ClusterSequence(pf, jetdef)
 
-        pf_info = events.goodjets.constituents.pf
-        pf_info['px'] = events.goodjets.constituents.pf.px
-        pf_info['py'] = events.goodjets.constituents.pf.py
-        pf_info['pz'] = events.goodjets.constituents.pf.pz
-        pf_info['E'] = events.goodjets.constituents.pf.E
+        softdrop = cluster.exclusive_jets_softdrop_grooming()
+        softdrop_cluster = fastjet.ClusterSequence(softdrop.constituents, jetdef)
+
+        events['goodjets','n4b1'] = softdrop_cluster.exclusive_jets_energy_correlator(
+                            func='nseries', npoint=4, beta=1,
+                )
 
         skim = ak.zip(
             {
-                'goodjets_pt':ak.firsts(events.goodjets).pt,
-                'goodjets_msd':ak.firsts(events.goodjets).msoftdrop,
-                # 'JetCons':ak.firsts(pf_info),
-                'event': events.event,
+                'goodjets':events.goodjets,
             },
             depth_limit=1,
         )
 
-        path = f"/project01/ndcms/cmoore24/skims/jet_skims/nolepton/mc/comparison/{dataset}"
+        path = f"/project01/ndcms/cmoore24/skims/softdrop/mc/{dataset}"
         skim_task = dak.to_parquet(
             skim,
             path, ##Change this to where you'd like the output to be written
@@ -276,7 +279,7 @@ if __name__ == "__main__":
     # to_skim = 'qcd' ## Use this string to choose the subsample. Name must be found in input_datasets.json ######
     for to_skim in samples_ready:
         # if (skim_ds in to_skim):
-        if ('hgg' in to_skim):
+        if ('qcd' in to_skim):
             subset[to_skim] = samples_ready[to_skim]
             files = subset[to_skim]['files']
             form = subset[to_skim]['form']
@@ -300,8 +303,8 @@ if __name__ == "__main__":
             
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        samples_ready, ## Run over all subsamples in input_datasets.json
-        # batch, ## Run over only the subsample specified as the "to_skim" string
+        # samples_ready, ## Run over all subsamples in input_datasets.json
+        batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )#[0]
@@ -314,7 +317,7 @@ if __name__ == "__main__":
             worker_transfers=True,
             resources={"cores": 1},
             task_mode="function-calls",
-            lib_resources={'cores': 24, 'slots': 24},
+            lib_resources={'cores': 6, 'slots': 6},
             prune_depth=2, 
         )
 
