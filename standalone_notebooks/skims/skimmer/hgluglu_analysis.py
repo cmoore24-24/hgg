@@ -13,12 +13,12 @@ import warnings
 import scipy
 import pickle
 
-index = 'hgg'
+index = 'ht_qcd'
 samples_process = False
 lep_region = 'nolepton'
 template_name = f'{lep_region}_{index}'
-dset_type = 'mc'
-year = '2017'
+dset_type = 'data'
+year = '2018'
 full_start = time.time()
 
 if __name__ == "__main__":
@@ -54,7 +54,7 @@ if __name__ == "__main__":
         def sampler(samples):
            samples_ready, samples = dataset_tools.preprocess(
                samples,
-               step_size=3_000, ## Change this step size to adjust the size of chunks of events
+               step_size=25_000, ## Change this step size to adjust the size of chunks of events
                skip_bad_files=True,
                recalculate_steps=True,
                save_form=False,
@@ -95,13 +95,17 @@ if __name__ == "__main__":
 
     with open("samples_ready.json", 'r') as f:
         samples_ready = json.load(f)
+
+    print(f'The region is {lep_region}, the year is {year}, and the section is {dset_type}.')
         
     if (lep_region == 'nolepton') or (lep_region == 'trijet'):
         with open('triggers.json', 'r') as f:
             triggers = json.load(f)
     elif lep_region == 'singlemuon':
         triggers = {}
-        triggers['2017'] = ['Mu50', 'TkMu50']
+        triggers['2017'] = ['Mu50','TkMu50']
+        triggers['2016'] = ['Mu50']
+        triggers['2018'] = ['Mu50']
 
     def apply_selections(events, region, trigger, goodmuon, pdgid=None, is_wz=False):     
         fatjetSelect = (
@@ -124,7 +128,7 @@ if __name__ == "__main__":
         elif lep_region == 'trijet':
             fatjetSelect = ((fatjetSelect) & (ak.num(events.FatJet) >= 3) & (events.FatJet.pt >= 450))
 
-        if (pdgid != None) or (is_wz):
+        if ((pdgid != None) or (is_wz)):
             if is_wz:
                 genparts = events.GenPart[
                     ((abs(events.GenPart.pdgId) == 24)|(events.GenPart.pdgId == 23))
@@ -195,7 +199,7 @@ if __name__ == "__main__":
 
         # Create Trigger Mask
         trigger = ak.zeros_like(ak.firsts(events.FatJet.pt), dtype='bool')
-        for t in triggers['2017']:
+        for t in triggers[year]:
             if t in events.HLT.fields:
                 trigger = trigger | events.HLT[t]
         trigger = ak.fill_none(trigger, False)
@@ -389,32 +393,46 @@ if __name__ == "__main__":
         ##### Adjust arrays to be compatible with boostedhiggs #####
 
         # JEC Variables
-        def add_jec_variables(jets, event_rho):
-            jets["pt_raw"] = (1 - jets.rawFactor)*jets.pt
-            jets["mass_raw"] = (1 - jets.rawFactor)*jets.mass
-            jets["pt_gen"] = ak.values_astype(ak.fill_none(jets.matched_gen.pt, 0), np.float32)
+        # def add_jec_variables(jets, event_rho):
+            # jets["pt_raw"] = (1 - jets.rawFactor)*jets.pt
+            # jets["mass_raw"] = (1 - jets.rawFactor)*jets.mass
+            # if dset_type == 'mc':
+                # jets["pt_gen"] = ak.values_astype(ak.fill_none(jets.matched_gen.pt, 0), np.float32)
             # jets["rho"] = ak.broadcast_arrays(event_rho, jets.pt)[0]
-            return jets
+            # return jets
 
-        events['goodjets'] = add_jec_variables(events.goodjets, events.fixedGridRhoFastjetAll)
-        events['Jet'] = add_jec_variables(events.Jet, events.fixedGridRhoFastjetAll)
+        events['goodjets','pt_raw'] = (1 - events.goodjets.rawFactor)*events.goodjets.pt
+        events['goodjets','mass_raw'] = (1 - events.goodjets.rawFactor)*events.goodjets.mass
+        events['goodjets','rho'] = ak.broadcast_arrays(events.fixedGridRhoFastjetAll, events.goodjets.pt)[0]
 
-        # Boson storage
-        if type(pdgId) == int:
-            genparts = events.GenPart[
-                    (abs(events.GenPart.pdgId) == pdgId)
-                    & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
-                ]
-        elif type(pdgId) == str:
-            genparts = events.GenPart[
-                    ((abs(events.GenPart.pdgId) == 24)|(events.GenPart.pdgId == 23))
-                    & events.GenPart.hasFlags(["fromHardProcess", "isLastCopy"])
-                ]
-        else:
-            genparts = events.GenPart
-        matchedBoson = events.FatJet.nearest(genparts, threshold=0.2)
-        events['matchedBoson'] =  matchedBoson[~ak.is_none(matchedBoson, axis=1)]
-        events['matchedBoson', 'children'] = events.matchedBoson.children
+        events['Jet','pt_raw'] = (1 - events.Jet.rawFactor)*events.Jet.pt
+        events['Jet','mass_raw'] = (1 - events.Jet.rawFactor)*events.Jet.mass
+        events['Jet','rho'] = ak.broadcast_arrays(events.fixedGridRhoFastjetAll, events.Jet.pt)[0]
+
+        if dset_type == 'mc':
+            events['goodjets','pt_gen'] = ak.values_astype(ak.fill_none(events.goodjets.matched_gen.pt, 0), np.float32)
+            events['Jet','pt_gen'] = ak.values_astype(ak.fill_none(events.Jet.matched_gen.pt, 0), np.float32)
+        
+        # events['goodjets'] = add_jec_variables(events.goodjets, events.fixedGridRhoFastjetAll)
+        # events['Jet'] = add_jec_variables(events.Jet, events.fixedGridRhoFastjetAll)
+
+        # # Boson storage
+        if dset_type == 'mc':
+            if type(pdgId) == int:
+                genparts = events.GenPart[
+                        (abs(events.GenPart.pdgId) == pdgId)
+                        & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
+                    ]
+            elif type(pdgId) == str:
+                genparts = events.GenPart[
+                        ((abs(events.GenPart.pdgId) == 24)|(events.GenPart.pdgId == 23))
+                        & events.GenPart.hasFlags(["fromHardProcess", "isLastCopy"])
+                    ]
+            else:
+                genparts = events.GenPart
+            matchedBoson = events.FatJet.nearest(genparts, threshold=0.2)
+            events['matchedBoson'] =  matchedBoson[~ak.is_none(matchedBoson, axis=1)]
+            events['matchedBoson', 'children'] = events.matchedBoson.children
 
                 # Create output array
         # skim = ak.zip(
@@ -452,7 +470,7 @@ if __name__ == "__main__":
             path, ##Change this to where you'd like the output to be written
             compute=False,
             write_metadata=False, 
-            extensionarray=True,
+            extensionarray=False,
         )
         return skim_task
 
@@ -484,8 +502,8 @@ if __name__ == "__main__":
     # Create the dictionary of tasks to compute
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        # samples_ready, ## Run over all subsamples in input_datasets.json
-        batch, ## Run over only the subsample specified as the "to_skim" string
+        samples_ready, ## Run over all subsamples in input_datasets.json
+        # batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )

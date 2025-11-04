@@ -9,3 +9,10 @@
 *.out
 *.err
 *.json
+*.condor
+*.out
+*.err
+*.root
+*.png
+*.txt
+*.npy
