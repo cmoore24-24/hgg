@@ -7,7 +7,7 @@ def get_bins(year="2017"):
     # else:
     #     ptbins = np.array([450, 500, 550, 600, 675, 800, 1200])
     ptbins = np.array([450, 1200])
-    msdbins = np.linspace(40, 200, 24)
+    msdbins = np.linspace(72,184,29)
 
     npt = len(ptbins) - 1
 
@@ -18,20 +18,20 @@ def get_bins(year="2017"):
     rhopts = 2*np.log(msdpts/ptpts)
     # ptscaled = (ptpts - ptbins[0]) / (ptbins[-1] - ptbins[0])
     ptscaled = (ptpts - 450.0) / (1200.0 - 450.0)
-    msdscaled = ((msdbins[:-1] + 0.5 * np.diff(msdbins) - 40.0) / (200.0 - 40.0))
+    msdscaled = ((msdbins[:-1] + 0.5 * np.diff(msdbins) - 72.0) / (184.0 - 72.0))
     rhoscaled = (rhopts - (-6)) / ((-2.1) - (-6))
     # validbins = (rhoscaled >= 0) & (rhoscaled <= 1)
     # rhoscaled[~validbins] = 1  # we will mask these out later
 
     # Define fine bins for smooth TF plots
-    fptbins = np.arange(ptbins[0], ptbins[0]+2, 2)
-    fmsdbins = np.arange(40, 201.5, .5)
+    # fptbins = np.arange(ptbins[0], ptbins[0]+2, 2)
+    # fmsdbins = np.arange(40, 201.5, .5)
 
-    fptpts, fmsdpts = np.meshgrid(fptbins[:-1] + 0.3 * np.diff(fptbins),
-                                fmsdbins[:-1] + 0.5 * np.diff(fmsdbins),
-                                indexing='ij')
-    frhopts = 2*np.log(fmsdpts/fptpts)
-    fptscaled = (fptpts - ptbins[0]) / (ptbins[-1] - ptbins[0])
+    # fptpts, fmsdpts = np.meshgrid(fptbins[:-1] + 0.3 * np.diff(fptbins),
+    #                             fmsdbins[:-1] + 0.5 * np.diff(fmsdbins),
+    #                             indexing='ij')
+    # frhopts = 2*np.log(fmsdpts/fptpts)
+    # fptscaled = (fptpts - ptbins[0]) / (ptbins[-1] - ptbins[0])
     # frhoscaled = (frhopts - (-6)) / ((-2.1) - (-6))
     # fvalidbins = (frhoscaled >= 0) & (frhoscaled <= 1)
     # frhoscaled[~fvalidbins] = 1  # we will mask these out later

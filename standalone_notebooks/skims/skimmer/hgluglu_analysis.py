@@ -12,13 +12,15 @@ import os
 import warnings
 import scipy
 import pickle
+from coffea.lumi_tools import LumiMask
 
-index = 'ht_qcd'
+index = 'B'
 samples_process = False
 lep_region = 'nolepton'
 template_name = f'{lep_region}_{index}'
 dset_type = 'data'
-year = '2018'
+year = '2017'
+match = 'True'
 full_start = time.time()
 
 if __name__ == "__main__":
@@ -54,10 +56,10 @@ if __name__ == "__main__":
         def sampler(samples):
            samples_ready, samples = dataset_tools.preprocess(
                samples,
-               step_size=25_000, ## Change this step size to adjust the size of chunks of events
-               skip_bad_files=True,
+               step_size=10_000, ## Change this step size to adjust the size of chunks of events
+               skip_bad_files=False,
                recalculate_steps=True,
-               save_form=False,
+               save_form=True,
            )
            return samples_ready
         
@@ -75,7 +77,7 @@ if __name__ == "__main__":
            prune_depth=0,
            worker_transfers=True,
            task_mode="function-calls",
-           lib_resources={'cores': 12, 'slots': 12},
+           lib_resources={'cores': 1, 'slots': 1},
         )[0]
         
         samples_ready = {}
@@ -107,7 +109,7 @@ if __name__ == "__main__":
         triggers['2016'] = ['Mu50']
         triggers['2018'] = ['Mu50']
 
-    def apply_selections(events, region, trigger, goodmuon, pdgid=None, is_wz=False):     
+    def apply_selections(events, region, trigger, goodmuon, do_matching=True, pdgid=None, is_wz=False):     
         fatjetSelect = (
             # (events.FatJet.pt >= 450) &
             (events.FatJet.pt <= 1200)
@@ -115,19 +117,38 @@ if __name__ == "__main__":
             & (events.FatJet.msoftdrop >= 40)
             & (events.FatJet.msoftdrop <= 200)
             & (region)
-            # & (ak.fill_none(events.FatJet.delta_r(events.FatJet.nearest(events.Muon[goodmuon], axis=1)) > 0.8, True)) # Uncomment for SingleMuon
-            # & (trigger) # Uncomment to apply trigger mask to dataset
+            & (trigger)
             & (events.FatJet.btag_count == 0)
-            # & (ak.num(events.FatJet) < 3)
         )
 
         if lep_region == 'nolepton':
-            fatjetSelect = ((fatjetSelect) & (ak.num(events.FatJet) < 3) & (events.FatJet.pt >= 450))
+            fatjetSelect = ((fatjetSelect) 
+                            & (ak.num(events.FatJet) < 3) 
+                            & (events.FatJet.pt >= 450))
         elif lep_region == 'singlemuon':
             fatjetSelect = ((fatjetSelect) & (ak.num(events.FatJet) < 3) & (events.FatJet.pt >= 400) & (ak.fill_none(events.FatJet.delta_r(events.FatJet.nearest(events.Muon[goodmuon], axis=1)) > 0.8, True)))
         elif lep_region == 'trijet':
             fatjetSelect = ((fatjetSelect) & (ak.num(events.FatJet) >= 3) & (events.FatJet.pt >= 450))
 
+        if do_matching:
+            if ((pdgid != None) or (is_wz)):
+                if is_wz:
+                    genparts = events.GenPart[
+                        ((abs(events.GenPart.pdgId) == 24)|(events.GenPart.pdgId == 23))
+                        & events.GenPart.hasFlags(["fromHardProcess", "isLastCopy"])
+                    ]
+                else:
+                    genparts = events.GenPart[
+                        (abs(events.GenPart.pdgId) == pdgid)
+                        & events.GenPart.hasFlags(['fromHardProcess', 'isLastCopy'])
+                    ]
+                parents = events.FatJet.nearest(genparts, threshold=0.2)
+                matched_jets = ~ak.is_none(parents, axis=1)
+                fatjetSelect = (fatjetSelect) & (matched_jets)
+                return fatjetSelect
+        return fatjetSelect
+
+    def matching_mask(events, pdgid=None, is_wz=False):
         if ((pdgid != None) or (is_wz)):
             if is_wz:
                 genparts = events.GenPart[
@@ -141,9 +162,7 @@ if __name__ == "__main__":
                 ]
             parents = events.FatJet.nearest(genparts, threshold=0.2)
             matched_jets = ~ak.is_none(parents, axis=1)
-            fatjetSelect = ((fatjetSelect) & (matched_jets))
-            return fatjetSelect
-        return fatjetSelect
+            return matched_jets
 
     def ecf_reorg(ecf_dict, jet_array):
         output_dict = {}        
@@ -205,10 +224,23 @@ if __name__ == "__main__":
         trigger = ak.fill_none(trigger, False)
         events['FatJet', 'trigger_mask'] = trigger
 
+        lumimasks = {
+                '2016': 'lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt',
+                '2017': 'lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt',
+                '2018': 'lumimasks/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
+            }
+
         # Store important values; number of fatjets and number of b-tagged AK4 jets per event
         events['FatJet', 'num_fatjets'] = ak.num(events.FatJet)
         events['FatJet', 'dazsle_msd'] = (events.FatJet.subjets * (1 - events.FatJet.subjets.rawFactor)).sum()
-        events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > 0.3040, axis=1)
+
+        btag_wps = {
+            '2016apv': 0.3142,
+            '2016': 0.3657,
+            '2017': 0.3040,
+            '2018': 0.2561,
+        }
+        events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > btag_wps[year], axis=1)
 
         # Create muon selections
         goodmuon = (
@@ -253,29 +285,38 @@ if __name__ == "__main__":
         if ('hgg' in dataset) or ('hbb' in dataset) or ('flat' in dataset) or ('hw' in dataset) or ('vbf' in dataset) or ('hz' in dataset):
             print(f'Higgs {dataset}')
             pdgId = 25
-            fatjetSelect = apply_selections(events, region, trigger, goodmuon, pdgId)
+            events['FatJet','match_mask'] = matching_mask(events, pdgId)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, do_matching=match, pdgid=pdgId)
             do_li = True
         elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset) and ('hww' not in dataset):
             print(dataset)
             pdgId = 24
-            fatjetSelect = apply_selections(events, region, trigger, goodmuon, pdgId)
+            events['FatJet','match_mask'] = matching_mask(events, pdgId)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, do_matching=match, pdgid=pdgId)
             do_li = True
         elif ('zqq' in dataset) or ('zz' in dataset):
             print(dataset)
             pdgId = 23
-            fatjetSelect = apply_selections(events, region, trigger, goodmuon, pdgId)
+            events['FatJet','match_mask'] = matching_mask(events, pdgId)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, do_matching=match, pdgid=pdgId)
             do_li = True
         elif ('wz' in dataset):
             print(dataset)
             pdgId = 'wz'
-            fatjetSelect = apply_selections(events, region, trigger, goodmuon, is_wz=True)
+            events['FatJet','match_mask'] = matching_mask(events, pdgId, is_wz=True)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, do_matching=match, pdgid=pdgId, is_wz=True)
             do_li = True
         else:
             print(dataset)
             pdgId = None
-            fatjetSelect = apply_selections(events, region, trigger, goodmuon)
+            fatjetSelect = apply_selections(events, region, trigger, goodmuon, do_matching=match, pdgid=pdgId)
             do_li = True
 
+        if dset_type == 'data':
+            lumimask = LumiMask(lumimasks[year])(events.run, events.luminosityBlock)
+            fatjetSelect = (fatjetSelect) & (lumimask)
+        
+        
         # Create array with passing AK8 jets
         events["goodjets"] = events.FatJet[fatjetSelect]
         mask = ~ak.is_none(ak.firsts(events.goodjets))
@@ -343,12 +384,12 @@ if __name__ == "__main__":
         events["ungroomed_ecfs"] = ak.firsts(ak.zip(ungroomed_ecfs, depth_limit=1))
         
         # Add labels to relevant datasets
-        if ('hgg' in dataset) or ('flat' in dataset):
-            events = labels(events, 'label_H_gg') 
-        elif ('qcd' in dataset):
-            events = labels(events, 'label_QCD') 
-        else:
-            events = labels(events, None) 
+        # if ('hgg' in dataset) or ('flat' in dataset):
+        #     events = labels(events, 'label_H_gg') 
+        # elif ('qcd' in dataset):
+        #     events = labels(events, 'label_QCD') 
+        # else:
+        #     events = labels(events, None) 
 
         # Save PFCand and SV information for ParticleNet
         # pfcands = events.goodjets.constituents.pf
@@ -393,13 +434,13 @@ if __name__ == "__main__":
         ##### Adjust arrays to be compatible with boostedhiggs #####
 
         # JEC Variables
-        # def add_jec_variables(jets, event_rho):
-            # jets["pt_raw"] = (1 - jets.rawFactor)*jets.pt
-            # jets["mass_raw"] = (1 - jets.rawFactor)*jets.mass
-            # if dset_type == 'mc':
-                # jets["pt_gen"] = ak.values_astype(ak.fill_none(jets.matched_gen.pt, 0), np.float32)
-            # jets["rho"] = ak.broadcast_arrays(event_rho, jets.pt)[0]
-            # return jets
+        def add_jec_variables(jets, event_rho):
+            jets["pt_raw"] = (1 - jets.rawFactor)*jets.pt
+            jets["mass_raw"] = (1 - jets.rawFactor)*jets.mass
+            if dset_type == 'mc':
+                jets["pt_gen"] = ak.values_astype(ak.fill_none(jets.matched_gen.pt, 0), np.float32)
+            jets["rho"] = ak.broadcast_arrays(event_rho, jets.pt)[0]
+            return jets
 
         events['goodjets','pt_raw'] = (1 - events.goodjets.rawFactor)*events.goodjets.pt
         events['goodjets','mass_raw'] = (1 - events.goodjets.rawFactor)*events.goodjets.mass
@@ -413,8 +454,8 @@ if __name__ == "__main__":
             events['goodjets','pt_gen'] = ak.values_astype(ak.fill_none(events.goodjets.matched_gen.pt, 0), np.float32)
             events['Jet','pt_gen'] = ak.values_astype(ak.fill_none(events.Jet.matched_gen.pt, 0), np.float32)
         
-        # events['goodjets'] = add_jec_variables(events.goodjets, events.fixedGridRhoFastjetAll)
-        # events['Jet'] = add_jec_variables(events.Jet, events.fixedGridRhoFastjetAll)
+        events['goodjets'] = add_jec_variables(events.goodjets, events.fixedGridRhoFastjetAll)
+        events['Jet'] = add_jec_variables(events.Jet, events.fixedGridRhoFastjetAll)
 
         # # Boson storage
         if dset_type == 'mc':
@@ -502,8 +543,8 @@ if __name__ == "__main__":
     # Create the dictionary of tasks to compute
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        samples_ready, ## Run over all subsamples in input_datasets.json
-        # batch, ## Run over only the subsample specified as the "to_skim" string
+        # samples_ready, ## Run over all subsamples in input_datasets.json
+        batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )
@@ -517,7 +558,7 @@ if __name__ == "__main__":
             worker_transfers=True,
             resources={"cores": 1},
             task_mode="function-calls",
-            lib_resources={'cores': 12, 'slots': 12},
+            lib_resources={'cores': 1, 'slots': 1},
             prune_depth=2, 
             optimize_graph=True,
         )

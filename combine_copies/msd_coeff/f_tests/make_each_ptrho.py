@@ -60,6 +60,8 @@ if __name__ == '__main__':
         --setParameters r=0 --freezeParameters r \
         -n \"Observed\" --algo \"saturated\" --cminDefaultMinimizerStrategy 0"
         os.system(combine_cmd)
+
+        combine_cmd = "combine -M FitDiagnostics -d output/model_combined.root -m 125 --saveShapes"
         os.system(combine_cmd)
 
         os.chdir("../")

@@ -7,19 +7,15 @@ from scipy.stats import f
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots(1, 1)
 
-nbins=23*6
+nbins=23*1
 
 def Ftest(lambda1,lambda2,p1,p2,nbins):
-
     if lambda1 < lambda2:
         return -2
-
     numerator = -2.0*np.log(1.0*lambda1/lambda2)/(p2-p1)
     denominator = -2.0*np.log(lambda2)/(nbins-p2)
-
     if math.isnan(numerator/denominator):
         return -1
-
     return numerator/denominator
 
 if __name__ == '__main__':
@@ -66,6 +62,7 @@ if __name__ == '__main__':
 
     # Caculate the F-test for toys
     f_dist = [Ftest(lambda1_toys[j],lambda2_toys[j],p1,p2,nbins=nbins) for j in range(len(lambda1_toys))]
+    print('f_dist:')
     print(f_dist)
 
     # Observed

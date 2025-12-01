@@ -11,6 +11,7 @@ from rhalphalib import AffineMorphTemplate, MorphHistW2
 from util import make_dirs
 import hist
 
+
 rl.util.install_roofit_helpers()
 
 SF = {
@@ -149,10 +150,12 @@ def get_templ(f, region, sample, ptbin, syst=None, muon=False, nowarn=False):
                 print("{}Sample {}, {}, {}, {} not found.".format('(Muon) ' if muon else "",
                     sample, region, ptbin if not muon else "-", syst))
         return None
-        
-    h_vals = f[hist_name].values()
-    h_edges = f[hist_name].axes["msd"].edges
-    h_variances = f[hist_name].variances()
+
+    slice_up = 36
+    slice_down = 8
+    h_vals = f[hist_name][slice_down:slice_up].values()
+    h_edges = f[hist_name][slice_down:slice_up].axes["msd"].edges
+    h_variances = f[hist_name][slice_down:slice_up].variances()
     
     if np.any(h_vals < 0):
         print("Sample {}, {}, {}, {}, has {} negative bins. They will be set to 0.".format(
@@ -354,7 +357,7 @@ def dummy_rhalphabet(pseudo,
             _inits = np.ones(tuple(n + 1 for n in degsMC))
         elif _basisMC == 'Chebyshev':
             _inits = np.zeros(tuple(n + 1 for n in degsMC))
-            _inits[0, 0] = 1
+            _inits[0,] = 1
         else:
             raise ValueError("Basis ``{}`` not understood.".format(_basisMC))
         tf_MCtempl = rl.BasisPoly("tf{}_MCtempl".format(year),
@@ -393,7 +396,7 @@ def dummy_rhalphabet(pseudo,
             obs,
             ROOT.RooFit.Extended(True),
             ROOT.RooFit.SumW2Error(True),
-            ROOT.RooFit.Strategy(1),
+            ROOT.RooFit.Strategy(2),
             ROOT.RooFit.Save(),
             ROOT.RooFit.Minimizer('Minuit2', 'migrad'),
             ROOT.RooFit.Offset(True),
@@ -409,20 +412,20 @@ def dummy_rhalphabet(pseudo,
         qcdmodel.readRooFitResult(qcdfit)
 
         # # Plot it
-        from rhalphalib.plot.plot_TF import TF_smooth_plot, TF_params
-        from rhalphalib.plot.plot_TF import plotTF as plotMCTF
-        _values = [par.value for par in tf_MCtempl.parameters.flatten()]
-        _names = [par.name for par in tf_MCtempl.parameters.flatten()]
-        np.save('{}/MCTF'.format(model_name), _values)
-        print('msd deg', degsMC[0])
-        fig_mctf = plotMCTF(*TF_smooth_plot(*TF_params(_values, _names)),
-                            MC=True,
-                            raw=True,
-                            msddeg=degsMC[0],
-                            year=args.year)
-        _plot_name = '{}/plots/TF_MC_only_{}'.format(model_name, args.year)
-        fig_mctf.savefig(_plot_name+".png", dpi=100, transparent=True, bbox_inches="tight")
-        fig_mctf.savefig(_plot_name+".pdf", dpi=100, transparent=True, bbox_inches="tight")
+        #from rhalphalib.plot.plot_TF import TF_smooth_plot, TF_params
+        #from rhalphalib.plot.plot_TF import plotTF as plotMCTF
+        #_values = [par.value for par in tf_MCtempl.parameters.flatten()]
+        #_names = [par.name for par in tf_MCtempl.parameters.flatten()]
+        #np.save('{}/MCTF'.format(model_name), _values)
+        #print('msd deg', degsMC[0])
+        #fig_mctf = plotMCTF(*TF_smooth_plot(*TF_params(_values, _names)),
+        #                    MC=True,
+        #                    raw=True,
+        #                    msddeg=degsMC[0],
+        #                    year=args.year)
+        #_plot_name = '{}/plots/TF_MC_only_{}'.format(model_name, args.year)
+        #fig_mctf.savefig(_plot_name+".png", dpi=100, transparent=True, bbox_inches="tight")
+        #fig_mctf.savefig(_plot_name+".pdf", dpi=100, transparent=True, bbox_inches="tight")
 
         param_names = [p.name for p in tf_MCtempl.parameters.reshape(-1)]
         decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(
@@ -478,13 +481,13 @@ def dummy_rhalphabet(pseudo,
             # Define mask
             mask=np.ones(len(msdbins)-1)
             # mask = validbins[ptbin].copy()
-            # if not pseudo and region == 'pass':
-            #     if blind:
-            #         mask[6:9] = False
-            #         mask[10:14] = False
+            if not pseudo and region == 'pass':
+                if blind:
+                    # mask[6:9] = False
+                    mask[11:18] = False
 
             from functools import partial
-            # badtemp_ma = partial(badtemp, mask=mask)
+            badtemp_ma = partial(badtemp, mask=mask)
 
             def badtemp_ma(hvalues, eps=0.0000001, mask=None):
                 # Need minimum size & more than 1 non-zero bins
@@ -661,7 +664,7 @@ def dummy_rhalphabet(pseudo,
                 ch.addSample(sample)
 
             if not pseudo:
-                data_obs = get_templ(f, region, 'data_obs',
+                data_obs = get_templ(f, region, 'data',
                                      ptbin)[:-1]  # Don't pass variances
                 if ptbin == 0 and region == "pass": print("Reading real data")
 
@@ -701,7 +704,7 @@ def dummy_rhalphabet(pseudo,
             ch.setObservation(data_obs)
 
             # drop bins outside rho validity
-            # ch.mask = mask
+            ch.mask = mask
 
     if fitTF:
         if opts.transform:
@@ -716,7 +719,7 @@ def dummy_rhalphabet(pseudo,
             _inits = np.ones(tuple(n + 1 for n in degs))
         elif _basis == 'Chebyshev':
             _inits = np.zeros(tuple(n + 1 for n in degs))
-            _inits[0, 0] = 1
+            _inits[0,] = 1
         else:
             raise ValueError("Basis ``{}`` not understood.".format(_basis))
         tf_dataResidual = rl.BasisPoly("tf{}_dataResidual".format(year),
@@ -749,7 +752,7 @@ def dummy_rhalphabet(pseudo,
                 print(initial_qcd)
                 warnings.warn("Negative bins will be forced positive", UserWarning)
                 initial_qcd[0 > initial_qcd] = abs(initial_qcd[0 > initial_qcd])
-            sigmascale = 1  # to scale the deviation from initial
+            sigmascale = 10  # to scale the deviation from initial
             scaledparams = initial_qcd * (
                 1 +1.0 / np.maximum(1., np.sqrt(initial_qcd)))** (qcdparams*sigmascale)
             fail_qcd = rl.ParametericSample('ptbin{}fail{}_qcd'.format(ptbin, year),
@@ -760,9 +763,86 @@ def dummy_rhalphabet(pseudo,
                                                tf_params[:], fail_qcd)
             passCh.addSample(pass_qcd)
 
-    with open("{}.pkl".format(model_name), "wb") as fout:
-        pickle.dump(model, fout)
+    # with open("{}.pkl".format(model_name), "wb") as fout:
+    #     pickle.dump(model, fout)
 
+    ### W SF ###
+
+    # Attempt 1
+    # wqqeffSF = rl.IndependentParameter('wqqeffSF_{}'.format(year), 0.5, 0, 1)
+    # wqqpass = model[f'ptbin0pass{year}']['wqq']
+    # wqqfail = model[f'ptbin0fail{year}']['wqq']
+    # wqq_pass_yield = np.array(get_templ(f, "pass", 'wqq', 0)[0])
+    # wqq_fail_yield = np.array(get_templ(f, "fail", 'wqq', 0)[0])
+    # wqqpass.setParamEffect(wqqeffSF, 1*wqqeffSF)
+    # wqqfail.setParamEffect(wqqeffSF, 1 + (wqq_pass_yield/wqq_fail_yield)*(1-wqqeffSF))
+
+    # Attempt 2
+    # wqqeffSF = rl.IndependentParameter(f"wqqeffSF_{year}", 0.0,0.0,1.0)
+    # wqqpass = model[f'ptbin0pass{year}']['wqq']
+    # wqqfail = model[f'ptbin0fail{year}']['wqq']  
+    # w_pass = np.array(get_templ(f, "pass", "wqq", 0)[0], dtype=float)
+    # w_fail = np.array(get_templ(f, "fail", "wqq", 0)[0], dtype=float)    
+    # r = float(w_pass.sum() / max(1e-12, w_fail.sum()))
+    # wqqpass.setParamEffect(wqqeffSF, 1.0 * wqqeffSF)
+    # wqqfail.setParamEffect(wqqeffSF, 1.0 + r * (1.0 - wqqeffSF))
+
+    # zqqeffSF = rl.IndependentParameter(f"zqqeffSF_{year}", 0.0,0.0,1.0)
+    # zqqpass = model[f'ptbin0pass{year}']['zqq']
+    # zqqfail = model[f'ptbin0fail{year}']['zqq']  
+    # z_pass = np.array(get_templ(f, "pass", "zqq", 0)[0], dtype=float)
+    # z_fail = np.array(get_templ(f, "fail", "zqq", 0)[0], dtype=float)    
+    # r = float(z_pass.sum() / max(1e-12, z_fail.sum()))
+    # zqqpass.setParamEffect(zqqeffSF, 1.0 * zqqeffSF)
+    # zqqfail.setParamEffect(zqqeffSF, 1.0 + r * (1.0 - zqqeffSF))
+
+    # Attempt 3
+    # wqqeffSF = rl.NuisanceParameter(f"wqqeffSF_{year}", "lnN", 0, 0, 1)
+    # wqqpass = model[f'ptbin0pass{year}']['wqq']
+    # wqqfail = model[f'ptbin0fail{year}']['wqq']
+    # w_pass = np.array(get_templ(f, "pass", "wqq", 0)[0], dtype=float)
+    # w_fail = np.array(get_templ(f, "fail", "wqq", 0)[0], dtype=float)
+    # r = np.divide(w_pass.sum(), max(1e-12, w_fail.sum()))
+    # unc = 0.10
+    # pass_up = float((unc))
+    # fail_up = float(1.0 + r * (1.0 - pass_up))
+    # wqqpass.setParamEffect(wqqeffSF, pass_up)
+    # wqqfail.setParamEffect(wqqeffSF, fail_up)
+
+    # zqqeffSF = rl.NuisanceParameter(f"zqqeffSF_{year}", "lnN", 0, 0, 1)
+    # zqqpass = model[f'ptbin0pass{year}']['zqq']
+    # zqqfail = model[f'ptbin0fail{year}']['zqq']
+    # z_pass = np.array(get_templ(f, "pass", "zqq", 0)[0], dtype=float)
+    # z_fail = np.array(get_templ(f, "fail", "zqq", 0)[0], dtype=float)
+    # r = np.divide(z_pass.sum(), max(1e-12, z_fail.sum()))
+    # unc = 0.10
+    # pass_up = float((unc))
+    # fail_up = float(1.0 + r * (1.0 - pass_up))
+    # zqqpass.setParamEffect(zqqeffSF, pass_up)
+    # zqqfail.setParamEffect(zqqeffSF, fail_up)
+
+    # Attempt 4
+    def apply_mistag_np(f, model, year, proc, unc=0.05):
+        nu = rl.NuisanceParameter(f"{proc}effSF_{year}", "lnN")
+        sample_pass = model[f'ptbin{ptbin}pass{year}'][proc]
+        sample_fail = model[f'ptbin{ptbin}fail{year}'][proc]
+        pass_yield = np.array(get_templ(f, "pass", proc, 0)[0])
+        fail_yield = np.array(get_templ(f, "fail", proc, 0)[0])
+        r = pass_yield / fail_yield
+        # p_sum = float(p.sum())
+        # q_sum = float(q.sum())
+        # r = p_sum / q_sum
+        pass_eff = np.exp(unc)
+        fail_eff = np.exp(-r * unc)
+        sample_pass.setParamEffect(nu, pass_eff)
+        sample_fail.setParamEffect(nu, 1-fail_eff)
+    
+    # replace your Attempt 3 with:
+    apply_mistag_np(f, model, year, "wqq", unc=0.01)
+    apply_mistag_np(f, model, year, "zqq", unc=0.01)
+
+
+    
     model.renderCombine(model_name)
 
 

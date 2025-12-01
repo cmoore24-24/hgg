@@ -1,10 +1,10 @@
 {
 	"manager-name":"cmoore24-hgg",
-	"max-workers":300,
-	"min-workers":10,
+	"max-workers":100,
+	"min-workers":0,
 	"workers-per-cycle":1000,
-	"cores":24,
-	"memory":cores*5120,
+	"cores":12,
+	"memory":cores*2048,
 	"disk":100000,
 	"timeout":600,
         "condor-requirements": "((has_vast) && !regexp(\"^camd\", MachineShortName))"

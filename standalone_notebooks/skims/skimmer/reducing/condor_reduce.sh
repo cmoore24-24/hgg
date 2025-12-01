@@ -8,7 +8,7 @@ conda activate coffea
 export TERMINFO=/usr/share/terminfo
 export PATH=$WORKDIR/coffea/bin:$PATH
 
-REDUCE_DIRECTORY='/project01/ndcms/cmoore24/skims/analysis_skims/2018/nolepton/data'
+REDUCE_DIRECTORY='/project01/ndcms/cmoore24/skims/analysis_skims/2017/nolepton/data'
 
 echo $1
 
