@@ -14,13 +14,13 @@ import scipy
 import pickle
 from coffea.lumi_tools import LumiMask
 
-index = 'B'
-samples_process = False
+index = 'hgg'
+samples_process = True
 lep_region = 'nolepton'
 template_name = f'{lep_region}_{index}'
-dset_type = 'data'
-year = '2017'
-match = 'True'
+dset_type = 'mc'
+year = '2016APV'
+match = True
 full_start = time.time()
 
 if __name__ == "__main__":
@@ -34,8 +34,9 @@ if __name__ == "__main__":
     m.tune("temp-replica-count", 3)
     m.tune("worker-source-max-transfers", 1000)
     m.tune("immediate-recovery", 0)
-    m.tune("max-retrievals", -1)
+    m.tune("max-retrievals", 1)
     m.tune("transient-error-interval", 1)
+    m.tune("prefer-dispatch", 1)
     
     warnings.filterwarnings("ignore", "Found duplicate branch")
     warnings.filterwarnings("ignore", "Missing cross-reference index for")
@@ -43,7 +44,7 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore", "Please ensure")
     warnings.filterwarnings("ignore", "invalid value")
 
-    ##### Turns nput datasets into working into post-processed, stepped filelist #####
+    ##### Turns input datasets into post-processed, stepped filelist #####
 
     if samples_process:
         with open('input_datasets.json', 'r') as f:
@@ -71,22 +72,26 @@ if __name__ == "__main__":
         samples_postprocess = dask.compute(
            sampler_dict,
            scheduler=m.get,
-           resources={"cores": 1},
+           resources={"cores": 2},
            # resources_mode=None,
            # prune_files=True,
            prune_depth=0,
            worker_transfers=True,
            task_mode="function-calls",
-           lib_resources={'cores': 1, 'slots': 1},
+           lib_resources={'cores': 2, 'slots': 1},
         )[0]
         
         samples_ready = {}
+        with open('test_file.json','w') as f:
+            json.dump(samples_postprocess,f)
+            
         for i in samples_postprocess:
            samples_ready[i] = samples_postprocess[i]['files']
         
         sample_stop = time.time()
         print('samples done')
         print('full sample time is ' + str((sample_stop - sample_start)/60))
+
         
         with open("samples_ready.json", "w") as fout:
            json.dump(samples_ready, fout)
@@ -98,7 +103,7 @@ if __name__ == "__main__":
     with open("samples_ready.json", 'r') as f:
         samples_ready = json.load(f)
 
-    print(f'The region is {lep_region}, the year is {year}, and the section is {dset_type}.')
+    print(f'The region is {lep_region}, the year is {year}, gen matching is {match}, and the section is {dset_type}.')
         
     if (lep_region == 'nolepton') or (lep_region == 'trijet'):
         with open('triggers.json', 'r') as f:
@@ -218,7 +223,11 @@ if __name__ == "__main__":
 
         # Create Trigger Mask
         trigger = ak.zeros_like(ak.firsts(events.FatJet.pt), dtype='bool')
-        for t in triggers[year]:
+        if 'APV' not in year:
+            trigg_year = year
+        else:
+            trigg_year = '2016'
+        for t in triggers[trigg_year]:
             if t in events.HLT.fields:
                 trigger = trigger | events.HLT[t]
         trigger = ak.fill_none(trigger, False)
@@ -235,12 +244,12 @@ if __name__ == "__main__":
         events['FatJet', 'dazsle_msd'] = (events.FatJet.subjets * (1 - events.FatJet.subjets.rawFactor)).sum()
 
         btag_wps = {
-            '2016apv': 0.3142,
+            '2016APV': 0.3142,
             '2016': 0.3657,
             '2017': 0.3040,
             '2018': 0.2561,
         }
-        events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 20) & (abs(events.Jet.eta) < 2.4)].btagDeepFlavB > btag_wps[year], axis=1)
+        events['FatJet', 'btag_count'] = ak.sum(events.Jet[(events.Jet.pt > 30) & (abs(events.Jet.eta) < 2.5)].btagDeepFlavB > btag_wps[year], axis=1)
 
         # Create muon selections
         goodmuon = (
@@ -313,7 +322,11 @@ if __name__ == "__main__":
             do_li = True
 
         if dset_type == 'data':
-            lumimask = LumiMask(lumimasks[year])(events.run, events.luminosityBlock)
+            if 'APV' not in year:
+                lumi_year = year
+            else:
+                lumi_year = '2016'
+            lumimask = LumiMask(lumimasks[lumi_year])(events.run, events.luminosityBlock)
             fatjetSelect = (fatjetSelect) & (lumimask)
         
         
@@ -506,6 +519,9 @@ if __name__ == "__main__":
 
         # Write parquet file with Dask Awkward
         path = f"/project01/ndcms/cmoore24/skims/analysis_skims/{year}/{lep_region}/{dset_type}/{dataset}" #Edit this for parquet file destination!
+        if (match==False) and (dset_type == 'mc'):
+            path = f"/project01/ndcms/cmoore24/skims/analysis_skims/{year}/{lep_region}/{dset_type}_unmatched/{dataset}"
+            
         skim_task = dak.to_parquet(
             events,
             path, ##Change this to where you'd like the output to be written
@@ -543,8 +559,8 @@ if __name__ == "__main__":
     # Create the dictionary of tasks to compute
     tasks = dataset_tools.apply_to_fileset(
         analysis,
-        # samples_ready, ## Run over all subsamples in input_datasets.json
-        batch, ## Run over only the subsample specified as the "to_skim" string
+        samples_ready, ## Run over all subsamples in input_datasets.json
+        # batch, ## Run over only the subsample specified as the "to_skim" string
         uproot_options={"allow_read_errors_with_report": False},
         schemaclass = PFNanoAODSchema,
     )

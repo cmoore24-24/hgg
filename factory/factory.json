@@ -1,9 +1,9 @@
 {
 	"manager-name":"cmoore24-hgg",
-	"max-workers":100,
+	"max-workers":200,
 	"min-workers":0,
 	"workers-per-cycle":1000,
-	"cores":12,
+	"cores":24,
 	"memory":cores*2048,
 	"disk":100000,
 	"timeout":600,

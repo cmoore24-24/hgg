@@ -50,8 +50,6 @@ for j in os.listdir(dir_name):
     params = ak.parameters(events) or {}
     record = params.get("__record__", "Events")
     params = {k: v for k, v in params.items() if k != "__record__"}
-
-    print('Here1')
     
     
     field_dict = {}
@@ -59,7 +57,6 @@ for j in os.listdir(dir_name):
         if i in events.fields:
             field_dict = field_dict | {i:events[i]}
 
-    print('Here2')
 
     skim = ak.zip(
             field_dict,
@@ -68,7 +65,6 @@ for j in os.listdir(dir_name):
             depth_limit=1,
         )
 
-    print('Here3')
     
     ak.to_parquet(skim, f'{dir_name}/{j}/reduced{section}.parquet', extensionarray=True)
     # del(skim)
