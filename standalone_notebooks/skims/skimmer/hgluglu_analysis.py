@@ -14,12 +14,12 @@ import scipy
 import pickle
 from coffea.lumi_tools import LumiMask
 
-index = 'hgg'
+index = 'qcd_trijet'
 samples_process = True
-lep_region = 'nolepton'
+lep_region = 'trijet'
 template_name = f'{lep_region}_{index}'
 dset_type = 'mc'
-year = '2016APV'
+year = '2017'
 match = True
 full_start = time.time()
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
                step_size=10_000, ## Change this step size to adjust the size of chunks of events
                skip_bad_files=False,
                recalculate_steps=True,
-               save_form=True,
+               save_form=False,
            )
            return samples_ready
         
@@ -223,11 +223,11 @@ if __name__ == "__main__":
 
         # Create Trigger Mask
         trigger = ak.zeros_like(ak.firsts(events.FatJet.pt), dtype='bool')
-        if 'APV' not in year:
-            trigg_year = year
-        else:
-            trigg_year = '2016'
-        for t in triggers[trigg_year]:
+        # if 'APV' not in year:
+        #     trigg_year = year
+        # else:
+        #     trigg_year = '2016'
+        for t in triggers[year]:
             if t in events.HLT.fields:
                 trigger = trigger | events.HLT[t]
         trigger = ak.fill_none(trigger, False)
@@ -297,7 +297,7 @@ if __name__ == "__main__":
             events['FatJet','match_mask'] = matching_mask(events, pdgId)
             fatjetSelect = apply_selections(events, region, trigger, goodmuon, do_matching=match, pdgid=pdgId)
             do_li = True
-        elif ('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset) and ('hww' not in dataset):
+        elif (('wqq' in dataset) or ('ww' in dataset) or ('wlnu' in dataset)) and ('hww' not in dataset):
             print(dataset)
             pdgId = 24
             events['FatJet','match_mask'] = matching_mask(events, pdgId)

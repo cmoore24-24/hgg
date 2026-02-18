@@ -1,0 +1,41 @@
+universe = vanilla
+executable = condor_reduce.sh
+
+Log    = ./logs/$(Cluster)_$(Process).log
+Output = ./logs/$(Cluster)/$(Cluster)_$(Process).out
+Error  = ./logs/$(Cluster)/$(Cluster)_$(Process).err
+
+should_transfer_files = YES
+transfer_input_files = condor_reduce.sh, reducer.py
+when_to_transfer_output = ON_EXIT
+# transfer_output_files = outputs
+
+request_memory = 40 GB
+request_cpus   = 1
+
+queue arguments from (
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+    10
+    11
+    12
+    13
+    14
+    15
+    16
+    17
+    18
+    19
+    20
+    21
+    22
+    23
+)
